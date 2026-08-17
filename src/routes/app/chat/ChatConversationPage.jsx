@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import AppSidebar from '../../../components/layout/AppSidebar';
-import Topbar from '../../../components/layout/Topbar';
 import ChatWindow from '../../../components/features/chat/ChatWindow';
 import ChatInput from '../../../components/features/chat/ChatInput';
 import RightPanel from '../../../components/layout/RightPanel';
@@ -24,14 +23,16 @@ const CONTEXT = {
 
 export default function ChatConversationPage() {
   const { chatId } = useParams();
-  const { activeChat, messages, selectChat, sendMessage } = useChat();
   const navigate = useNavigate();
+  const { sidebarCollapsed } = useUiStore();
+  const { activeChat, messages, loadConversation, sendMessage } = useChat();
+
 
   useEffect(() => {
-    if (chatId && chatId !== activeChat?.id) {
-      selectChat(chatId);
+    if (chatId) {
+      loadConversation(chatId);
     }
-  }, [chatId, activeChat?.id, selectChat]);
+  }, [chatId, loadConversation]);
 
   const handleSend = async (text) => {
     await sendMessage(text);
@@ -44,10 +45,13 @@ export default function ChatConversationPage() {
   return (
     <div className="bg-background text-on-background font-body-md h-screen w-full overflow-hidden flex">
       <AppSidebar variant="chat" cta={<ChatSidebarCta onNewChat={handleNewChat} />} />
-      <div className="flex-1 ml-64 flex flex-col h-screen relative bg-background">
-        <Topbar variant="chat" />
-
+      <div
+        className={`flex-1 flex flex-col h-screen relative bg-background transition-all duration-300 ease-in-out ${
+          sidebarCollapsed ? 'md:ml-16' : 'md:ml-64'
+        }`}
+      >
         <main className="flex-1 flex w-full relative overflow-hidden">
+
           <div className="flex-1 flex flex-col relative max-w-[800px] mx-auto w-full border-r border-outline-variant bg-background shadow-level-1 z-10">
             <div className="flex items-center justify-between px-8 py-6 border-b border-surface-container bg-surface/50 backdrop-blur-sm sticky top-0 z-20">
               <div className="flex items-center gap-4">

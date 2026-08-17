@@ -1,30 +1,44 @@
+import { useNavigate } from 'react-router-dom';
 import Icon from '../ui/Icon';
 import Avatar from '../ui/Avatar';
 import { cx } from '../../lib/utils';
-import { useCourseProgress } from '../../hooks/useCourseProgress';
+import { useUserStats } from '../../hooks/useUserStats';
 import { useAuthStore } from '../../stores/authStore';
 
 const CHAT_LINKS = ['Case Research', 'Legal Drafting', 'Consultations'];
 
+
 export default function Topbar({ variant = 'academy', onSearch = null }) {
-  const { streak } = useCourseProgress();
+  const navigate = useNavigate();
+  const { currentStreak, totalXp, level } = useUserStats();
   const user = useAuthStore((s) => s.user);
 
   return (
     <header className="bg-surface border-b border-outline-variant sticky top-0 z-30 shrink-0">
       <div className="h-16 flex items-center justify-between px-gutter md:px-margin-desktop">
         {variant === 'chat' ? (
-          <div className="flex items-center gap-8">
-            {CHAT_LINKS.map((label) => (
-              <a
-                key={label}
-                className="text-on-surface-variant hover:text-primary transition-colors font-body-md text-[15px] cursor-pointer hidden md:block"
-              >
-                {label}
-              </a>
-            ))}
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => navigate('/academy/dashboard')}
+              className="flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-primary font-semibold text-[13px] border border-outline-variant/60 transition-colors shadow-xs"
+            >
+              <Icon name="arrow_back" size={16} />
+              <span>Back to Learn</span>
+            </button>
+            <div className="h-5 w-px bg-outline-variant/60 hidden md:block" />
+            <div className="flex items-center gap-6 hidden md:flex">
+              {CHAT_LINKS.map((label) => (
+                <a
+                  key={label}
+                  className="text-on-surface-variant hover:text-primary transition-colors font-body-md text-[14px] cursor-pointer"
+                >
+                  {label}
+                </a>
+              ))}
+            </div>
           </div>
         ) : (
+
           <div className="flex-1 max-w-md">
             <div className="relative">
               <Icon name="search" size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" />
@@ -55,11 +69,11 @@ export default function Topbar({ variant = 'academy', onSearch = null }) {
               <div className={cx('flex items-center gap-4 hidden lg:flex')}>
                 <div className="flex items-center gap-2 bg-surface-container-low px-3 py-1.5 rounded-full border border-outline-variant">
                   <Icon name="local_fire_department" size={18} fill className="text-secondary-container" />
-                  <span className="font-label-caps text-label-caps font-bold text-on-surface">{streak} Day Streak</span>
+                  <span className="font-label-caps text-label-caps font-bold text-on-surface">{currentStreak} Day Streak</span>
                 </div>
                 <div className="flex items-center gap-2 bg-surface-container-low px-3 py-1.5 rounded-full border border-outline-variant">
                   <Icon name="military_tech" size={18} className="text-primary-container" />
-                  <span className="font-label-caps text-label-caps font-bold text-on-surface">Level 3 XP</span>
+                  <span className="font-label-caps text-label-caps font-bold text-on-surface">Level {level} · {totalXp} XP</span>
                 </div>
               </div>
               <div className="hidden sm:flex items-center gap-3">

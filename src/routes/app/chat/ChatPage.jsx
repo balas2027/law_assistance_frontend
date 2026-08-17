@@ -2,15 +2,19 @@ import { useNavigate } from 'react-router-dom';
 import AppSidebar from '../../../components/layout/AppSidebar';
 import RightPanel from '../../../components/layout/RightPanel';
 import SuggestedPrompts from '../../../components/features/chat/SuggestedPrompts';
+
 import ChatInput from '../../../components/features/chat/ChatInput';
 import DisclaimerBanner from '../../../components/shared/DisclaimerBanner';
 import Icon from '../../../components/ui/Icon';
 import { SUGGESTED_PROMPTS } from '../../../types/chat';
 import { useChat } from '../../../hooks/useChat';
+import { useUiStore } from '../../../stores/uiStore';
+
 
 export default function ChatPage() {
   const { newChat } = useChat();
   const navigate = useNavigate();
+  const { sidebarCollapsed } = useUiStore();
 
   const handlePrompt = async (text) => {
     const chat = await newChat(text);
@@ -25,8 +29,13 @@ export default function ChatPage() {
   return (
     <div className="flex h-screen w-full bg-background text-on-surface font-body-md overflow-hidden">
       <AppSidebar variant="chat" />
-      <main className="flex-1 ml-64 flex flex-col relative bg-surface h-screen">
+      <main
+        className={`flex-1 flex flex-col relative bg-surface h-screen transition-all duration-300 ease-in-out ${
+          sidebarCollapsed ? 'md:ml-16' : 'md:ml-64'
+        }`}
+      >
         <div className="flex-1 overflow-y-auto px-margin-desktop pt-12 pb-40 flex flex-col items-center min-h-0">
+
           <div className="w-full max-w-[800px] flex flex-col items-center animate-fade-in-up my-auto">
             <div className="w-24 h-24 mb-8 rounded-3xl bg-primary-container flex items-center justify-center shadow-level-2">
               <Icon name="account_balance" size={56} fill className="text-secondary-container" />

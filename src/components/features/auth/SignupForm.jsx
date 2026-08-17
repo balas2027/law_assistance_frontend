@@ -3,14 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../hooks/useAuth';
 import Button from '../../ui/Button';
 import Icon from '../../ui/Icon';
-import { SIGNUP_ROLES } from '../../../types/user';
 
 export default function SignupForm() {
   const [form, setForm] = useState({
     name: '',
     email: '',
     password: '',
-    role: '',
+    role: 'common_man',
     terms: false,
   });
   const [showPassword, setShowPassword] = useState(false);
@@ -24,7 +23,7 @@ export default function SignupForm() {
     e.preventDefault();
     try {
       const user = await signup({ ...form });
-      const defaultPath = user?.user_type === 'admin' ? '/admin/dashboard' : '/academy/path/course_fr';
+      const defaultPath = user?.user_type === 'admin' ? '/admin/dashboard' : '/chat';
       navigate(defaultPath, { replace: true });
     } catch {
       // error surfaced via store
@@ -85,31 +84,6 @@ export default function SignupForm() {
           >
             <Icon name={showPassword ? 'visibility' : 'visibility_off'} size={20} />
           </button>
-        </div>
-      </div>
-
-      <div className="flex flex-col gap-1.5">
-        <label className="font-label-caps text-label-caps text-on-surface" htmlFor="role">
-          Select Role
-        </label>
-        <div className="relative">
-          <select
-            className="w-full h-12 rounded-xl border border-surface-variant bg-surface-container-lowest px-4 pr-10 font-body-md text-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all appearance-none shadow-sm cursor-pointer"
-            id="role"
-            value={form.role}
-            onChange={setField('role')}
-            required
-          >
-            <option value="" disabled>
-              Choose your primary domain
-            </option>
-            {SIGNUP_ROLES.map((r) => (
-              <option key={r.value} value={r.value}>
-                {r.label}
-              </option>
-            ))}
-          </select>
-          <Icon name="expand_more" size={24} className="absolute right-4 top-1/2 -translate-y-1/2 text-outline-variant pointer-events-none" />
         </div>
       </div>
 

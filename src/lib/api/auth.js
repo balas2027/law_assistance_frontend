@@ -17,11 +17,11 @@ async function handle(res) {
   return data;
 }
 
-export async function loginApi({ email, password, user_type }) {
+export async function loginApi({ email, password }) {
   const res = await fetch(`${API_BASE}/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, password, user_type }),
+    body: JSON.stringify({ email, password }),
   });
   const data = await handle(res);
   return { token: data.access_token, user: data.user };

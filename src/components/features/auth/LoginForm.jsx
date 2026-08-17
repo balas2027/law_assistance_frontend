@@ -4,12 +4,10 @@ import { useAuth } from '../../../hooks/useAuth';
 import Input from '../../ui/Input';
 import Button from '../../ui/Button';
 import Icon from '../../ui/Icon';
-import { ROLE_LIST } from '../../../types/user';
 
 export default function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [userType, setUserType] = useState('');
   const { login, loading, error } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -17,7 +15,7 @@ export default function LoginForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const user = await login({ email, password, user_type: userType });
+      const user = await login({ email, password });
       const from = location.state?.from?.pathname;
       const defaultPath = user?.user_type === 'admin' ? '/admin/dashboard' : '/chat';
       navigate(from || defaultPath, { replace: true });
@@ -48,31 +46,6 @@ export default function LoginForm() {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-
-      <div className="flex flex-col gap-1.5">
-        <label className="font-label-caps text-label-caps text-on-surface" htmlFor="userType">
-          Login As (Type)
-        </label>
-        <div className="relative">
-          <select
-            id="userType"
-            className="w-full h-12 rounded-xl border border-surface-variant bg-surface-container-lowest px-4 pr-10 font-body-md text-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all appearance-none shadow-sm cursor-pointer"
-            value={userType}
-            onChange={(e) => setUserType(e.target.value)}
-            required
-          >
-            <option value="" disabled>
-              Choose your account type
-            </option>
-            {ROLE_LIST.map((t) => (
-              <option key={t.value} value={t.value}>
-                {t.label}
-              </option>
-            ))}
-          </select>
-          <Icon name="expand_more" size={24} className="absolute right-4 top-1/2 -translate-y-1/2 text-outline-variant pointer-events-none" />
-        </div>
-      </div>
 
       {error && <p className="text-xs text-error">{error}</p>}
 

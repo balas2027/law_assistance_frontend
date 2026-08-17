@@ -1,27 +1,67 @@
 import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import AdminSidebar from '../../components/layout/AdminSidebar';
 import QuizBuilderForm from '../../components/features/admin/QuizBuilderForm';
 import QuizSettingsPanel from '../../components/features/admin/QuizSettingsPanel';
 import Icon from '../../components/ui/Icon';
 import { useAdminStore } from '../../stores/adminStore';
+import { useUiStore } from '../../stores/uiStore';
 
 export default function QuizBuilderPage() {
   const { id } = useParams();
-  const { quizBuilder, loadQuizBuilder, setBuilderField, setBuilderOption, setCorrectOption, addBuilderOption, addCitation, removeCitation, saveQuizBuilder } =
+  const navigate = useNavigate();
+  const { sidebarCollapsed } = useUiStore();
+  const { quizBuilder, topics, loading, error, loadQuizBuilder, loadTopics, setBuilderField, addQuestion, removeQuestion, setQuestionScenario, setQuestionPoints, addQuestionOption, removeQuestionOption, setQuestionOptionText, setQuestionCorrectOption, addCitation, removeCitation, saveQuizBuilder, publishQuizBuilder } =
     useAdminStore();
 
+  const isNew = !id || id === 'new' || id === 'demo';
+
   useEffect(() => {
-    if (id && id !== quizBuilder.id) {
+    loadTopics();
+  }, [loadTopics]);
+
+  useEffect(() => {
+    const numericId = Number(id);
+    if (!Number.isInteger(numericId) || numericId <= 0) return;
+    if (id !== String(quizBuilder.id)) {
       loadQuizBuilder(id);
     }
   }, [id, quizBuilder.id, loadQuizBuilder]);
+
+  const afterSave = (saved) => {
+    if (isNew) {
+      navigate(`/admin/quiz-builder/${saved.id}`, { replace: true });
+    }
+  };
+
+  const handlePublish = async () => {
+    try {
+      const saved = await publishQuizBuilder();
+      afterSave(saved);
+    } catch {
+      // failure toast handled in the store
+    }
+  };
+
+  const handleSaveDraft = async () => {
+    try {
+      const saved = await saveQuizBuilder();
+      afterSave(saved);
+    } catch {
+      // failure toast handled in the store
+    }
+  };
 
   return (
     <div className="bg-background text-on-background font-body-md min-h-screen flex flex-col md:flex-row">
       <AdminSidebar />
 
-      <div className="flex-1 flex flex-col min-w-0">
+      <div
+        className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ease-in-out ${
+          sidebarCollapsed ? 'md:ml-16' : 'md:ml-64'
+        }`}
+      >
+
         <header className="bg-surface-container-lowest text-primary border-b border-outline-variant shadow-sm flex justify-between items-center w-full px-gutter h-16 sticky z-20">
           <div className="flex items-center gap-4">
             <button className="md:hidden text-on-surface-variant">
@@ -44,10 +84,18 @@ export default function QuizBuilderPage() {
               </button>
             </div>
             <button
-              onClick={saveQuizBuilder}
-              className="bg-saffron text-on-primary font-label-caps text-label-caps px-6 py-2 rounded-full font-bold hover:opacity-90 transition-opacity"
+              onClick={handleSaveDraft}
+              disabled={loading}
+              className="border border-outline-variant text-on-surface-variant font-label-caps text-label-caps px-6 py-2 rounded-full font-bold hover:bg-surface-container transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Publish Changes
+              Save Draft
+            </button>
+            <button
+              onClick={handlePublish}
+              disabled={loading}
+              className="bg-saffron text-on-primary font-label-caps text-label-caps px-6 py-2 rounded-full font-bold hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? 'Saving…' : 'Publish Changes'}
             </button>
           </div>
         </header>
@@ -57,17 +105,29 @@ export default function QuizBuilderPage() {
             <QuizBuilderForm
               quiz={quizBuilder}
               onFieldChange={setBuilderField}
-              onOptionTextChange={setBuilderOption}
-              onCorrectChange={setCorrectOption}
-              onAddOption={addBuilderOption}
+              onAddQuestion={addQuestion}
+              onRemoveQuestion={removeQuestion}
+              onQuestionScenarioChange={setQuestionScenario}
+              onQuestionPointsChange={setQuestionPoints}
+              onAddOption={addQuestionOption}
+              onRemoveOption={removeQuestionOption}
+              onOptionTextChange={setQuestionOptionText}
+              onCorrectChange={setQuestionCorrectOption}
             />
             <QuizSettingsPanel
               quiz={quizBuilder}
+              topics={topics}
               onFieldChange={setBuilderField}
               onAddCitation={addCitation}
               onRemoveCitation={removeCitation}
             />
           </div>
+          {error && (
+            <div className="mt-4 bg-error/10 border border-error/30 text-error rounded-xl px-5 py-3 flex items-center gap-2">
+              <Icon name="error" size={18} />
+              {error}
+            </div>
+          )}
         </main>
       </div>
     </div>

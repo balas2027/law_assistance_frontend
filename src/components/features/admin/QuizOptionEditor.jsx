@@ -1,6 +1,7 @@
 import { cx } from '../../../lib/utils';
+import Icon from '../../ui/Icon';
 
-export default function QuizOptionEditor({ option, onTextChange, onCorrectChange }) {
+export default function QuizOptionEditor({ option, onTextChange, onCorrectChange, onRemove = null }) {
   const isCorrect = option.isCorrect;
   return (
     <div
@@ -36,6 +37,16 @@ export default function QuizOptionEditor({ option, onTextChange, onCorrectChange
           placeholder={`Enter ${option.label} text...`}
         />
       </div>
+      {onRemove && (
+        <button
+          className="pt-2 text-on-surface-variant hover:text-error transition-colors"
+          onClick={() => onRemove(option.id)}
+          aria-label={`Remove ${option.label}`}
+          type="button"
+        >
+          <Icon name="close" size={16} />
+        </button>
+      )}
     </div>
   );
 }
