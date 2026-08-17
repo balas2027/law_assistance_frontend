@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Quiz Builder - NyayaAI Admin</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Manrope:wght@600;700;800&amp;family=IBM+Plex+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-error-container": "#93000a",
+                    "primary-container": "#172554",
+                    "outline-variant": "#c6c5d0",
+                    "on-secondary-container": "#683700",
+                    "error-container": "#ffdad6",
+                    "inverse-primary": "#b7c4fd",
+                    "on-surface-variant": "#45464f",
+                    "surface-container-highest": "#e2e3e0",
+                    "on-secondary-fixed-variant": "#6d3a00",
+                    "inverse-surface": "#2f312f",
+                    "primary-fixed": "#dce1ff",
+                    "on-primary-fixed-variant": "#374475",
+                    "surface": "#f9f9f6",
+                    "tertiary": "#001800",
+                    "error": "#ba1a1a",
+                    "secondary": "#8f4e00",
+                    "on-primary": "#ffffff",
+                    "tertiary-fixed-dim": "#72de5c",
+                    "on-tertiary-fixed-variant": "#035300",
+                    "primary": "#000f3f",
+                    "on-background": "#1a1c1b",
+                    "on-primary-container": "#808dc2",
+                    "secondary-fixed": "#ffdcc2",
+                    "tertiary-container": "#013000",
+                    "secondary-fixed-dim": "#ffb77a",
+                    "secondary-container": "#fe9832",
+                    "on-secondary": "#ffffff",
+                    "surface-dim": "#dadad7",
+                    "surface-bright": "#f9f9f6",
+                    "surface-container-low": "#f4f4f1",
+                    "on-secondary-fixed": "#2e1500",
+                    "surface-tint": "#4f5c8e",
+                    "on-error": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "inverse-on-surface": "#f1f1ee",
+                    "surface-variant": "#e2e3e0",
+                    "surface-container": "#eeeeeb",
+                    "on-surface": "#1a1c1b",
+                    "on-tertiary-container": "#38a429",
+                    "primary-fixed-dim": "#b7c4fd",
+                    "on-primary-fixed": "#071747",
+                    "outline": "#767680",
+                    "on-tertiary-fixed": "#012200",
+                    "tertiary-fixed": "#8dfc75",
+                    "background": "#f9f9f6",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-high": "#e8e8e5"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "chat-gap": "12px",
+                    "gutter": "24px",
+                    "margin-desktop": "48px",
+                    "base_unit": "8px",
+                    "margin-mobile": "16px"
+            },
+            "fontFamily": {
+                    "body-lg": [
+                            "Inter"
+                    ],
+                    "h1": [
+                            "Manrope"
+                    ],
+                    "citation": [
+                            "IBM Plex Mono"
+                    ],
+                    "h1-mobile": [
+                            "Manrope"
+                    ],
+                    "h2": [
+                            "Manrope"
+                    ],
+                    "body-md": [
+                            "Inter"
+                    ],
+                    "label-caps": [
+                            "Inter"
+                    ]
+            },
+            "fontSize": {
+                    "body-lg": [
+                            "18px",
+                            {
+                                    "lineHeight": "28px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "h1": [
+                            "40px",
+                            {
+                                    "lineHeight": "48px",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "citation": [
+                            "14px",
+                            {
+                                    "lineHeight": "20px",
+                                    "letterSpacing": "0.02em",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "h1-mobile": [
+                            "30px",
+                            {
+                                    "lineHeight": "36px",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "h2": [
+                            "32px",
+                            {
+                                    "lineHeight": "40px",
+                                    "letterSpacing": "-0.01em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "body-md": [
+                            "16px",
+                            {
+                                    "lineHeight": "24px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "label-caps": [
+                            "12px",
+                            {
+                                    "lineHeight": "16px",
+                                    "fontWeight": "600"
+                            }
+                    ]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .chakra-loader {
+            width: 24px;
+            height: 24px;
+            border: 2px solid transparent;
+            border-top-color: #FF9933;
+            border-right-color: #172554;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .ambient-shadow-1 { box-shadow: 0 2px 12px rgba(23, 37, 84, 0.06); }
+        .ambient-shadow-2 { box-shadow: 0 8px 24px rgba(23, 37, 84, 0.10); }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col md:flex-row">
+<!-- SideNavBar -->
+<nav class="bg-surface text-primary font-body-md docked left-0 h-screen w-64 border-r border-outline-variant shadow-sm hidden md:flex flex-col h-full py-base_unit flex-shrink-0 z-10">
+<div class="px-6 py-8">
+<h1 class="font-h2 text-h2 font-bold text-primary">NyayaAI Academy</h1>
+<p class="font-label-caps text-label-caps text-on-surface-variant mt-1">Admin Portal</p>
+</div>
+<div class="px-6 mb-8">
+<button class="w-full bg-primary-container text-on-primary py-3 px-4 rounded-full font-label-caps text-label-caps font-bold hover:bg-opacity-90 transition-opacity flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add</span>
+                Draft New Lesson
+            </button>
+</div>
+<ul class="flex-1 px-4 space-y-2">
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                    Dashboard
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">edit_note</span>
+                    Content CMS
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">analytics</span>
+                    User Analytics
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-primary font-bold border-r-4 border-primary bg-surface-container opacity-80 scale-[0.99] transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">quiz</span>
+                    Quiz Builder
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+                    Platform Settings
+                </a>
+</li>
+</ul>
+<div class="px-4 mt-auto mb-6 pt-6 border-t border-outline-variant">
+<ul class="space-y-2">
+<li>
+<a class="flex items-center gap-3 px-4 py-2 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200 font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined text-sm">help_center</span>
+                        Support
+                    </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200 font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined text-sm">logout</span>
+                        Sign Out
+                    </a>
+</li>
+</ul>
+</div>
+</nav>
+<!-- Main Content Area -->
+<div class="flex-1 flex flex-col min-w-0">
+<!-- TopNavBar for Mobile & Contextual Actions -->
+<header class="bg-surface-container-lowest text-primary docked full-width top-0 border-b border-outline-variant shadow-sm flex justify-between items-center w-full px-gutter h-16 sticky z-20">
+<div class="flex items-center gap-4">
+<button class="md:hidden text-on-surface-variant">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Quiz Builder</span>
+<h2 class="font-h2 text-h2 font-bold text-primary truncate md:text-[24px]">Draft: Article 21 - Privacy Rights</h2>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden md:flex items-center gap-2">
+<button class="text-on-surface-variant hover:text-secondary transition-all p-2 rounded-full hover:bg-surface-container">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-secondary transition-all p-2 rounded-full hover:bg-surface-container">
+<span class="material-symbols-outlined">gavel</span>
+</button>
+</div>
+<button class="bg-[#FF9933] text-on-primary font-label-caps text-label-caps px-6 py-2 rounded-full font-bold hover:opacity-90 transition-opacity">
+                    Publish Changes
+                </button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant hidden md:block">
+<img alt="Legal Expert Avatar" class="w-full h-full object-cover" data-alt="A small circular avatar portrait of a professional legal expert wearing formal attire, well-lit, sharp focus, modern light-mode color palette, isolated against a soft white background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAx-EU_Kl6tJ-rS_4ZAKuvCHCqBUt8_iHITctJfke9DcMv2RwTXZeXFhEj-cYk3gWbuQWD3o6F80eQNK5dBFFkUweXsM1pNwmVcw_JXHD5PXIB-4da1LF-p84tc_i5oxtdKvtU9Lgsnvap6VxhEW4SBe924e09bU8G32etp6TYEWlz8bZfdQImlAFfqnSBdOlyP2NYWIruOf3k_VgYHMpuh_ToYh3_8KZ568IALevvAZO-ldW3yqLoFjg"/>
+</div>
+</div>
+</header>
+<!-- Canvas -->
+<main class="flex-1 p-margin-mobile md:p-gutter max-w-[1200px] w-full mx-auto overflow-y-auto">
+<div class="flex flex-col lg:flex-row gap-gutter items-start">
+<!-- Central Editing Card -->
+<div class="flex-1 w-full bg-surface-container-lowest rounded-xl border border-[#E7E5DE] ambient-shadow-1 p-6 md:p-8 space-y-8">
+<div>
+<label class="block font-label-caps text-label-caps text-on-surface-variant mb-2">Question Title</label>
+<input class="w-full bg-surface-container-lowest border border-[#E7E5DE] rounded-[12px] px-4 py-3 font-body-lg text-body-lg text-primary focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors" type="text" value="Article 21 Scenario: Right to Privacy vs National Security"/>
+</div>
+<div>
+<label class="block font-label-caps text-label-caps text-on-surface-variant mb-2">Case Description</label>
+<textarea class="w-full bg-surface-container-lowest border border-[#E7E5DE] rounded-[12px] px-4 py-3 font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors resize-y" rows="5">A prominent journalist discovers that their communications have been intercepted by state agencies without a formal warrant under the Telegraph Act. The state cites 'national security' as the primary justification, refusing to disclose the operational details. The journalist files a writ petition under Article 32. Based on the KS Puttaswamy judgment, evaluate the state's action.</textarea>
+</div>
+<div class="space-y-4">
+<div class="flex items-center justify-between border-b border-[#E7E5DE] pb-2">
+<h3 class="font-h2 text-h2 text-[20px] font-bold text-primary">Multiple Choice Options</h3>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Select correct answer</span>
+</div>
+<!-- Option A -->
+<div class="flex items-start gap-4 p-4 rounded-[12px] border border-primary-container bg-[#FAFAF7]">
+<div class="pt-3">
+<input checked="" class="w-5 h-5 text-[#FF9933] border-outline-variant focus:ring-[#FF9933]" name="correct_answer" type="radio"/>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-2 mb-2">
+<span class="font-citation text-citation text-primary-container bg-surface-container px-2 py-0.5 rounded-sm">Option A</span>
+<span class="text-xs text-[#38a429] font-bold uppercase tracking-wider">Correct Answer</span>
+</div>
+<textarea class="w-full bg-surface-container-lowest border border-[#E7E5DE] rounded-lg px-3 py-2 font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary-container transition-colors" rows="2">The interception is unconstitutional. While national security is a legitimate state aim, the action lacks procedural safeguards and proportionality, failing the three-fold test established in Puttaswamy.</textarea>
+</div>
+</div>
+<!-- Option B -->
+<div class="flex items-start gap-4 p-4 rounded-[12px] border border-[#E7E5DE] bg-surface-container-lowest hover:bg-[#FAFAF7] transition-colors">
+<div class="pt-3">
+<input class="w-5 h-5 text-[#FF9933] border-outline-variant focus:ring-[#FF9933]" name="correct_answer" type="radio"/>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-2 mb-2">
+<span class="font-citation text-citation text-on-surface-variant bg-surface-container px-2 py-0.5 rounded-sm">Option B</span>
+</div>
+<textarea class="w-full bg-surface-container-lowest border border-[#E7E5DE] rounded-lg px-3 py-2 font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary-container transition-colors" rows="2">The interception is perfectly legal. National security concerns override the fundamental right to privacy under all circumstances without requiring judicial oversight.</textarea>
+</div>
+</div>
+</div>
+<button class="flex items-center gap-2 text-primary font-label-caps text-label-caps font-bold hover:text-secondary transition-colors py-2">
+<span class="material-symbols-outlined text-[18px]">add_circle</span>
+                        Add Another Option
+                    </button>
+</div>
+<!-- Right Sidebar: Quiz Settings -->
+<div class="w-full lg:w-80 flex-shrink-0 space-y-6">
+<div class="bg-surface-container-lowest rounded-xl border border-[#E7E5DE] ambient-shadow-1 p-6">
+<h3 class="font-h2 text-h2 text-[18px] font-bold text-primary border-b border-[#E7E5DE] pb-3 mb-4">Quiz Settings</h3>
+<div class="space-y-6">
+<!-- XP Reward -->
+<div>
+<label class="block font-label-caps text-label-caps text-on-surface-variant mb-2">XP Reward</label>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-[#FFF4E5] flex items-center justify-center border border-[#FF9933]">
+<span class="material-symbols-outlined text-[#FF9933]" style="font-variation-settings: 'FILL' 1;">stars</span>
+</div>
+<input class="w-24 bg-surface-container-lowest border border-[#E7E5DE] rounded-lg px-3 py-2 font-citation text-citation text-primary text-center focus:outline-none focus:border-[#FF9933] transition-colors" type="number" value="150"/>
+<span class="font-body-md text-body-md text-on-surface-variant">Points</span>
+</div>
+</div>
+<!-- Difficulty -->
+<div>
+<label class="block font-label-caps text-label-caps text-on-surface-variant mb-2">Difficulty Level</label>
+<select class="w-full bg-surface-container-lowest border border-[#E7E5DE] rounded-lg px-3 py-2 font-body-md text-body-md text-primary focus:outline-none focus:border-primary-container transition-colors appearance-none">
+<option>Beginner</option>
+<option>Intermediate</option>
+<option selected="">Advanced (Bar Level)</option>
+<option>Expert</option>
+</select>
+</div>
+<!-- Reference Acts -->
+<div>
+<label class="block font-label-caps text-label-caps text-on-surface-variant mb-2">Reference Acts &amp; Citations</label>
+<div class="flex flex-wrap gap-2 mb-3">
+<span class="bg-[#FAFAF7] border border-[#E7E5DE] text-primary-container font-citation text-citation px-3 py-1 rounded-full flex items-center gap-1">
+                                        Constitution of India
+                                        <button class="hover:text-error"><span class="material-symbols-outlined text-[14px]">close</span></button>
+</span>
+<span class="bg-[#FAFAF7] border border-[#E7E5DE] text-primary-container font-citation text-citation px-3 py-1 rounded-full flex items-center gap-1">
+                                        KS Puttaswamy v. UOI
+                                        <button class="hover:text-error"><span class="material-symbols-outlined text-[14px]">close</span></button>
+</span>
+</div>
+<div class="relative">
+<input class="w-full bg-surface-container-lowest border border-[#E7E5DE] rounded-lg px-3 py-2 pl-9 font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary-container transition-colors" placeholder="Search acts or cases..." type="text"/>
+<span class="material-symbols-outlined absolute left-2.5 top-2.5 text-outline-variant text-[18px]">search</span>
+</div>
+</div>
+<!-- AI Suggestion Trigger -->
+<div class="pt-4 border-t border-[#E7E5DE]">
+<button class="w-full flex items-center justify-center gap-2 bg-surface-container border border-primary-container text-primary-container py-2 rounded-lg font-label-caps text-label-caps hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-[16px]">auto_awesome</span>
+                                    AI Generate Explanations
+                                </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>NyayaAI Academy - Content CMS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&amp;family=Inter:wght@400;600&amp;family=Manrope:wght@600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-error-container": "#93000a",
+                      "primary-container": "#172554",
+                      "outline-variant": "#c6c5d0",
+                      "on-secondary-container": "#683700",
+                      "error-container": "#ffdad6",
+                      "inverse-primary": "#b7c4fd",
+                      "on-surface-variant": "#45464f",
+                      "surface-container-highest": "#e2e3e0",
+                      "on-secondary-fixed-variant": "#6d3a00",
+                      "inverse-surface": "#2f312f",
+                      "primary-fixed": "#dce1ff",
+                      "on-primary-fixed-variant": "#374475",
+                      "surface": "#f9f9f6",
+                      "tertiary": "#001800",
+                      "error": "#ba1a1a",
+                      "secondary": "#8f4e00",
+                      "on-primary": "#ffffff",
+                      "tertiary-fixed-dim": "#72de5c",
+                      "on-tertiary-fixed-variant": "#035300",
+                      "primary": "#000f3f",
+                      "on-background": "#1a1c1b",
+                      "on-primary-container": "#808dc2",
+                      "secondary-fixed": "#ffdcc2",
+                      "tertiary-container": "#013000",
+                      "secondary-fixed-dim": "#ffb77a",
+                      "secondary-container": "#fe9832",
+                      "on-secondary": "#ffffff",
+                      "surface-dim": "#dadad7",
+                      "surface-bright": "#f9f9f6",
+                      "surface-container-low": "#f4f4f1",
+                      "on-secondary-fixed": "#2e1500",
+                      "surface-tint": "#4f5c8e",
+                      "on-error": "#ffffff",
+                      "on-tertiary": "#ffffff",
+                      "inverse-on-surface": "#f1f1ee",
+                      "surface-variant": "#e2e3e0",
+                      "surface-container": "#eeeeeb",
+                      "on-surface": "#1a1c1b",
+                      "on-tertiary-container": "#38a429",
+                      "primary-fixed-dim": "#b7c4fd",
+                      "on-primary-fixed": "#071747",
+                      "outline": "#767680",
+                      "on-tertiary-fixed": "#012200",
+                      "tertiary-fixed": "#8dfc75",
+                      "background": "#f9f9f6",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-container-high": "#e8e8e5"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "chat-gap": "12px",
+                      "gutter": "24px",
+                      "margin-desktop": "48px",
+                      "base_unit": "8px",
+                      "margin-mobile": "16px"
+              },
+              "fontFamily": {
+                      "body-lg": ["Inter"],
+                      "h1": ["Manrope"],
+                      "citation": ["IBM Plex Mono"],
+                      "h1-mobile": ["Manrope"],
+                      "h2": ["Manrope"],
+                      "body-md": ["Inter"],
+                      "label-caps": ["Inter"]
+              },
+              "fontSize": {
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "h1": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "citation": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                      "h1-mobile": ["30px", {"lineHeight": "36px", "fontWeight": "700"}],
+                      "h2": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "label-caps": ["12px", {"lineHeight": "16px", "fontWeight": "600"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        /* Ambient Shadows & Tonal Layering */
+        .elevation-1 { box-shadow: 0 2px 12px rgba(23, 37, 84, 0.06); }
+        .elevation-2 { box-shadow: 0 8px 24px rgba(23, 37, 84, 0.10); }
+        
+        /* Subtle UI Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #e2e3e0; border-radius: 9999px; }
+        ::-webkit-scrollbar-thumb:hover { background: #c6c5d0; }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased overflow-hidden flex h-screen w-full">
+<!-- SideNavBar (From JSON) -->
+<aside class="bg-surface border-r border-outline-variant shadow-sm hidden md:flex flex-col h-full py-base_unit docked left-0 w-64 z-20 flex-shrink-0 relative">
+<!-- Brand Area -->
+<div class="px-6 py-8 flex flex-col items-start border-b border-outline-variant/50">
+<h1 class="font-h2 text-h2 font-bold text-primary tracking-tight">NyayaAI Academy</h1>
+<p class="font-label-caps text-label-caps text-on-surface-variant mt-1">Admin Portal</p>
+</div>
+<!-- Navigation Links -->
+<nav class="flex-1 overflow-y-auto py-6 flex flex-col gap-2 px-3">
+<!-- Dashboard (Inactive) -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+<span class="font-body-md text-body-md font-medium">Dashboard</span>
+</a>
+<!-- Content CMS (Active based on prompt context) -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-surface-container text-primary font-bold border-r-4 border-primary transition-colors duration-200 opacity-80 scale-[0.99]" href="#">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">edit_note</span>
+<span class="font-body-md text-body-md">Content CMS</span>
+</a>
+<!-- User Analytics (Inactive) -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined text-[20px]">analytics</span>
+<span class="font-body-md text-body-md font-medium">User Analytics</span>
+</a>
+<!-- Quiz Builder (Inactive) -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined text-[20px]">quiz</span>
+<span class="font-body-md text-body-md font-medium">Quiz Builder</span>
+</a>
+<!-- Platform Settings (Inactive) -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+<span class="font-body-md text-body-md font-medium">Platform Settings</span>
+</a>
+</nav>
+<!-- Primary CTA from SideNav JSON -->
+<div class="px-6 py-4">
+<button class="w-full bg-primary-container text-on-primary text-center py-3 rounded-full font-label-caps text-label-caps font-semibold hover:bg-primary transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                Draft New Lesson
+            </button>
+</div>
+<!-- Footer Links from SideNav JSON -->
+<div class="mt-auto border-t border-outline-variant/50 pt-4 pb-6 px-3 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-2 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-[18px]">help_center</span>
+<span class="font-label-caps text-label-caps">Support</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-[18px]">logout</span>
+<span class="font-label-caps text-label-caps">Sign Out</span>
+</a>
+<!-- User Profile Snippet inside Footer area -->
+<div class="mt-4 px-4 flex items-center gap-3">
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-container border border-outline-variant flex-shrink-0">
+<img alt="Admin Profile" class="w-full h-full object-cover" data-alt="A professional, minimalist headshot illustration of an authoritative legal administrator, wearing a dark navy suit against a clean, off-white studio background. High-key lighting, modern corporate aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4GB6qeE1l1o9QmuaSH51A-fWP86KpGxaylOdRy0l2wEY7jo_Z_EB283meUr4NTD_Arg_9NlH0NmZp0lHl301bP3Nlda_pw5U-nonVZp36IM2T50BwHUOG_ZzwYpddbzbs485wsCLvl2E2e2zH6aDu2lzuZ4m5PJNTJUIEUlFF8c2y_ewp8yHc8ZwTI0URGc7A86HnjVD4mW0jlC2tSo9fAQgoi0GVkqtyENFyDcf2_Z3SPpeMk191IA"/>
+</div>
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-primary">Admin Profile</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 flex flex-col w-full min-w-0 bg-background relative overflow-hidden">
+<!-- TopNavBar (From JSON - serving as main header) -->
+<header class="bg-surface-container-lowest border-b border-outline-variant shadow-sm z-10 docked full-width top-0 w-full">
+<div class="flex justify-between items-center w-full px-gutter h-16 max-w-[1200px] mx-auto">
+<!-- Left side - Context (Product Name from JSON used as section identifier here) -->
+<div class="flex items-center gap-6">
+<h2 class="font-h1 text-h1 font-black text-primary tracking-tight md:text-[24px]">NyayaAI Admin</h2>
+<nav class="hidden lg:flex items-center gap-6 border-l border-outline-variant pl-6 h-8">
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-secondary transition-all pb-1 border-b-2 border-transparent" href="#">Directives</a>
+<a class="font-label-caps text-label-caps text-primary border-b-2 border-primary pb-1 transition-opacity duration-150" href="#">Compliance</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-secondary transition-all pb-1 border-b-2 border-transparent" href="#">Academy Logs</a>
+</nav>
+</div>
+<!-- Right side Actions -->
+<div class="flex items-center gap-4">
+<!-- Icon Actions -->
+<button class="p-2 text-on-surface-variant hover:bg-surface-container rounded-full transition-colors flex items-center justify-center relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container rounded-full transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined">gavel</span>
+</button>
+<div class="w-px h-6 bg-outline-variant mx-1"></div>
+<!-- Trailing Primary Action -->
+<button class="bg-primary-container text-on-primary px-4 py-2 rounded-full font-label-caps text-label-caps font-semibold hover:bg-primary transition-colors">
+                        Publish Changes
+                    </button>
+<!-- Profile Avatar (Mobile fallback or consistent top right) -->
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-container border border-outline ml-2 md:hidden">
+<img alt="Legal Expert Avatar" class="w-full h-full object-cover" data-alt="A minimalist avatar icon representing a legal expert, clean vector style, navy blue lines on off-white background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2WClRo4ONHTjd3T_67EDC2nq5XUT9wWWJPIY1nCAK0WtxGqytCJ9JP8YXo0sOS-_3AuxliGf-d8BN82tTg0RZWR4P-6H-FXx_c3_O7cxsNlvssHWQiZ7NrmTDtjj4sOXEOLBa_0acMWHt5u6v9R2Ly2SYXjfbVJ9OJ9MZEZWM4SbKQi3SW9s8cUiGRwhQaPvK4Jt-KGf0ZQFYIJ6MIpoLjZ03isFsYUVwp9f1ybUKyoA9k6SsoJg4Hw"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Scrollable Page Content -->
+<div class="flex-1 overflow-y-auto p-gutter lg:p-margin-desktop w-full max-w-[1200px] mx-auto pb-24">
+<!-- Page Header & Saffron CTA requested by User -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+<div>
+<h1 class="font-h1 text-h1-mobile md:text-h1 text-primary mb-2">Content Management</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">Manage curriculum, draft legal modules, and oversee publishing status across the academy.</p>
+</div>
+<button class="bg-secondary-container text-on-secondary-container px-6 py-3 rounded-full font-label-caps text-label-caps font-bold tracking-wide hover:opacity-90 transition-opacity shadow-sm flex items-center gap-2 flex-shrink-0 self-start md:self-auto">
+<span class="material-symbols-outlined text-[18px]">add_circle</span>
+                    New Lesson
+                </button>
+</div>
+<!-- Stats Overview Cards (Bento Grid Style) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+<!-- Stat Card 1 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 elevation-1 flex flex-col relative overflow-hidden group">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-surface-container rounded-full opacity-50 group-hover:scale-110 transition-transform duration-500 pointer-events-none"></div>
+<span class="material-symbols-outlined text-on-surface-variant mb-4">school</span>
+<h3 class="font-label-caps text-label-caps text-on-surface-variant mb-1 uppercase tracking-wider">Total Students</h3>
+<div class="font-h1 text-h1 text-primary">12,450</div>
+<div class="mt-2 text-[12px] font-medium text-tertiary-container flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">trending_up</span> +8% this month
+                    </div>
+</div>
+<!-- Stat Card 2 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 elevation-1 flex flex-col relative overflow-hidden group">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-surface-container rounded-full opacity-50 group-hover:scale-110 transition-transform duration-500 pointer-events-none"></div>
+<span class="material-symbols-outlined text-on-surface-variant mb-4">menu_book</span>
+<h3 class="font-label-caps text-label-caps text-on-surface-variant mb-1 uppercase tracking-wider">Lessons Published</h3>
+<div class="font-h1 text-h1 text-primary">342</div>
+<div class="mt-2 text-[12px] font-medium text-on-surface-variant flex items-center gap-1">
+                        Across 12 Categories
+                    </div>
+</div>
+<!-- Stat Card 3 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 elevation-1 flex flex-col relative overflow-hidden group">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-surface-container rounded-full opacity-50 group-hover:scale-110 transition-transform duration-500 pointer-events-none"></div>
+<span class="material-symbols-outlined text-on-surface-variant mb-4">workspace_premium</span>
+<h3 class="font-label-caps text-label-caps text-on-surface-variant mb-1 uppercase tracking-wider">Avg. Quiz Score</h3>
+<div class="font-h1 text-h1 text-primary">86%</div>
+<div class="mt-2 text-[12px] font-medium text-tertiary-container flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">trending_up</span> +2.1% improvement
+                    </div>
+</div>
+</div>
+<!-- Main Content Area: Split Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+<!-- Left Column: Active Curriculum List -->
+<div class="lg:col-span-2 bg-surface-container-lowest border border-outline-variant rounded-xl elevation-1 overflow-hidden">
+<div class="px-6 py-5 border-b border-outline-variant flex justify-between items-center bg-surface-bright">
+<h3 class="font-h2 text-h2 text-primary text-[20px]">Active Curriculum</h3>
+<div class="flex gap-2">
+<button class="p-1.5 text-on-surface-variant hover:bg-surface-container rounded-md transition-colors"><span class="material-symbols-outlined text-[20px]">filter_list</span></button>
+<button class="p-1.5 text-on-surface-variant hover:bg-surface-container rounded-md transition-colors"><span class="material-symbols-outlined text-[20px]">search</span></button>
+</div>
+</div>
+<div class="overflow-x-auto w-full">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface border-b border-outline-variant">
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Lesson Title</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Status</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider hidden sm:table-cell">Author</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider text-right">Last Updated</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/50">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low transition-colors group cursor-pointer">
+<td class="px-6 py-4">
+<div class="font-body-md text-body-md font-medium text-primary mb-1">Fundamental Rights: Article 21</div>
+<div class="font-citation text-citation text-on-surface-variant text-[12px]">MOD-CON-01a</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-surface-container border border-outline-variant text-on-surface-variant">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary mr-1.5"></span> Draft
+                                        </span>
+</td>
+<td class="px-6 py-4 font-body-md text-body-md text-on-surface-variant hidden sm:table-cell">A. Sharma, Esq.</td>
+<td class="px-6 py-4 font-citation text-citation text-on-surface-variant text-[13px] text-right">Just now</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-low transition-colors group cursor-pointer">
+<td class="px-6 py-4">
+<div class="font-body-md text-body-md font-medium text-primary mb-1">Corporate Compliance Basics</div>
+<div class="font-citation text-citation text-on-surface-variant text-[12px]">MOD-CORP-11</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#e8f5e9] text-[#2e7d32] border border-[#c8e6c9]">
+<span class="w-1.5 h-1.5 rounded-full bg-[#4caf50] mr-1.5"></span> Published
+                                        </span>
+</td>
+<td class="px-6 py-4 font-body-md text-body-md text-on-surface-variant hidden sm:table-cell">NyayaAI System</td>
+<td class="px-6 py-4 font-citation text-citation text-on-surface-variant text-[13px] text-right">Oct 24, 2023</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low transition-colors group cursor-pointer">
+<td class="px-6 py-4">
+<div class="font-body-md text-body-md font-medium text-primary mb-1">Criminal Procedure Code Overview</div>
+<div class="font-citation text-citation text-on-surface-variant text-[12px]">MOD-CRM-04</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#e8f5e9] text-[#2e7d32] border border-[#c8e6c9]">
+<span class="w-1.5 h-1.5 rounded-full bg-[#4caf50] mr-1.5"></span> Published
+                                        </span>
+</td>
+<td class="px-6 py-4 font-body-md text-body-md text-on-surface-variant hidden sm:table-cell">R. Desai, Sr. Adv</td>
+<td class="px-6 py-4 font-citation text-citation text-on-surface-variant text-[13px] text-right">Oct 20, 2023</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-low transition-colors group cursor-pointer">
+<td class="px-6 py-4">
+<div class="font-body-md text-body-md font-medium text-primary mb-1">Contract Law Exceptions</div>
+<div class="font-citation text-citation text-on-surface-variant text-[12px]">MOD-CIV-08</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-surface-container border border-outline-variant text-on-surface-variant">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary mr-1.5"></span> Draft
+                                        </span>
+</td>
+<td class="px-6 py-4 font-body-md text-body-md text-on-surface-variant hidden sm:table-cell">A. Sharma, Esq.</td>
+<td class="px-6 py-4 font-citation text-citation text-on-surface-variant text-[13px] text-right">Oct 18, 2023</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-6 py-4 border-t border-outline-variant bg-surface flex justify-center">
+<button class="font-label-caps text-label-caps text-primary hover:text-primary-container transition-colors font-medium">View All Records</button>
+</div>
+</div>
+<!-- Right Column: Editor Preview Card (Glassmorphism/Tactile inspired) -->
+<div class="lg:col-span-1 bg-surface-container-lowest border border-outline-variant rounded-xl elevation-2 p-6 flex flex-col h-[500px] sticky top-6">
+<div class="flex justify-between items-start mb-6">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">visibility</span>
+<h3 class="font-h2 text-h2 text-[18px] text-primary">Live Preview</h3>
+</div>
+<span class="bg-surface-container text-on-surface-variant text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider border border-outline-variant">Drafting</span>
+</div>
+<!-- Simulated Canvas for the lesson -->
+<div class="flex-1 border border-outline-variant/50 rounded-lg bg-surface p-5 overflow-y-auto relative custom-scrollbar">
+<!-- Aesthetic Ashoka Chakra structural hint in background -->
+<div class="absolute -right-12 -top-12 w-40 h-40 border-[2px] border-outline-variant/20 rounded-full pointer-events-none"></div>
+<div class="mb-4 inline-block bg-surface-container-low border border-outline-variant px-3 py-1 rounded-full font-citation text-citation text-[11px] text-primary">
+                            Module: Constitutional Law
+                        </div>
+<h4 class="font-h1 text-[22px] leading-tight text-primary mb-4 font-bold">Fundamental Rights: Protection of Life and Personal Liberty (Article 21)</h4>
+<p class="font-body-md text-[14px] leading-relaxed text-on-background mb-4">
+                            No person shall be deprived of his life or personal liberty except according to procedure established by law. This article is the heart of the Constitution, arguably the most organic and progressive provision.
+                        </p>
+<div class="bg-surface-container-lowest border border-outline-variant p-4 rounded-lg shadow-sm my-4">
+<h5 class="font-label-caps text-label-caps text-primary mb-2 flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">gavel</span> Key Precedent
+                            </h5>
+<p class="font-body-md text-[13px] text-on-surface-variant">
+                                In Maneka Gandhi v. Union of India (1978), the Supreme Court expanded the scope of Article 21, stating that the 'procedure established by law' must be fair, just, and reasonable, not fanciful, oppressive, or arbitrary.
+                            </p>
+</div>
+<!-- AI Suggestion Bubble -->
+<div class="flex gap-chat-gap mt-6 animate-pulse">
+<div class="w-6 h-6 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-on-primary text-[12px]">smart_toy</span>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl rounded-tl-none p-3 shadow-sm">
+<p class="font-body-md text-[13px] text-on-background">Consider adding a quiz question here regarding the distinction between 'due process' and 'procedure established by law'.</p>
+</div>
+</div>
+</div>
+<div class="mt-6 flex gap-3">
+<button class="flex-1 border border-outline text-on-surface-variant py-2 rounded-lg font-label-caps text-label-caps font-semibold hover:bg-surface-container transition-colors">Discard</button>
+<button class="flex-1 bg-primary text-on-primary py-2 rounded-lg font-label-caps text-label-caps font-semibold hover:bg-primary-container transition-colors shadow-sm">Save Draft</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

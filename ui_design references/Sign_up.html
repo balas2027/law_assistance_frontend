@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>NyayaAI Academy - Sign Up</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&amp;family=Inter:wght@400;600&amp;family=Manrope:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-error-container": "#93000a",
+                      "primary-container": "#172554",
+                      "outline-variant": "#c6c5d0",
+                      "on-secondary-container": "#683700",
+                      "error-container": "#ffdad6",
+                      "inverse-primary": "#b7c4fd",
+                      "on-surface-variant": "#45464f",
+                      "surface-container-highest": "#e2e3e0",
+                      "on-secondary-fixed-variant": "#6d3a00",
+                      "inverse-surface": "#2f312f",
+                      "primary-fixed": "#dce1ff",
+                      "on-primary-fixed-variant": "#374475",
+                      "surface": "#f9f9f6",
+                      "tertiary": "#001800",
+                      "error": "#ba1a1a",
+                      "secondary": "#8f4e00",
+                      "on-primary": "#ffffff",
+                      "tertiary-fixed-dim": "#72de5c",
+                      "on-tertiary-fixed-variant": "#035300",
+                      "primary": "#000f3f",
+                      "on-background": "#1a1c1b",
+                      "on-primary-container": "#808dc2",
+                      "secondary-fixed": "#ffdcc2",
+                      "tertiary-container": "#013000",
+                      "secondary-fixed-dim": "#ffb77a",
+                      "secondary-container": "#fe9832",
+                      "on-secondary": "#ffffff",
+                      "surface-dim": "#dadad7",
+                      "surface-bright": "#f9f9f6",
+                      "surface-container-low": "#f4f4f1",
+                      "on-secondary-fixed": "#2e1500",
+                      "surface-tint": "#4f5c8e",
+                      "on-error": "#ffffff",
+                      "on-tertiary": "#ffffff",
+                      "inverse-on-surface": "#f1f1ee",
+                      "surface-variant": "#e2e3e0",
+                      "surface-container": "#eeeeeb",
+                      "on-surface": "#1a1c1b",
+                      "on-tertiary-container": "#38a429",
+                      "primary-fixed-dim": "#b7c4fd",
+                      "on-primary-fixed": "#071747",
+                      "outline": "#767680",
+                      "on-tertiary-fixed": "#012200",
+                      "tertiary-fixed": "#8dfc75",
+                      "background": "#f9f9f6",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-container-high": "#e8e8e5"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "chat-gap": "12px",
+                      "gutter": "24px",
+                      "margin-desktop": "48px",
+                      "base_unit": "8px",
+                      "margin-mobile": "16px"
+              },
+              "fontFamily": {
+                      "body-lg": ["Inter"],
+                      "h1": ["Manrope"],
+                      "citation": ["IBM Plex Mono"],
+                      "h1-mobile": ["Manrope"],
+                      "h2": ["Manrope"],
+                      "body-md": ["Inter"],
+                      "label-caps": ["Inter"]
+              },
+              "fontSize": {
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "h1": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "citation": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                      "h1-mobile": ["30px", {"lineHeight": "36px", "fontWeight": "700"}],
+                      "h2": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "label-caps": ["12px", {"lineHeight": "16px", "fontWeight": "600"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        .chakra-spin {
+            animation: spin 8s linear infinite;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex antialiased">
+<!-- Left Column: Brand Panel (Hidden on mobile) -->
+<div class="hidden lg:flex flex-col w-[45%] bg-primary-container text-on-primary p-margin-desktop relative overflow-hidden justify-between">
+<!-- Abstract Background Graphic -->
+<div class="absolute inset-0 z-0 opacity-20" data-alt="A striking digital installation art piece featuring glowing, generative geometric shapes suspended in a vast, dark gallery space. The artwork relies on a sophisticated palette of deep navy blacks and pristine whites, punctuated by intense accents of vibrant saffron orange. Subtle architectural lines evoke a modern institutional setting. The mood is authoritative, serene, and technologically advanced, fitting for a premium legal AI platform." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC8thJXz6No10jAHEUzA6NUQ5uSQixlfz7YWpv2kKuqruk_jkTv0cxrL1ek75xFFpbscyigmgrJ0CzYmnJoE92xuOITp_hK68_ZnFoc6QmXBqng2zW3ew7SB8Bq6-hxooD_HBEo1FLpFcoG7bY9YrdJEnhsJ26VCpeA2PgfUPnL3eCDN4xfemNf_FPbTvylFVLaqwhWKvt2yr5NDlJ1Mojl0a40Qsb3jzufd9v2uQDEcGem3FY8uw6RRA')"></div>
+<!-- Subtle gradient overlay to ensure text readability -->
+<div class="absolute inset-0 bg-gradient-to-b from-primary-container/80 via-primary-container/90 to-primary-container z-0"></div>
+<!-- Top: Logo -->
+<div class="relative z-10 flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary-container" data-weight="fill" style="font-size: 32px;">account_balance</span>
+<span class="font-h2 text-h2 text-on-primary">NyayaAI</span>
+</div>
+<!-- Middle: Tagline & Motif -->
+<div class="relative z-10 flex flex-col gap-6 max-w-lg mt-24">
+<!-- Ashoka Chakra inspired motif -->
+<div class="w-16 h-16 rounded-full border-[2px] border-secondary-container/30 border-t-secondary-container chakra-spin mb-4"></div>
+<h1 class="font-h1 text-h1 text-on-primary">
+                Join 10,000+ legal scholars.
+            </h1>
+<p class="font-body-lg text-body-lg text-on-primary-container">
+                Experience the next generation of institutional-grade legal research. Fast, precise, and unequivocally reliable.
+            </p>
+</div>
+<!-- Bottom: Trust Indicators -->
+<div class="relative z-10 flex items-center gap-4 mt-auto">
+<div class="flex -space-x-3">
+<div class="w-10 h-10 rounded-full border-2 border-primary-container bg-surface-variant bg-cover bg-center" data-alt="Close up portrait of a professional Indian lawyer in a modern law office setting. High key lighting, sharp focus, wearing a dark suit. The mood is confident and authoritative." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDru2SZ9HeiDJ-1pI8PDx1RSPBc6M-2RgsKOGIC1PP1dcfXQXLEQlEH4shC3iajFKW9XBLygFznM4TBSJ_5SUBzp1LBLSzIeSKz_fSTvGhPf07lvuRrKsBeX5ldUiEQDp3SIuTefwu7nBQ6f-mICnNVize0Syn9TCiNjJnxg941Eufvn8mki6OR7HWUWupSWb2LvfKaCZNmeYkr9uNF_BYREkopz1XyB2JXpacXXPjWz7MzBWm6X0VrAA')"></div>
+<div class="w-10 h-10 rounded-full border-2 border-primary-container bg-surface-variant bg-cover bg-center" data-alt="Portrait of a focused female legal scholar reviewing documents in a contemporary library. Warm ambient lighting, highly detailed, expressing intellectual rigor and professionalism." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCGVtvAYA38BxYoq2lcebUhaMZxNWKcZZE0uBGC4Zn8cjvHnzcgri6h0Wt5-zMnCd5rYF3QzbuoSOOPabY6Jsf3UdOoGaALESMOJxSkybsO_t7vKHDqVUarMzqU92nV_VoAx_YJvDeFr3auIDW4beC0CAFrrx417l7n5x2GjnwMtYVAflrHawh94N7GAe4NLmsYsdzcsIQT9HqskDNgvENxVNI2Wzh0pe5ySeWrvruWJwdJJuKEowX9Xw')"></div>
+<div class="w-10 h-10 rounded-full border-2 border-primary-container bg-surface-variant bg-cover bg-center" data-alt="Portrait of a senior Indian judge in a refined, minimalist courtroom environment. Soft natural light, sharp focus on the face, conveying wisdom, trust, and institutional authority." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCV45u_S4M33iXi19cff5WbLfPMh5vJAh9rfOdXAAJPzG1nzpZxYbluiJ8TwmwUN_gfjclhFNDca2nKQIWucJ71v2LKb-uQ_fYd6sDWWta3j1EwMfbko91L6lzscNwJDChElL1IPG7mhcYp3dqLV2B73WpOZQBz-whsdRcyYxTIKaAiWZzZs-MjArDIAr-0LHgVmcp3GKXMnf0gRIK06ZcCmiSLYtWJFxhNrFoZj4pEqi1ZYibAlvLOhw')"></div>
+</div>
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-on-primary">Trusted by</span>
+<span class="font-body-md text-body-md text-on-primary-container text-sm">Top Tier Firms &amp; Universities</span>
+</div>
+</div>
+</div>
+<!-- Right Column: Form Canvas -->
+<div class="flex-1 flex items-center justify-center p-margin-mobile md:p-margin-desktop bg-surface relative">
+<!-- Subtle noise texture or plain background -->
+<div class="absolute inset-0 bg-surface z-0 pointer-events-none"></div>
+<div class="w-full max-w-[480px] bg-surface-container-lowest rounded-xl border border-surface-variant shadow-[0_2px_12px_rgba(23,37,84,0.06)] p-8 md:p-10 relative z-10">
+<!-- Mobile Logo (Visible only on small screens) -->
+<div class="flex lg:hidden items-center gap-2 mb-8 justify-center">
+<span class="material-symbols-outlined text-primary" data-weight="fill" style="font-size: 28px;">account_balance</span>
+<span class="font-h2 text-h2 text-primary">NyayaAI</span>
+</div>
+<!-- Form Header -->
+<div class="mb-8">
+<h2 class="font-h1-mobile text-h1-mobile md:font-h2 md:text-h2 text-primary mb-2">Create Account</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Start your journey in AI-assisted legal research.</p>
+</div>
+<!-- Social Login -->
+<div class="flex flex-col gap-4 mb-8">
+<button class="w-full h-12 rounded-full border border-outline text-primary font-label-caps text-label-caps flex items-center justify-center gap-3 hover:bg-surface-container-low transition-colors duration-200">
+<img alt="Google Logo" class="w-5 h-5" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGCJOx5U3Ela0JKgcPuPWhJA3oDv1TIFe1RxVRn8atpnPLK5d1WEY2zaq9gfsvykly6Qw_nJvI2llLjGCl7_0A-YOJoqnRll8LC900dZmjk1qSwfj0VuYstgj65NlMLrToeNHrST_ekNHBlYvGZ9zfSUeA9SDsDKjxmLcSId48R1s_yzD6aIwYNgtm-Pq4zOQBQUwUxfti13RZxVwjtv3qBDk-vccGJkXe7WYyicgkbpV0Yf2Itjl1gQ"/>
+                    Sign up with Google
+                </button>
+<button class="w-full h-12 rounded-full border border-outline text-primary font-label-caps text-label-caps flex items-center justify-center gap-3 hover:bg-surface-container-low transition-colors duration-200">
+<img alt="LinkedIn Logo" class="w-5 h-5" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnRrFaXu65RPi1DE50pUsmEGcLmhpYIMEa7x16v7t18sQ2J0SMC5mPUTUEkK9cIka9-wF-L9h6yTaT3hre4ugSS54D-jYF2Ds0jsm2yc0glhYhiX-D-3oyAkRIMGPmS11Mj57HXAvAdQJhcx8R7d2v8-VCLQZQfrdeOmCPpGl521uKw1ahyWRysGklAh3cWwqHy5ik0RF9DAhuUXiN7nyouaj7pGvBADagCj9YSyeZVlacY7BtYulPiA"/>
+                    Sign up with LinkedIn
+                </button>
+</div>
+<!-- Divider -->
+<div class="flex items-center mb-8">
+<div class="flex-1 border-t border-surface-variant"></div>
+<span class="px-4 font-citation text-citation text-on-surface-variant uppercase tracking-wider text-xs">Or register with email</span>
+<div class="flex-1 border-t border-surface-variant"></div>
+</div>
+<!-- Standard Form -->
+<form class="flex flex-col gap-5">
+<div class="flex flex-col gap-1.5">
+<label class="font-label-caps text-label-caps text-on-surface" for="fullName">Full Name</label>
+<input class="w-full h-12 rounded-xl border border-surface-variant bg-surface-container-lowest px-4 font-body-md text-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-outline-variant shadow-sm" id="fullName" placeholder="e.g. Aditi Sharma" type="text"/>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="font-label-caps text-label-caps text-on-surface" for="email">Institutional Email</label>
+<input class="w-full h-12 rounded-xl border border-surface-variant bg-surface-container-lowest px-4 font-body-md text-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-outline-variant shadow-sm" id="email" placeholder="name@university.edu" type="email"/>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="font-label-caps text-label-caps text-on-surface" for="password">Password</label>
+<div class="relative">
+<input class="w-full h-12 rounded-xl border border-surface-variant bg-surface-container-lowest px-4 pr-12 font-body-md text-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-outline-variant shadow-sm" id="password" placeholder="Create a strong password" type="password"/>
+<button class="absolute right-4 top-1/2 -translate-y-1/2 text-outline-variant hover:text-on-surface-variant transition-colors" type="button">
+<span class="material-symbols-outlined text-[20px]">visibility_off</span>
+</button>
+</div>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="font-label-caps text-label-caps text-on-surface" for="role">Select Role</label>
+<div class="relative">
+<select class="w-full h-12 rounded-xl border border-surface-variant bg-surface-container-lowest px-4 pr-10 font-body-md text-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all appearance-none shadow-sm cursor-pointer" id="role">
+<option disabled="" selected="" value="">Choose your primary domain</option>
+<option value="student">Law Student</option>
+<option value="professional">Legal Professional</option>
+<option value="academic">Academic Researcher</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline-variant pointer-events-none">expand_more</span>
+</div>
+</div>
+<!-- Terms -->
+<div class="mt-2 flex items-start gap-3">
+<div class="flex items-center h-6">
+<input class="w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary bg-surface-container-lowest cursor-pointer" id="terms" type="checkbox"/>
+</div>
+<label class="font-body-md text-[14px] leading-[20px] text-on-surface-variant" for="terms">
+                        I agree to the <a class="text-primary underline hover:text-secondary-container transition-colors" href="#">Terms of Service</a> and <a class="text-primary underline hover:text-secondary-container transition-colors" href="#">Privacy Policy</a>.
+                    </label>
+</div>
+<!-- Primary CTA -->
+<button class="w-full h-12 mt-4 rounded-full bg-secondary-container text-on-secondary-container font-label-caps text-label-caps uppercase tracking-wider flex items-center justify-center transition-all hover:bg-secondary hover:text-on-secondary shadow-sm" type="submit">
+                    Create Account
+                </button>
+</form>
+<!-- Footer Login Link -->
+<div class="mt-8 text-center">
+<p class="font-body-md text-body-md text-on-surface-variant">
+                    Already have an account? 
+                    <a class="font-label-caps text-label-caps text-primary hover:text-secondary-container transition-colors ml-1 uppercase tracking-wide" href="#">Log In</a>
+</p>
+</div>
+</div>
+</div>
+</body></html>

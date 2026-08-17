@@ -1,0 +1,124 @@
+# TASK: Convert static HTML references into a component-based React app
+
+## CONTEXT
+This project has static HTML mockups (Stitch-generated) inside `src/ui_design references/`.
+Your job is to rebuild these as a production React app inside `src/`, using the SAME
+visual design (colors, spacing, typography, layout) but as reusable, typed React
+components with proper routing and state management. Do NOT copy inline styles as-is —
+extract them into Tailwind classes (or the existing CSS setup) while preserving exact
+visual output.
+
+## SOURCE → TARGET MAPPING
+Read each file fully before coding. Map as follows:
+
+| Source file | Route | Target page component |
+|---|---|---|
+| home.html | `/` | `app/(marketing)/page.tsx` |
+| Sign_in.html | `/login` | `app/(auth)/login/page.tsx` |
+| Sign_up.html | `/signup` | `app/(auth)/signup/page.tsx` |
+| ai_chat_interface_empty.html | `/chat` | `app/(app)/chat/page.tsx` |
+| ai_with_chat.html | `/chat/:chatId` | `app/(app)/chat/[chatId]/page.tsx` |
+| nyayaai_academy.html | `/academy/path/:courseId` | `app/(app)/academy/path/[courseId]/page.tsx` |
+| ai_academy_article.html | `/academy/lesson/:lessonId` | `app/(app)/academy/lesson/[lessonId]/page.tsx` |
+| "NyayaAI Academy - Fundamental...html" (quiz file) | `/academy/quiz/:quizId` | `app/(app)/academy/quiz/[quizId]/page.tsx` |
+| admin_dashboard.html | `/admin/dashboard` | `app/(admin)/dashboard/page.tsx` |
+| admin_quiz_maker.html | `/admin/quiz-builder/:id` | `app/(admin)/quiz-builder/[id]/page.tsx` |
+
+## TECH STACK (do not deviate)
+- React 18 + Vite (already scaffolded)
+- react-router-dom v6 for routing (since this is Vite, not Next.js — convert the
+  `app/` folder-based paths above into a `routes/` structure using react-router,
+  see ROUTING section below)
+- Zustand for global state (auth user, chat session, academy progress)
+- React Context only for theme/UI-local state if truly needed
+- Tailwind CSS for styling — extract all inline/embedded CSS from the HTML files
+  into Tailwind utility classes matching the existing design tokens
+- TypeScript for all files (.tsx)
+
+## ROUTING (react-router-dom, since this is Vite not Next.js)
+Adjust the folder plan: keep the SAME component folder structure I gave you under
+`src/components/`, but routes live in `src/routes/` with react-router, like:
+
+src/
+├── routes/
+│   ├── router.tsx                 # createBrowserRouter config, all routes here
+│   ├── marketing/HomePage.tsx
+│   ├── auth/LoginPage.tsx
+│   ├── auth/SignupPage.tsx
+│   ├── app/AppLayout.tsx          # sidebar shell, <Outlet/>
+│   ├── app/chat/ChatPage.tsx
+│   ├── app/chat/ChatConversationPage.tsx
+│   ├── app/academy/AcademyPathPage.tsx
+│   ├── app/academy/LessonPage.tsx
+│   ├── app/academy/QuizPage.tsx
+│   ├── admin/AdminLayout.tsx      # admin sidebar shell, <Outlet/>
+│   ├── admin/DashboardPage.tsx
+│   └── admin/QuizBuilderPage.tsx
+├── components/                    # (use the structure already agreed: ui/, layout/, features/*, shared/)
+├── stores/                        # Zustand stores
+│   ├── authStore.ts
+│   ├── chatStore.ts
+│   ├── academyStore.ts
+│   └── adminStore.ts
+├── hooks/
+├── lib/
+│   ├── api/
+│   └── utils.ts
+├── types/
+└── App.tsx                        # wraps RouterProvider
+
+Use nested routes with layouts: `AppLayout` wraps chat + academy routes (shared
+sidebar), `AdminLayout` wraps admin routes (separate sidebar). Use `<Outlet />`.
+
+## EXECUTION STEPS (do in this exact order)
+1. Set up `src/routes/router.tsx` with all routes from the mapping table above,
+   using placeholder empty pages first — verify routing works before styling.
+2. Build `components/ui/*` primitives first (Button, Input, Badge, Card, Modal,
+   Dropdown, ProgressCircle, ProgressBar, Avatar, Tag, Tabs) by extracting the
+   repeated visual patterns you see across ALL the HTML files (same button style,
+   same card style, same badge pills like "Draft"/"Published" appear in multiple
+   files — build ONE component, reuse everywhere).
+3. Build `components/layout/*` (AppSidebar, AdminSidebar, Navbar, Footer, Topbar,
+   RightPanel) — extract from the repeated sidebar/nav markup across the HTML files.
+4. Convert each HTML file into its route page + feature components, one at a time,
+   in this order: home.html → Sign_in.html → Sign_up.html →
+   ai_chat_interface_empty.html → ai_with_chat.html → nyayaai_academy.html →
+   ai_academy_article.html → quiz file → admin_dashboard.html → admin_quiz_maker.html.
+   For each file:
+   a. Identify distinct visual "blocks" (cards, list items, panels) and create a
+      feature component per block under `components/features/<domain>/`.
+   b. Wire static content to props/types — do not hardcode data that should come
+      from state or API (e.g. lesson lists, quiz options, curriculum table rows).
+   c. Delete inline `<style>` blocks and re-implement with Tailwind classes,
+      matching spacing/colors/font-sizes as closely as possible to the source.
+5. Set up Zustand stores AFTER static UI is working:
+   - authStore: user, token, login(), logout(), signup()
+   - chatStore: messages, activeChat, sendMessage(), chatHistory
+   - academyStore: courses, currentLesson, quizProgress, xp, streak
+   - adminStore: curriculum list, draft lesson, quiz builder state
+6. Connect components to stores via hooks (`useChat`, `useAuth`, `useQuiz`,
+   `useCourseProgress`) — no direct store imports inside leaf UI components,
+   only inside page-level or feature container components.
+7. Add route guards: `(app)` and `(admin)` routes require `authStore.user` to be
+   set — redirect unauthenticated users to `/login`.
+8. Once every page renders and routes work, do a visual diff pass against each
+   original HTML file to confirm pixel-level design fidelity, then remove the
+   `src/ui_design references/` folder.
+
+## CONSTRAINTS
+- Every component must be typed (props interface, no `any`).
+- No component file should exceed ~150 lines — split further into sub-components
+  if a single HTML block is complex (e.g. the quiz builder option editor).
+- Reuse `components/ui/*` primitives everywhere — do not redefine a button style
+  inline in a feature component.
+- Keep state colocated in Zustand stores, not scattered `useState` across pages,
+  for anything that needs to persist across route changes (chat messages, quiz
+  progress, auth).
+- Confirm each step works (`npm run dev`, check the route in browser) before
+  moving to the next file in the conversion order.
+
+## DELIVERABLE
+A working Vite + React + TypeScript app where every route in the mapping table
+renders the equivalent of its source HTML file, built from reusable components,
+routed via react-router-dom, and backed by Zustand stores — ready to connect to
+the FastAPI backend endpoints already defined in `nyayaai-backend/app/api/v1/endpoints/`.

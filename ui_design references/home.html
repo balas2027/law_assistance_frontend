@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>NyayaAI - Indian Law Assistant</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&amp;family=Inter:wght@400;600&amp;family=Manrope:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface-variant": "#45464f",
+                        "inverse-primary": "#b7c4fd",
+                        "surface-tint": "#4f5c8e",
+                        "surface-dim": "#dadad7",
+                        "tertiary-fixed": "#8dfc75",
+                        "outline": "#767680",
+                        "on-tertiary-fixed-variant": "#035300",
+                        "secondary": "#8f4e00",
+                        "on-surface": "#1a1c1b",
+                        "primary": "#000f3f",
+                        "on-primary-container": "#808dc2",
+                        "primary-fixed-dim": "#b7c4fd",
+                        "surface-variant": "#e2e3e0",
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed-dim": "#72de5c",
+                        "on-secondary-fixed": "#2e1500",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-container": "#38a429",
+                        "surface-container-high": "#e8e8e5",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-fixed": "#012200",
+                        "tertiary": "#001800",
+                        "error": "#ba1a1a",
+                        "secondary-fixed": "#ffdcc2",
+                        "secondary-fixed-dim": "#ffb77a",
+                        "background": "#f9f9f6",
+                        "on-primary-fixed": "#071747",
+                        "inverse-surface": "#2f312f",
+                        "surface-container-low": "#f4f4f1",
+                        "on-secondary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-bright": "#f9f9f6",
+                        "on-secondary-container": "#683700",
+                        "on-error": "#ffffff",
+                        "surface": "#f9f9f6",
+                        "surface-container-highest": "#e2e3e0",
+                        "primary-container": "#172554",
+                        "surface-container": "#eeeeeb",
+                        "tertiary-container": "#013000",
+                        "on-background": "#1a1c1b",
+                        "inverse-on-surface": "#f1f1ee",
+                        "on-tertiary": "#ffffff",
+                        "outline-variant": "#c6c5d0",
+                        "on-primary-fixed-variant": "#374475",
+                        "secondary-container": "#fe9832",
+                        "on-secondary-fixed-variant": "#6d3a00",
+                        "primary-fixed": "#dce1ff",
+                        "saffron": "#FF9933"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px",
+                        "card": "12px"
+                    },
+                    "spacing": {
+                        "margin-desktop": "48px",
+                        "base_unit": "8px",
+                        "margin-mobile": "16px",
+                        "gutter": "24px",
+                        "chat-gap": "12px"
+                    },
+                    "fontFamily": {
+                        "h1-mobile": ["Manrope"],
+                        "h1": ["Manrope"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "h2": ["Manrope"],
+                        "label-caps": ["Inter"],
+                        "citation": ["IBM Plex Mono"]
+                    },
+                    "fontSize": {
+                        "h1-mobile": ["30px", {"lineHeight": "36px", "fontWeight": "700"}],
+                        "h1": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "h2": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                        "citation": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}]
+                    },
+                    "boxShadow": {
+                        "level-1": "0 2px 12px rgba(23, 37, 84, 0.06)",
+                        "level-2": "0 8px 24px rgba(23, 37, 84, 0.10)"
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #FAFAF7; color: #1a1c1b; }
+        .arc-bg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120%;
+            height: 120%;
+            background: conic-gradient(from 180deg at 50% 50%, rgba(23, 37, 84, 0) 0deg, rgba(255, 153, 51, 0.1) 180deg, rgba(23, 37, 84, 0) 360deg);
+            border-radius: 50%;
+            animation: rotate 20s linear infinite;
+            z-index: 0;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        @keyframes rotate {
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        .mockup-container {
+            transform: perspective(1000px) rotateY(-10deg) rotateX(5deg);
+            transition: transform 0.5s ease;
+        }
+        .mockup-container:hover {
+            transform: perspective(1000px) rotateY(0deg) rotateX(0deg);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-saffron selection:text-white flex flex-col min-h-screen">
+<!-- Navigation -->
+<header class="sticky top-0 z-50 bg-background/90 backdrop-blur-md border-b border-surface-variant transition-all duration-300">
+<div class="max-w-[1200px] mx-auto px-margin-mobile md:px-margin-desktop h-16 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="font-h2 text-h2 font-black text-primary tracking-tight">NyayaAI</span>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors font-medium" href="#">Law Assistance</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors font-medium" href="#">Learn</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors font-medium" href="#">Constitution</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors font-medium" href="#">Pricing</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors font-medium" href="#">About</a>
+</nav>
+<div class="hidden md:flex items-center gap-6">
+<div class="flex items-center gap-1 cursor-pointer group">
+<span class="font-body-md text-body-md text-on-surface-variant group-hover:text-primary transition-colors">EN</span>
+<span class="material-symbols-outlined text-sm text-on-surface-variant group-hover:text-primary">expand_more</span>
+</div>
+<a class="font-body-md text-body-md text-primary font-medium hover:opacity-80 transition-opacity" href="#">Sign In</a>
+<button class="bg-saffron text-white px-6 py-2.5 rounded-full font-label-caps text-label-caps uppercase tracking-wider hover:bg-orange-500 transition-colors shadow-level-1">Get Started</button>
+</div>
+<button class="md:hidden text-primary">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</header>
+<main class="flex-grow">
+<!-- Hero Section -->
+<section class="relative pt-20 pb-24 overflow-hidden">
+<div class="max-w-[1200px] mx-auto px-margin-mobile md:px-margin-desktop grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+<div class="relative z-10">
+<div class="inline-flex items-center gap-2 px-3 py-1 bg-primary/5 rounded-full mb-6 border border-primary/10">
+<span class="w-2 h-2 rounded-full bg-saffron animate-pulse"></span>
+<span class="font-label-caps text-label-caps text-primary tracking-wider uppercase">AI-POWERED · GROUNDED IN INDIAN LAW</span>
+</div>
+<h1 class="font-h1-mobile text-h1-mobile md:font-h1 md:text-h1 text-primary mb-6 text-balance">
+                        Understand the Law.<br/>Know Your Rights.
+                    </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-10 max-w-lg">
+                        Navigate complex Indian legal concepts, draft documents, and learn your constitutional rights with an AI assistant trained strictly on verified Indian jurisprudence.
+                    </p>
+<div class="flex flex-col sm:flex-row gap-4 mb-12">
+<button class="bg-saffron text-white px-8 py-3.5 rounded-full font-body-md text-body-md font-medium hover:bg-orange-500 transition-colors shadow-level-1 flex items-center justify-center gap-2">
+                            Ask NyayaAI
+                            <span class="material-symbols-outlined text-xl">arrow_forward</span>
+</button>
+<button class="bg-transparent text-primary border-2 border-primary px-8 py-3.5 rounded-full font-body-md text-body-md font-medium hover:bg-primary/5 transition-colors flex items-center justify-center gap-2">
+                            Start Learning
+                            <span class="material-symbols-outlined text-xl">school</span>
+</button>
+</div>
+<div class="flex items-center gap-6 pt-6 border-t border-surface-variant">
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">Trained On:</p>
+<div class="flex gap-4">
+<span class="font-citation text-citation text-primary bg-surface-container-low px-2 py-1 rounded-sm border border-surface-variant">BNS 2023</span>
+<span class="font-citation text-citation text-primary bg-surface-container-low px-2 py-1 rounded-sm border border-surface-variant">BNSS 2023</span>
+<span class="font-citation text-citation text-primary bg-surface-container-low px-2 py-1 rounded-sm border border-surface-variant">BSA 2023</span>
+</div>
+</div>
+</div>
+<div class="relative w-full aspect-square md:aspect-[4/3] lg:aspect-auto lg:h-[600px] flex items-center justify-center">
+<div class="arc-bg"></div>
+<div class="mockup-container relative z-10 w-full max-w-md bg-white rounded-card shadow-level-2 border border-surface-variant overflow-hidden flex flex-col h-[500px]">
+<div class="bg-surface-container-low border-b border-surface-variant px-4 py-3 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-bold text-sm">N</div>
+<div>
+<h3 class="font-body-md text-sm font-semibold text-primary leading-tight">NyayaAI</h3>
+<p class="font-label-caps text-[10px] text-on-surface-variant">Legal Assistant</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant text-sm">more_horiz</span>
+</div>
+<div class="flex-grow p-4 overflow-y-auto flex flex-col gap-chat-gap bg-background">
+<div class="self-end max-w-[85%] bg-primary text-white p-3 rounded-2xl rounded-tr-sm shadow-sm">
+<p class="font-body-md text-sm">What are the key changes in the Bharatiya Nyaya Sanhita regarding cybercrime?</p>
+</div>
+<div class="self-start max-w-[90%] bg-white border border-surface-variant text-primary p-4 rounded-2xl rounded-tl-sm shadow-level-1">
+<p class="font-body-md text-sm mb-3">The BNS (2023) introduces several key provisions addressing digital and cybercrimes:</p>
+<ul class="list-disc pl-4 font-body-md text-sm space-y-2 mb-3 text-on-surface-variant">
+<li>Data theft and digital fraud are now explicitly defined under Section 111.</li>
+<li>Heavier penalties for unauthorized access to critical infrastructure.</li>
+</ul>
+<div class="bg-surface-container-low p-2 rounded-sm border border-surface-variant inline-block">
+<span class="font-citation text-xs text-primary">Source: BNS Sec 111(1)</span>
+</div>
+</div>
+</div>
+<div class="p-4 bg-white border-t border-surface-variant">
+<div class="bg-background border border-surface-variant rounded-xl p-2 flex items-center gap-2 focus-within:border-primary transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant ml-2">attach_file</span>
+<input class="flex-grow bg-transparent border-none focus:ring-0 font-body-md text-sm text-primary placeholder-on-surface-variant py-1" placeholder="Ask a legal question..." type="text"/>
+<button class="w-8 h-8 rounded-lg bg-primary text-white flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-sm">arrow_upward</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Pillars Section -->
+<section class="py-20 bg-white border-y border-surface-variant relative">
+<div class="max-w-[1200px] mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="text-center mb-16">
+<h2 class="font-h2 text-h2 text-primary mb-4">Empowering citizens through clarity.</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">We bridge the gap between complex legal jargon and everyday understanding, providing tools to navigate the Indian legal landscape confidently.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Card 1 -->
+<div class="bg-background rounded-card p-8 border border-surface-variant shadow-level-1 hover:shadow-level-2 transition-shadow group relative overflow-hidden">
+<div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary transition-colors">
+<span class="material-symbols-outlined text-primary group-hover:text-white transition-colors text-2xl">chat_bubble</span>
+</div>
+<h3 class="font-h2 text-xl font-bold text-primary mb-3">Ask &amp; Get Answers</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Ask questions in plain English or regional languages and get accurate answers grounded in BNS, BNSS, and BSA.</p>
+<div class="absolute -bottom-10 -right-10 w-32 h-32 bg-saffron/5 rounded-full blur-2xl group-hover:bg-saffron/10 transition-colors"></div>
+</div>
+<!-- Card 2 -->
+<div class="bg-background rounded-card p-8 border border-surface-variant shadow-level-1 hover:shadow-level-2 transition-shadow group relative overflow-hidden">
+<div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary transition-colors">
+<span class="material-symbols-outlined text-primary group-hover:text-white transition-colors text-2xl">description</span>
+</div>
+<h3 class="font-h2 text-xl font-bold text-primary mb-3">Understand Documents</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Upload legal notices, contracts, or FIRs. NyayaAI will summarize the contents and explain your obligations and rights.</p>
+<div class="absolute -bottom-10 -right-10 w-32 h-32 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-colors"></div>
+</div>
+<!-- Card 3 -->
+<div class="bg-background rounded-card p-8 border border-surface-variant shadow-level-1 hover:shadow-level-2 transition-shadow group relative overflow-hidden">
+<div class="w-12 h-12 rounded-full bg-saffron/10 flex items-center justify-center mb-6 group-hover:bg-saffron transition-colors">
+<span class="material-symbols-outlined text-saffron group-hover:text-white transition-colors text-2xl">menu_book</span>
+</div>
+<h3 class="font-h2 text-xl font-bold text-primary mb-3">Learn the Law</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Access structured courses on the Indian Constitution, Fundamental Rights, and key civic duties designed for non-lawyers.</p>
+<div class="absolute -bottom-10 -right-10 w-32 h-32 bg-saffron/5 rounded-full blur-2xl group-hover:bg-saffron/10 transition-colors"></div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-white border-t border-surface-variant pt-16 pb-8">
+<div class="max-w-[1200px] mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-16">
+<div class="col-span-2 lg:col-span-2">
+<span class="font-h2 text-h2 font-black text-primary tracking-tight mb-4 block">NyayaAI</span>
+<p class="font-body-md text-sm text-on-surface-variant max-w-xs mb-6">Democratizing legal knowledge across India through secure, accessible, and accurate AI technology.</p>
+<div class="flex gap-4">
+<a class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-surface-variant transition-colors border border-surface-variant" href="#">
+<span class="material-symbols-outlined text-sm">share</span>
+</a>
+<a class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-surface-variant transition-colors border border-surface-variant" href="#">
+<span class="material-symbols-outlined text-sm">mail</span>
+</a>
+</div>
+</div>
+<div>
+<h4 class="font-label-caps text-label-caps text-primary uppercase tracking-wider mb-4">Product</h4>
+<ul class="space-y-3 font-body-md text-sm text-on-surface-variant">
+<li><a class="hover:text-primary transition-colors" href="#">Chat Assistant</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Document Analysis</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Learning Hub</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Pricing</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-label-caps text-label-caps text-primary uppercase tracking-wider mb-4">Legal Topics</h4>
+<ul class="space-y-3 font-body-md text-sm text-on-surface-variant">
+<li><a class="hover:text-primary transition-colors" href="#">BNS Overview</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Fundamental Rights</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Civil Procedure</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Corporate Law</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-label-caps text-label-caps text-primary uppercase tracking-wider mb-4">Company</h4>
+<ul class="space-y-3 font-body-md text-sm text-on-surface-variant">
+<li><a class="hover:text-primary transition-colors" href="#">About Us</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Careers</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Terms of Service</a></li>
+</ul>
+</div>
+</div>
+<div class="border-t border-surface-variant pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+<p class="font-body-md text-xs text-on-surface-variant">© 2024 NyayaAI. All rights reserved.</p>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant text-sm">gavel</span>
+<p class="font-body-md text-xs text-on-surface-variant">Disclaimer: NyayaAI provides legal information, not formal legal advice. Consult a qualified advocate for specific legal issues.</p>
+</div>
+</div>
+</div>
+</footer>
+</body></html>
