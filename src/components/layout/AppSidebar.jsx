@@ -76,6 +76,7 @@ export default function AppSidebar({ variant = 'academy', cta = null, footer = n
       { id: 'acad_cases', to: '/academy/path', label: 'Case Studies', icon: 'gavel' },
       { id: 'acad_acts', to: '/academy/path', label: 'Bare Acts', icon: 'menu_book' },
       { id: 'acad_quiz', to: '/academy/quiz', label: 'Mock Tests', icon: 'quiz' },
+      { id: 'ai_chat', to: '/chat', label: 'AI Chat', icon: 'chat' },
     ],
     curriculum: [
       { id: 'curr_dash', to: dashboardRoute, label: 'Dashboard', icon: 'dashboard' },
@@ -83,6 +84,7 @@ export default function AppSidebar({ variant = 'academy', cta = null, footer = n
       { id: 'curr_cases', to: '/academy/path', label: 'Case Studies', icon: 'gavel' },
       { id: 'curr_quiz', to: '/academy/quiz', label: 'Mock Tests', icon: 'quiz' },
       { id: 'curr_resources', to: '/academy/path', label: 'Bare Acts', icon: 'menu_book' },
+
     ],
   };
 
@@ -123,6 +125,9 @@ export default function AppSidebar({ variant = 'academy', cta = null, footer = n
     }
     if (item.id === 'chat_civil') {
       return location.search.includes('domain=civil');
+    }
+    if (item.id === 'ai_chat') {
+      return p === '/chat';
     }
 
     return false;
@@ -189,7 +194,7 @@ export default function AppSidebar({ variant = 'academy', cta = null, footer = n
             {!sidebarCollapsed ? (
               <button
                 onClick={handleNewChatClick}
-                className="w-full py-2.5 px-4 rounded-full bg-primary-container hover:bg-primary text-white font-bold text-[13px] flex items-center justify-center gap-2 shadow-sm transition-all"
+                className="w-full py-2.5 px-4 rounded-sm bg-[#0b57d0] hover:bg-[#0842a0] text-white font-bold text-[13px] tracking-wider uppercase flex items-center justify-center gap-2 shadow-xs transition-all cursor-pointer"
               >
                 <AddOutlined sx={{ fontSize: 18 }} />
                 <span>New Chat</span>
@@ -198,7 +203,7 @@ export default function AppSidebar({ variant = 'academy', cta = null, footer = n
               <Tooltip title="New Chat" placement="right" arrow>
                 <button
                   onClick={handleNewChatClick}
-                  className="w-10 h-10 rounded-full bg-primary-container hover:bg-primary text-white flex items-center justify-center mx-auto shadow-sm transition-all"
+                  className="w-10 h-10 rounded-sm bg-[#0b57d0] hover:bg-[#0842a0] text-white flex items-center justify-center mx-auto shadow-xs transition-all cursor-pointer"
                 >
                   <AddOutlined sx={{ fontSize: 20 }} />
                 </button>
@@ -238,16 +243,16 @@ export default function AppSidebar({ variant = 'academy', cta = null, footer = n
                     <ListItemButton
                       onClick={() => handleNavClick(item.to)}
                       sx={{
-                        borderRadius: '8px',
+                        borderRadius: '6px',
                         py: 1,
                         px: 1,
                         justifyContent: 'center',
-                        color: isActive ? '#071747' : 'var(--color-on-surface-variant)',
-                        bgcolor: isActive ? '#dce1ff !important' : 'transparent',
+                        color: isActive ? '#0b57d0' : '#4b5563',
+                        bgcolor: isActive ? '#eaf1fc !important' : 'transparent',
                         fontWeight: isActive ? 700 : 500,
                         '&:hover': {
-                          bgcolor: isActive ? '#dce1ff !important' : 'var(--color-surface-container-high)',
-                          color: '#071747',
+                          bgcolor: isActive ? '#eaf1fc !important' : 'rgba(0, 0, 0, 0.04)',
+                          color: '#0b57d0',
                         },
                         minHeight: 40,
                       }}
@@ -255,7 +260,7 @@ export default function AppSidebar({ variant = 'academy', cta = null, footer = n
                       <ListItemIcon
                         sx={{
                           minWidth: 0,
-                          color: isActive ? '#071747' : 'inherit',
+                          color: isActive ? '#0b57d0' : 'inherit',
                           justifyContent: 'center',
                         }}
                       >
@@ -267,17 +272,16 @@ export default function AppSidebar({ variant = 'academy', cta = null, footer = n
                   <ListItemButton
                     onClick={() => handleNavClick(item.to)}
                     sx={{
-                      borderRadius: '8px',
+                      borderRadius: '6px',
                       py: 1,
                       px: 2,
                       justifyContent: 'flex-start',
-                      color: isActive ? '#071747' : 'var(--color-on-surface-variant)',
-                      bgcolor: isActive ? '#dce1ff !important' : 'transparent',
+                      color: isActive ? '#0b57d0' : '#4b5563',
+                      bgcolor: isActive ? '#eaf1fc !important' : 'transparent',
                       fontWeight: isActive ? 700 : 500,
-                      transform: isActive ? 'translateX(2px)' : 'none',
                       '&:hover': {
-                        bgcolor: isActive ? '#dce1ff !important' : 'var(--color-surface-container-high)',
-                        color: '#071747',
+                        bgcolor: isActive ? '#eaf1fc !important' : 'rgba(0, 0, 0, 0.04)',
+                        color: '#0b57d0',
                       },
                       transition: 'all 0.15s ease',
                       minHeight: 40,
@@ -286,7 +290,7 @@ export default function AppSidebar({ variant = 'academy', cta = null, footer = n
                     <ListItemIcon
                       sx={{
                         minWidth: 34,
-                        color: isActive ? '#071747' : 'inherit',
+                        color: isActive ? '#0b57d0' : 'inherit',
                       }}
                     >
                       <IconComponent sx={{ fontSize: 20 }} />
@@ -352,11 +356,11 @@ export default function AppSidebar({ variant = 'academy', cta = null, footer = n
                   <ListItemButton
                     onClick={() => navigate('/settings')}
                     sx={{
-                      borderRadius: '8px',
+                      borderRadius: '6px',
                       py: 0.7,
                       px: 2,
-                      color: 'var(--color-on-surface-variant)',
-                      '&:hover': { color: 'var(--color-primary)', bgcolor: 'var(--color-surface-container-high)' },
+                      color: '#4b5563',
+                      '&:hover': { color: '#0b57d0', bgcolor: 'rgba(0, 0, 0, 0.04)' },
                     }}
                   >
                     <ListItemIcon sx={{ minWidth: 32, color: 'inherit' }}>
@@ -371,11 +375,11 @@ export default function AppSidebar({ variant = 'academy', cta = null, footer = n
                   <ListItemButton
                     onClick={() => navigate('/support')}
                     sx={{
-                      borderRadius: '8px',
+                      borderRadius: '6px',
                       py: 0.7,
                       px: 2,
-                      color: 'var(--color-on-surface-variant)',
-                      '&:hover': { color: 'var(--color-primary)', bgcolor: 'var(--color-surface-container-high)' },
+                      color: '#4b5563',
+                      '&:hover': { color: '#0b57d0', bgcolor: 'rgba(0, 0, 0, 0.04)' },
                     }}
                   >
                     <ListItemIcon sx={{ minWidth: 32, color: 'inherit' }}>

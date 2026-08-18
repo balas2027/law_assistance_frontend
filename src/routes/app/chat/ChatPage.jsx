@@ -27,30 +27,30 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="flex h-screen w-full bg-background text-on-surface font-body-md overflow-hidden">
+    <div className="flex h-screen w-full bg-[#fafbfc] text-gray-900 font-sans overflow-hidden">
       <AppSidebar variant="chat" />
       <main
-        className={`flex-1 flex flex-col relative bg-surface h-screen transition-all duration-300 ease-in-out ${
+        className={`flex-1 flex flex-col relative bg-[#fafbfc] h-screen transition-all duration-300 ease-in-out ${
           sidebarCollapsed ? 'md:ml-16' : 'md:ml-64'
         }`}
       >
-        <div className="flex-1 overflow-y-auto px-margin-desktop pt-12 pb-40 flex flex-col items-center min-h-0">
+        <div className="flex-1 overflow-y-auto px-6 md:px-12 pt-12 pb-40 flex flex-col items-center min-h-0">
 
-          <div className="w-full max-w-[800px] flex flex-col items-center animate-fade-in-up my-auto">
-            <div className="w-24 h-24 mb-8 rounded-3xl bg-primary-container flex items-center justify-center shadow-level-2">
-              <Icon name="account_balance" size={56} fill className="text-secondary-container" />
+          <div className="w-full max-w-[800px] flex flex-col items-center animate-fade-in my-auto">
+            <div className="w-20 h-20 mb-6 rounded-2xl bg-[#eaf1fc] flex items-center justify-center shadow-xs">
+              <Icon name="account_balance" size={44} className="text-[#0b57d0]" />
             </div>
-            <h1 className="font-h2 text-h2 text-primary-container text-center mb-4 tracking-tight">
+            <h1 className="text-[28px] md:text-[34px] font-bold text-gray-950 text-center mb-3 tracking-tight">
               How can I help you with Indian law?
             </h1>
-            <p className="font-body-lg text-body-lg text-on-surface-variant text-center max-w-2xl mb-12">
-              Ask questions, upload legal documents, or describe your situation in simple language. Our AI is trained on Indian penal codes, constitutional law, and civil procedures.
+            <p className="text-[15px] text-gray-600 text-center max-w-2xl mb-10 leading-relaxed">
+              Ask questions, explore constitutional articles, analyze case precedents, or verify sections under BNS, BNSS, and Indian jurisprudence.
             </p>
             <SuggestedPrompts prompts={SUGGESTED_PROMPTS} onSelect={handlePrompt} />
           </div>
         </div>
 
-        <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-surface via-surface to-transparent pt-10 pb-6 px-margin-desktop z-10">
+        <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-[#fafbfc] via-[#fafbfc] to-transparent pt-10 pb-6 px-6 md:px-12 z-10">
           <div className="max-w-[800px] mx-auto w-full relative">
             <ChatInput onSend={handleComposerSend} />
             <DisclaimerBanner />
@@ -61,3 +61,4 @@ export default function ChatPage() {
     </div>
   );
 }
+
