@@ -14,6 +14,7 @@ import AcademyPathPage from './app/academy/AcademyPathPage';
 import LessonPage from './app/academy/LessonPage';
 import QuizListPage from './app/academy/QuizListPage';
 import QuizPage from './app/academy/QuizPage';
+import SupportPage from './app/support/SupportPage';
 import DashboardPage from './admin/DashboardPage';
 import QuizManagerPage from './admin/QuizManagerPage';
 import QuizBuilderPage from './admin/QuizBuilderPage';
@@ -33,6 +34,7 @@ export const router = createBrowserRouter([
     children: [
       { path: '/chat', element: <ChatPage /> },
       { path: '/chat/:chatId', element: <ChatConversationPage /> },
+      { path: '/support', element: <SupportPage /> },
       {
         element: (
           <RequireRole roles={['common_man', 'admin']}>

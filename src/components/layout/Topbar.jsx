@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icon from '../ui/Icon';
 import Avatar from '../ui/Avatar';
@@ -15,12 +15,30 @@ export default function Topbar({ variant = 'academy', onSearch = null, searchVal
   const user = useAuthStore((s) => s.user);
 
   const [localValue, setLocalValue] = useState(searchValue || '');
+  const [profileOpen, setProfileOpen] = useState(false);
+  const profileRef = useRef(null);
 
   useEffect(() => {
     if (searchValue !== undefined) {
       setLocalValue(searchValue);
     }
   }, [searchValue]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleOutsideClick(e) {
+      if (profileRef.current && !profileRef.current.contains(e.target)) {
+        setProfileOpen(false);
+      }
+    }
+    if (profileOpen) {
+      document.addEventListener('mousedown', handleOutsideClick);
+    }
+    return () => document.removeEventListener('mousedown', handleOutsideClick);
+  }, [profileOpen]);
+
+  const displayName = user?.full_name || user?.name || 'User';
+  const displayEmail = user?.email || '';
 
   return (
     <header className="bg-surface border-b border-outline-variant sticky top-0 z-30 shrink-0">
@@ -101,30 +119,71 @@ export default function Topbar({ variant = 'academy', onSearch = null, searchVal
                   <span className="font-label-caps text-label-caps font-bold text-on-surface">Level {level} · {totalXp} XP</span>
                 </div>
               </div>
-              <div className="hidden sm:flex items-center gap-3">
-                <button className="text-on-surface-variant hover:bg-surface-container-high p-2 rounded-full transition-colors relative">
-                  <Icon name="notifications" size={20} />
-                  <span className="absolute top-1 right-1 w-2 h-2 bg-secondary-container rounded-full border border-surface" />
-                </button>
-              </div>
+
             </>
           )}
 
           <div className="h-8 w-px bg-outline-variant hidden md:block" />
-          <div className="flex items-center gap-2.5">
-            <div className="hidden lg:flex flex-col items-end leading-tight">
-              <span className="font-body-md text-[14px] font-semibold text-on-surface">
-                {user?.full_name || user?.name || 'User'}
-              </span>
-              <span className="font-label-caps text-[11px] text-on-surface-variant">
-                #{user?.id} · {user?.role_name || 'Member'}
-              </span>
-            </div>
-            <Avatar
-              name={user?.full_name || user?.name || 'User'}
-              size="sm"
-              className="border-2 border-primary-fixed w-9 h-9"
-            />
+
+          {/* Profile section */}
+          <div className="relative flex items-center gap-2.5" ref={profileRef}>
+            {/* Name only — no id/role subtitle */}
+            <span className="hidden lg:block font-body-md text-[14px] font-semibold text-on-surface">
+              {displayName}
+            </span>
+
+            {/* Avatar — clickable, opens dropdown */}
+            <button
+              id="topbar-profile-btn"
+              aria-label="Open profile menu"
+              onClick={() => setProfileOpen((prev) => !prev)}
+              className="relative cursor-pointer rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            >
+              <Avatar
+                name={displayName}
+                size="sm"
+                className="border-2 border-primary-fixed w-9 h-9"
+              />
+            </button>
+
+            {/* Profile dropdown */}
+            {profileOpen && (
+              <div
+                className="absolute right-0 top-[calc(100%+10px)] w-64 bg-surface-container-lowest border border-outline-variant rounded-2xl shadow-lg overflow-hidden z-50 animate-fade-in"
+              >
+                {/* Header */}
+                <div className="flex items-center gap-3 px-4 py-4 border-b border-outline-variant/60">
+                  <Avatar
+                    name={displayName}
+                    size="md"
+                    className="border-2 border-primary-fixed w-10 h-10 shrink-0"
+                  />
+                  <div className="min-w-0">
+                    <p className="font-semibold text-[14px] text-on-surface truncate">{displayName}</p>
+                    {displayEmail && (
+                      <p className="text-[12px] text-on-surface-variant truncate">{displayEmail}</p>
+                    )}
+                  </div>
+                </div>
+                {/* Actions */}
+                <div className="p-2">
+                  <button
+                    onClick={() => { setProfileOpen(false); navigate('/settings'); }}
+                    className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-on-surface hover:bg-surface-container-high transition-colors text-left"
+                  >
+                    <Icon name="settings" size={17} />
+                    Settings
+                  </button>
+                  <button
+                    onClick={() => { setProfileOpen(false); useAuthStore.getState().logout?.(); navigate('/login'); }}
+                    className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-error hover:bg-error/8 transition-colors text-left"
+                  >
+                    <Icon name="logout" size={17} />
+                    Sign out
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -44,7 +44,9 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-surface-variant pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="font-body-md text-xs text-on-surface-variant">© 2024 NyayaAI. All rights reserved.</p>
+          <p className="font-body-md text-xs text-on-surface-variant">
+            &copy; {new Date().getFullYear()} NyayaAI. All rights reserved.
+          </p>
           <div className="flex items-center gap-2">
             <Icon name="gavel" size={16} className="text-on-surface-variant" />
             <p className="font-body-md text-xs text-on-surface-variant">
