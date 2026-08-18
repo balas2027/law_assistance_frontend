@@ -1,6 +1,5 @@
+import { API_BASE } from '../api_endpoint';
 import { demoCourse, demoLesson, demoQuiz } from '../../types/academy';
-
-const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8000/api/v1';
 
 function getAuthHeaders() {
   const token = JSON.parse(localStorage.getItem('nyayaai-auth') || '{}')?.state?.token;

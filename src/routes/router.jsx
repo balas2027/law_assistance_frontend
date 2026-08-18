@@ -20,6 +20,7 @@ import DashboardPage from './admin/DashboardPage';
 import QuizManagerPage from './admin/QuizManagerPage';
 import QuizBuilderPage from './admin/QuizBuilderPage';
 import ContentCMSPage from './admin/ContentCMSPage';
+import CourseLessonsPage from './admin/CourseLessonsPage';
 import LessonFormPage from './admin/LessonFormPage';
 
 export const router = createBrowserRouter([
@@ -62,12 +63,13 @@ export const router = createBrowserRouter([
       </RequireRole>
     ),
     children: [
-      { path: '/admin/dashboard',              element: <DashboardPage /> },
-      { path: '/admin/cms',                    element: <ContentCMSPage /> },
-      { path: '/admin/cms/lessons/new',        element: <LessonFormPage /> },
-      { path: '/admin/cms/lessons/:lessonId/edit', element: <LessonFormPage /> },
-      { path: '/admin/quiz-builder',           element: <QuizManagerPage /> },
-      { path: '/admin/quiz-builder/:id',       element: <QuizBuilderPage /> },
+      { path: '/admin/dashboard',                       element: <DashboardPage /> },
+      { path: '/admin/cms',                             element: <ContentCMSPage /> },
+      { path: '/admin/cms/courses/:courseId',           element: <CourseLessonsPage /> },
+      { path: '/admin/cms/lessons/new',                element: <LessonFormPage /> },
+      { path: '/admin/cms/lessons/:lessonId/edit',     element: <LessonFormPage /> },
+      { path: '/admin/quiz-builder',                   element: <QuizManagerPage /> },
+      { path: '/admin/quiz-builder/:id',               element: <QuizBuilderPage /> },
     ],
   },
   { path: '/forbidden', element: <ForbiddenPage /> },

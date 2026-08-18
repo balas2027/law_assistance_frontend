@@ -1,15 +1,14 @@
 import { useNavigate } from 'react-router-dom';
 import AppSidebar from '../../../components/layout/AppSidebar';
+import Topbar from '../../../components/layout/Topbar';
 import RightPanel from '../../../components/layout/RightPanel';
 import SuggestedPrompts from '../../../components/features/chat/SuggestedPrompts';
-
 import ChatInput from '../../../components/features/chat/ChatInput';
 import DisclaimerBanner from '../../../components/shared/DisclaimerBanner';
 import Icon from '../../../components/ui/Icon';
 import { SUGGESTED_PROMPTS } from '../../../types/chat';
 import { useChat } from '../../../hooks/useChat';
 import { useUiStore } from '../../../stores/uiStore';
-
 
 export default function ChatPage() {
   const { newChat } = useChat();
@@ -28,14 +27,19 @@ export default function ChatPage() {
 
   return (
     <div className="flex h-screen w-full bg-[#fafbfc] text-gray-900 font-sans overflow-hidden">
+      {/* Full-width fixed Topbar — same as Academy */}
+      <Topbar variant="chat" />
+
+      {/* Sidebar below Topbar */}
       <AppSidebar variant="chat" />
+
+      {/* Main content — offset by topbar height (pt-16) and sidebar width */}
       <main
-        className={`flex-1 flex flex-col relative bg-[#fafbfc] h-screen transition-all duration-300 ease-in-out ${
-          sidebarCollapsed ? 'md:ml-16' : 'md:ml-64'
+        className={`flex-1 flex flex-col relative bg-[#fafbfc] h-screen pt-16 transition-all duration-300 ease-in-out ${
+          sidebarCollapsed ? 'md:ml-16' : 'md:ml-56'
         }`}
       >
         <div className="flex-1 overflow-y-auto px-6 md:px-12 pt-12 pb-40 flex flex-col items-center min-h-0">
-
           <div className="w-full max-w-[800px] flex flex-col items-center animate-fade-in my-auto">
             <div className="w-20 h-20 mb-6 rounded-2xl bg-[#eaf1fc] flex items-center justify-center shadow-xs">
               <Icon name="account_balance" size={44} className="text-[#0b57d0]" />
@@ -57,8 +61,8 @@ export default function ChatPage() {
           </div>
         </div>
       </main>
+
       <RightPanel mode="empty" />
     </div>
   );
 }
-

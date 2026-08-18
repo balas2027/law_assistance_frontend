@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8000/api/v1';
+import { API_BASE } from '../api_endpoint';
 
 async function handle(res) {
   let data = {};

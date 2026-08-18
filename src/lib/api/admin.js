@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8000/api/v1';
+import { API_BASE } from '../api_endpoint';
 
 function getAuthHeaders() {
   const token = JSON.parse(localStorage.getItem('nyayaai-auth') || '{}')?.state?.token;
@@ -22,6 +22,11 @@ export async function fetchAdminStatsApi() {
 
 export async function fetchAdminUsersApi({ skip = 0, limit = 50 } = {}) {
   const res = await fetch(`${API_BASE}/admin/users?skip=${skip}&limit=${limit}`, { headers: getAuthHeaders() });
+  return handle(res);
+}
+
+export async function fetchUserSignupsApi({ from, to } = {}) {
+  const res = await fetch(`${API_BASE}/admin/users/signups?from_date=${from}&to_date=${to}`, { headers: getAuthHeaders() });
   return handle(res);
 }
 
