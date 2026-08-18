@@ -136,8 +136,10 @@ export default function AppSidebar({ variant = 'academy', cta = null, footer = n
       }`}
     >
       {/* ── Header: Logo + Collapse/Expand Toggle ── */}
-      <div className="h-16 px-4 flex items-center justify-between border-b border-outline-variant bg-surface shrink-0">
-        {!sidebarCollapsed ? (
+      <div className={`h-16 px-4 flex items-center border-b border-outline-variant bg-surface shrink-0 ${
+        sidebarCollapsed ? 'justify-center' : 'justify-between'
+      }`}>
+        {!sidebarCollapsed && (
           <div
             onClick={() => navigate('/academy/dashboard')}
             className="flex items-center gap-3 cursor-pointer min-w-0 flex-1 mr-1"
@@ -154,15 +156,6 @@ export default function AppSidebar({ variant = 'academy', cta = null, footer = n
               </p>
             </div>
           </div>
-        ) : (
-          <Tooltip title="NyayaAI Academy" placement="right" arrow>
-            <div
-              onClick={() => navigate('/academy/dashboard')}
-              className="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-white cursor-pointer mx-auto shadow-sm"
-            >
-              <AccountBalanceOutlined sx={{ fontSize: 20 }} />
-            </div>
-          </Tooltip>
         )}
 
         <Tooltip

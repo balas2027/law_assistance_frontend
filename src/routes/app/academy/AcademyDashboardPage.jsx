@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import AppSidebar from '../../../components/layout/AppSidebar';
 import Topbar from '../../../components/layout/Topbar';
-import Icon from '../../../components/ui/Icon';
 import { useAuth } from '../../../hooks/useAuth';
 import { useUiStore } from '../../../stores/uiStore';
 import { fetchCoursesApi, fetchLessonsApi } from '../../../lib/api/academy';
@@ -70,7 +69,6 @@ export default function AcademyDashboardPage() {
                 onClick={() => navigate('/chat')}
                 className="px-5 py-2.5 bg-white text-primary font-bold text-[13px] rounded-xl hover:bg-white/90 transition-all shadow-sm flex items-center gap-2"
               >
-                <Icon name="smart_toy" size={18} />
                 Ask AI Assistant
               </button>
             </div>
@@ -79,9 +77,6 @@ export default function AcademyDashboardPage() {
           {/* ── Stats Row ── */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-600 flex items-center justify-center shrink-0">
-                <Icon name="library_books" size={24} />
-              </div>
               <div>
                 <p className="text-[12px] font-semibold text-on-surface-variant uppercase tracking-wider">Courses</p>
                 <p className="font-h1 text-[22px] font-bold text-primary">{courses.length}</p>
@@ -89,9 +84,6 @@ export default function AcademyDashboardPage() {
             </div>
 
             <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center shrink-0">
-                <Icon name="menu_book" size={24} />
-              </div>
               <div>
                 <p className="text-[12px] font-semibold text-on-surface-variant uppercase tracking-wider">Lessons</p>
                 <p className="font-h1 text-[22px] font-bold text-primary">{totalLessons}</p>
@@ -99,9 +91,6 @@ export default function AcademyDashboardPage() {
             </div>
 
             <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center shrink-0">
-                <Icon name="local_fire_department" size={24} />
-              </div>
               <div>
                 <p className="text-[12px] font-semibold text-on-surface-variant uppercase tracking-wider">Daily Streak</p>
                 <p className="font-h1 text-[22px] font-bold text-primary">3 Days 🔥</p>
@@ -109,9 +98,6 @@ export default function AcademyDashboardPage() {
             </div>
 
             <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-purple-500/10 text-purple-600 flex items-center justify-center shrink-0">
-                <Icon name="military_tech" size={24} />
-              </div>
               <div>
                 <p className="text-[12px] font-semibold text-on-surface-variant uppercase tracking-wider">Experience</p>
                 <p className="font-h1 text-[22px] font-bold text-primary">Level 3 • 450 XP</p>
@@ -134,7 +120,7 @@ export default function AcademyDashboardPage() {
                       to={`/academy/path/${activeCourse.id}`}
                       className="text-[13px] font-semibold text-primary hover:underline flex items-center gap-1"
                     >
-                      View Curriculum <Icon name="arrow_forward" size={14} />
+                      View Curriculum
                     </Link>
                   </div>
 
@@ -156,7 +142,6 @@ export default function AcademyDashboardPage() {
                       className="px-5 py-2 bg-primary text-white text-[13px] font-bold rounded-lg hover:bg-primary/90 transition-colors shadow-sm flex items-center gap-2"
                     >
                       Resume Learning
-                      <Icon name="play_arrow" size={16} />
                     </button>
                   </div>
                 </div>
@@ -166,7 +151,6 @@ export default function AcademyDashboardPage() {
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="font-h2 text-[18px] font-bold text-primary flex items-center gap-2">
-                    <Icon name="auto_stories" size={20} className="text-primary" />
                     Available Learning Paths
                   </h2>
                   <span className="text-[12px] font-medium text-on-surface-variant">
@@ -182,7 +166,6 @@ export default function AcademyDashboardPage() {
                   </div>
                 ) : courses.length === 0 ? (
                   <div className="text-center py-12 bg-surface-container-lowest border border-outline-variant rounded-xl p-6">
-                    <Icon name="library_books" size={36} className="text-on-surface-variant/40 mb-2" />
                     <p className="text-[15px] font-semibold text-on-surface">No courses available yet</p>
                     <p className="text-[13px] text-on-surface-variant mt-1">Check back soon for new legal modules.</p>
                   </div>
@@ -207,7 +190,7 @@ export default function AcademyDashboardPage() {
 
                         <div className="flex items-center justify-between pt-3 border-t border-outline-variant/40 text-[12px]">
                           <span className="text-primary font-semibold group-hover:translate-x-0.5 transition-transform flex items-center gap-1">
-                            Explore Path <Icon name="arrow_forward" size={13} />
+                            Explore Path
                           </span>
                         </div>
                       </div>
@@ -222,9 +205,6 @@ export default function AcademyDashboardPage() {
               {/* Mock Test Practice Card */}
               <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl p-5 shadow-sm">
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-600 flex items-center justify-center shrink-0">
-                    <Icon name="quiz" size={22} />
-                  </div>
                   <div>
                     <h3 className="font-h2 text-[16px] font-bold text-primary">Mock Tests & Quizzes</h3>
                     <p className="text-[12px] text-on-surface-variant">Test your IPC comprehension</p>
@@ -238,16 +218,12 @@ export default function AcademyDashboardPage() {
                   className="w-full py-2.5 bg-surface-container-high text-primary font-bold text-[13px] rounded-xl hover:bg-primary hover:text-white transition-all flex items-center justify-center gap-2"
                 >
                   Start Practice Quiz
-                  <Icon name="arrow_forward" size={15} />
-                </button>
+                  </button>
               </div>
 
               {/* AI Assistant Quick Ask */}
               <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl p-5 shadow-sm">
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center shrink-0">
-                    <Icon name="gavel" size={22} />
-                  </div>
                   <div>
                     <h3 className="font-h2 text-[16px] font-bold text-primary">Case Law Research</h3>
                     <p className="text-[12px] text-on-surface-variant">Instant Indian law reference</p>
@@ -261,8 +237,7 @@ export default function AcademyDashboardPage() {
                   className="w-full py-2.5 bg-primary text-white font-bold text-[13px] rounded-xl hover:bg-primary/90 transition-all flex items-center justify-center gap-2 shadow-sm"
                 >
                   Ask NyayaAI
-                  <Icon name="send" size={15} />
-                </button>
+                  </button>
               </div>
             </div>
           </div>
