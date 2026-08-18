@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminSidebar from '../../components/layout/AdminSidebar';
+import Topbar from '../../components/layout/Topbar';
 import Icon from '../../components/ui/Icon';
 import { useCmsStore } from '../../stores/cmsStore';
 import { useUiStore } from '../../stores/uiStore';
@@ -166,36 +167,27 @@ export default function ContentCMSPage() {
     l.title.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
+  const adminAction = (
+    <button
+      id="cms-new-lesson-btn"
+      onClick={() => navigate('/admin/cms/lessons/new')}
+      className="flex items-center gap-2 bg-[#0b57d0] hover:bg-[#0842a0] text-white px-4 py-1.5 rounded-sm text-[12px] font-bold tracking-wider uppercase transition-colors shadow-xs cursor-pointer"
+    >
+      <Icon name="add" size={16} />
+      <span>New Lesson</span>
+    </button>
+  );
 
   return (
-    <div className="bg-background text-on-background font-body-md antialiased overflow-hidden flex h-screen w-full">
+    <div className="bg-[#fafbfc] text-on-background font-body-md antialiased overflow-hidden flex h-screen w-full">
+      <Topbar variant="admin" adminTitle="Content CMS" adminAction={adminAction} />
       <AdminSidebar />
 
       <main
-        className={`flex-1 flex flex-col w-full min-w-0 bg-background relative overflow-hidden transition-all duration-300 ease-in-out ${
-          sidebarCollapsed ? 'md:ml-16' : 'md:ml-64'
+        className={`flex-1 flex flex-col pt-16 h-screen w-full min-w-0 bg-[#fafbfc] relative overflow-hidden transition-all duration-300 ease-in-out ${
+          sidebarCollapsed ? 'md:ml-16' : 'md:ml-56'
         }`}
       >
-
-        {/* Header - Aligned at h-16 matching sidebar header */}
-        <header className="bg-white border-b border-gray-200/90 shadow-xs z-10 w-full h-16 flex items-center justify-between px-8 shrink-0">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-[#0b57d0] text-white flex items-center justify-center font-bold shadow-xs">
-              <Icon name="edit_note" size={20} />
-            </div>
-            <h2 className="text-[18px] font-bold text-gray-950 tracking-tight">
-              Content CMS
-            </h2>
-          </div>
-          <button
-            id="cms-new-lesson-btn"
-            onClick={() => navigate('/admin/cms/lessons/new')}
-            className="flex items-center gap-2 bg-[#0b57d0] hover:bg-[#0842a0] text-white px-4 py-2 rounded-sm text-[13px] font-bold tracking-wider uppercase transition-colors shadow-xs cursor-pointer"
-          >
-            <Icon name="add" size={16} />
-            <span>New Lesson</span>
-          </button>
-        </header>
 
         {/* Content Body - Responsive fluid width */}
         <div className="flex-1 overflow-y-auto px-8 py-8 w-full pb-24 bg-[#fafbfc]">

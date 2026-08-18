@@ -249,16 +249,16 @@ export default function QuizPage() {
 
   return (
     <div className="bg-background text-on-background font-body-md flex min-h-screen">
+      <Topbar variant="academy" />
       <AppSidebar variant="curriculum" />
+
       <div
-        className={`flex-1 flex flex-col min-h-screen transition-all duration-300 ease-in-out ${
-          sidebarCollapsed ? 'md:ml-16' : 'md:ml-56'
+        className={`flex-1 flex flex-col pt-16 min-h-screen transition-all duration-300 ease-in-out ${
+          sidebarCollapsed ? 'md:ml-16' : 'md:ml-64'
         }`}
       >
-
-        <Topbar variant="academy" />
-
         <main className="flex-1 p-margin-desktop flex gap-gutter max-w-[1200px] mx-auto w-full">
+
 
           {/* ── Left: question area ── */}
           <div className="flex-1 flex flex-col gap-8">

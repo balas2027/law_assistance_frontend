@@ -169,17 +169,16 @@ export default function LessonPage() {
 
   return (
     <div className="bg-background text-on-background font-body-md text-body-md overflow-hidden flex h-screen">
+      <Topbar variant="academy" />
       <AppSidebar variant="curriculum" />
+
       <div
-        className={`flex-1 flex flex-col h-screen relative transition-all duration-300 ease-in-out ${
+        className={`flex-1 flex flex-col pt-16 h-screen relative transition-all duration-300 ease-in-out ${
           sidebarCollapsed ? 'md:ml-16' : 'md:ml-64'
         }`}
       >
-
-
-        <Topbar variant="academy" />
-
         <main className="flex-1 overflow-y-auto flex flex-col">
+
           {/* WYSIWYG-style reading toolbar */}
           {!loading && lesson && <ReadingToolbar lesson={lesson} />}
 

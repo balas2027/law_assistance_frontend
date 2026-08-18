@@ -1,24 +1,49 @@
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import AdminSidebar from '../../components/layout/AdminSidebar';
-import Icon from '../../components/ui/Icon';
-import { useAdminStore } from '../../stores/adminStore';
-import { useUiStore } from '../../stores/uiStore';
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import AdminSidebar from "../../components/layout/AdminSidebar";
+import Icon from "../../components/ui/Icon";
+import { useAdminStore } from "../../stores/adminStore";
+import { useUiStore } from "../../stores/uiStore";
 
 const STAT_CARDS = [
-  { key: 'total_users',    label: 'Total Users',    icon: 'group',          color: 'text-primary' },
-  { key: 'total_students', label: 'Law Students',   icon: 'school',         color: 'text-secondary' },
-  { key: 'total_courses',  label: 'Courses',        icon: 'library_books',  color: 'text-tertiary-container' },
-  { key: 'total_lessons',  label: 'Lessons',        icon: 'menu_book',      color: 'text-primary' },
-  { key: 'total_quizzes',  label: 'Quizzes',        icon: 'quiz',           color: 'text-secondary' },
+  {
+    key: "total_users",
+    label: "Total Users",
+    icon: "group",
+    color: "text-primary",
+  },
+  {
+    key: "total_students",
+    label: "Law Students",
+    icon: "school",
+    color: "text-secondary",
+  },
+  {
+    key: "total_courses",
+    label: "Courses",
+    icon: "library_books",
+    color: "text-tertiary-container",
+  },
+  {
+    key: "total_lessons",
+    label: "Lessons",
+    icon: "menu_book",
+    color: "text-primary",
+  },
+  {
+    key: "total_quizzes",
+    label: "Quizzes",
+    icon: "quiz",
+    color: "text-secondary",
+  },
 ];
 
 const TYPE_COLORS = [
-  'bg-primary',
-  'bg-secondary',
-  'bg-tertiary-container',
-  'bg-error',
-  'bg-primary-container',
+  "bg-primary",
+  "bg-secondary",
+  "bg-tertiary-container",
+  "bg-error",
+  "bg-primary-container",
 ];
 
 function SkeletonCard() {
@@ -31,81 +56,115 @@ function SkeletonCard() {
   );
 }
 
-export default function DashboardPage() {
+import Topbar from "../../components/layout/Topbar";
 
+export default function DashboardPage() {
   const { stats, loading, loadStats } = useAdminStore();
   const navigate = useNavigate();
   const { sidebarCollapsed } = useUiStore();
 
-  useEffect(() => { loadStats(); }, [loadStats]);
+  useEffect(() => {
+    loadStats();
+  }, [loadStats]);
 
-  const userBreakdown = stats?.users_by_type ? Object.entries(stats.users_by_type) : [];
+  const userBreakdown = stats?.users_by_type
+    ? Object.entries(stats.users_by_type)
+    : [];
   const totalForChart = userBreakdown.reduce((sum, [, v]) => sum + v, 0) || 1;
 
+  const adminAction = (
+    <button
+      id="dashboard-goto-cms-btn"
+      onClick={() => navigate("/admin/cms")}
+      className="flex items-center gap-1.5 bg-[#0b57d0] hover:bg-[#0842a0] text-white px-3.5 py-1.5 rounded-sm text-[12px] font-bold tracking-wider uppercase transition-colors shadow-xs cursor-pointer"
+    >
+      <Icon name="edit_note" size={16} />
+      <span>Content CMS</span>
+    </button>
+  );
+
   return (
-    <div className="bg-background text-on-background font-body-md antialiased overflow-hidden flex h-screen w-full">
+    <div className="bg-[#fafbfc] text-on-background font-body-md antialiased overflow-hidden flex h-screen w-full">
+      <Topbar
+        variant="admin"
+        adminTitle="Dashboard Overview"
+        adminAction={adminAction}
+      />
       <AdminSidebar />
 
       <main
-        className={`flex-1 flex flex-col w-full min-w-0 bg-background relative overflow-hidden transition-all duration-300 ease-in-out ${
-          sidebarCollapsed ? 'md:ml-16' : 'md:ml-64'
+        className={`flex-1 flex flex-col pt-16 h-screen w-full min-w-0 bg-[#fafbfc] relative overflow-hidden transition-all duration-300 ease-in-out ${
+          sidebarCollapsed ? "md:ml-16" : "md:ml-56"
         }`}
       >
-
-        {/* Header */}
-        <header className="bg-white border-b border-gray-200/90 shadow-xs z-10 w-full h-16 flex items-center justify-between px-8 shrink-0">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-[#0b57d0] text-white flex items-center justify-center font-bold shadow-xs">
-              <Icon name="dashboard" size={18} />
-            </div>
-            <h2 className="text-[18px] font-bold text-gray-950 tracking-tight">
-              Dashboard Overview
-            </h2>
-          </div>
-          <button
-            id="dashboard-goto-cms-btn"
-            onClick={() => navigate('/admin/cms')}
-            className="flex items-center gap-2 bg-[#0b57d0] hover:bg-[#0842a0] text-white px-4 py-2 rounded-sm text-[13px] font-bold tracking-wider uppercase transition-colors shadow-xs cursor-pointer"
-          >
-            <Icon name="edit_note" size={16} />
-            <span>Content CMS</span>
-          </button>
-        </header>
-
-        <div className="flex-1 overflow-y-auto px-8 py-8 w-full pb-24 bg-[#fafbfc]">
+        <div className="flex-1 overflow-y-auto px-8 py-4 w-full pb-24 bg-[#fafbfc]">
           {/* Page heading */}
-          <div className="mb-8">
-            <p className="text-[12px] font-bold text-gray-500 tracking-[0.12em] uppercase mb-1.5">
-              ADMIN ANALYTICS
-            </p>
+          <div className="mb-4">
             <h1 className="text-[28px] md:text-[32px] font-bold text-gray-950 tracking-tight mb-1">
               Platform Overview
             </h1>
             <p className="text-[14px] text-gray-600">
-              Live statistics and content health directly from your Neon database.
+              Live statistics and content health directly from your Neon
+              database.
             </p>
           </div>
 
           {/* Stats grid */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-10">
             {loading || !stats
-              ? Array.from({ length: 5 }).map((_, i) => <SkeletonCard key={i} />)
+              ? Array.from({ length: 5 }).map((_, i) => (
+                  <SkeletonCard key={i} />
+                ))
               : [
-                  { key: 'total_users', label: 'Total Users', icon: 'group', color: 'text-[#0b57d0]', bg: 'bg-[#eaf1fc]' },
-                  { key: 'total_students', label: 'Learners', icon: 'school', color: 'text-amber-600', bg: 'bg-amber-50' },
-                  { key: 'total_courses', label: 'Courses', icon: 'library_books', color: 'text-emerald-700', bg: 'bg-emerald-50' },
-                  { key: 'total_lessons', label: 'Lessons', icon: 'menu_book', color: 'text-indigo-700', bg: 'bg-indigo-50' },
-                  { key: 'total_quizzes', label: 'Quizzes', icon: 'quiz', color: 'text-purple-700', bg: 'bg-purple-50' },
+                  {
+                    key: "total_users",
+                    label: "Total Users",
+                    icon: "group",
+                    color: "text-[#0b57d0]",
+                    bg: "bg-[#eaf1fc]",
+                  },
+                  {
+                    key: "total_students",
+                    label: "Learners",
+                    icon: "school",
+                    color: "text-amber-600",
+                    bg: "bg-amber-50",
+                  },
+                  {
+                    key: "total_courses",
+                    label: "Courses",
+                    icon: "library_books",
+                    color: "text-emerald-700",
+                    bg: "bg-emerald-50",
+                  },
+                  {
+                    key: "total_lessons",
+                    label: "Lessons",
+                    icon: "menu_book",
+                    color: "text-indigo-700",
+                    bg: "bg-indigo-50",
+                  },
+                  {
+                    key: "total_quizzes",
+                    label: "Quizzes",
+                    icon: "quiz",
+                    color: "text-purple-700",
+                    bg: "bg-purple-50",
+                  },
                 ].map(({ key, label, icon, color, bg }) => (
                   <div
                     key={key}
                     className="bg-white border border-gray-200/90 rounded-sm p-5 shadow-[0_1px_2px_rgba(0,0,0,0.02)] flex flex-col relative overflow-hidden group hover:border-gray-300 transition-all"
                   >
                     <div className="flex items-center justify-between mb-3">
-                      <div className={`w-9 h-9 rounded-sm ${bg} ${color} flex items-center justify-center shrink-0 shadow-xs`}>
+                      <div
+                        className={`w-9 h-9 rounded-sm ${bg} ${color} flex items-center justify-center shrink-0 shadow-xs`}
+                      >
                         <Icon name={icon} size={20} />
                       </div>
-                      <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">Live</span>
+                      <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
+                        Live
+                      </span>
                     </div>
                     <p className="text-[12px] font-bold text-gray-500 uppercase tracking-wider mb-1">
                       {label}
@@ -140,7 +199,9 @@ export default function DashboardPage() {
                   ))}
                 </div>
               ) : userBreakdown.length === 0 ? (
-                <p className="text-gray-500 text-[13.5px] py-4 text-center">No user data registered yet.</p>
+                <p className="text-gray-500 text-[13.5px] py-4 text-center">
+                  No user data registered yet.
+                </p>
               ) : (
                 <div className="space-y-4">
                   {userBreakdown.map(([typeName, count]) => {
@@ -151,7 +212,9 @@ export default function DashboardPage() {
                           <span className="text-[12px] font-bold text-gray-700 uppercase tracking-wider">
                             {typeName}
                           </span>
-                          <span className="text-[13px] font-bold text-gray-900">{count.toLocaleString()} ({pct}%)</span>
+                          <span className="text-[13px] font-bold text-gray-900">
+                            {count.toLocaleString()} ({pct}%)
+                          </span>
                         </div>
                         <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
                           <div
@@ -170,21 +233,47 @@ export default function DashboardPage() {
             <div className="bg-white border border-gray-200/90 rounded-sm p-6 shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
               <div className="flex items-center justify-between pb-4 mb-5 border-b border-gray-100">
                 <h3 className="text-[17px] text-gray-950 font-bold flex items-center gap-2">
-                  <Icon name="library_books" size={20} className="text-[#0b57d0]" />
+                  <Icon
+                    name="library_books"
+                    size={20}
+                    className="text-[#0b57d0]"
+                  />
                   Curriculum & Assessments
                 </h3>
-                <span className="text-[12px] text-gray-500 font-semibold">Quick Access</span>
+                <span className="text-[12px] text-gray-500 font-semibold">
+                  Quick Access
+                </span>
               </div>
               {loading || !stats ? (
                 <div className="space-y-3 animate-pulse">
-                  {[1, 2, 3].map((i) => <div key={i} className="h-14 bg-gray-100 rounded-sm" />)}
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="h-14 bg-gray-100 rounded-sm" />
+                  ))}
                 </div>
               ) : (
                 <div className="space-y-3">
                   {[
-                    { label: 'Courses Management', value: stats.total_courses, icon: 'library_books', to: '/admin/cms', desc: 'Curriculum modules & tracks' },
-                    { label: 'Published Lessons', value: stats.total_lessons, icon: 'menu_book', to: '/admin/cms', desc: 'Interactive reading materials' },
-                    { label: 'Quiz & Test Builder', value: stats.total_quizzes, icon: 'quiz', to: '/admin/quiz-builder', desc: 'Mock tests and scenarios' },
+                    {
+                      label: "Courses Management",
+                      value: stats.total_courses,
+                      icon: "library_books",
+                      to: "/admin/cms",
+                      desc: "Curriculum modules & tracks",
+                    },
+                    {
+                      label: "Published Lessons",
+                      value: stats.total_lessons,
+                      icon: "menu_book",
+                      to: "/admin/cms",
+                      desc: "Interactive reading materials",
+                    },
+                    {
+                      label: "Quiz & Test Builder",
+                      value: stats.total_quizzes,
+                      icon: "quiz",
+                      to: "/admin/quiz-builder",
+                      desc: "Mock tests and scenarios",
+                    },
                   ].map(({ label, value, icon, to, desc }) => (
                     <button
                       key={label}
@@ -196,13 +285,21 @@ export default function DashboardPage() {
                           <Icon name={icon} size={18} />
                         </div>
                         <div>
-                          <p className="text-[14px] font-bold text-gray-900 group-hover:text-[#0b57d0] transition-colors">{label}</p>
+                          <p className="text-[14px] font-bold text-gray-900 group-hover:text-[#0b57d0] transition-colors">
+                            {label}
+                          </p>
                           <p className="text-[12px] text-gray-500">{desc}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-3">
-                        <span className="text-[18px] font-bold text-gray-900">{(value ?? 0).toLocaleString()}</span>
-                        <Icon name="arrow_forward" size={16} className="text-gray-400 group-hover:text-[#0b57d0] group-hover:translate-x-0.5 transition-all" />
+                        <span className="text-[18px] font-bold text-gray-900">
+                          {(value ?? 0).toLocaleString()}
+                        </span>
+                        <Icon
+                          name="arrow_forward"
+                          size={16}
+                          className="text-gray-400 group-hover:text-[#0b57d0] group-hover:translate-x-0.5 transition-all"
+                        />
                       </div>
                     </button>
                   ))}

@@ -5,17 +5,14 @@ import {
   List,
   ListItemButton,
   ListItemIcon,
-  ListItemText,
-  Divider,
 } from "@mui/material";
-import MenuOpen from "@mui/icons-material/MenuOpen";
-import Menu from "@mui/icons-material/Menu";
 import DashboardOutlined from "@mui/icons-material/DashboardOutlined";
 import EditNoteOutlined from "@mui/icons-material/EditNoteOutlined";
 import QuizOutlined from "@mui/icons-material/QuizOutlined";
 import LogoutOutlined from "@mui/icons-material/LogoutOutlined";
-import AccountBalanceOutlined from "@mui/icons-material/AccountBalanceOutlined";
 import AutoStoriesOutlined from "@mui/icons-material/AutoStoriesOutlined";
+import KeyboardDoubleArrowLeft from "@mui/icons-material/KeyboardDoubleArrowLeft";
+import KeyboardDoubleArrowRight from "@mui/icons-material/KeyboardDoubleArrowRight";
 import { useAuth } from "../../hooks/useAuth";
 import { useUiStore } from "../../stores/uiStore";
 import Avatar from "../ui/Avatar";
@@ -34,68 +31,52 @@ export default function AdminSidebar() {
 
   return (
     <aside
-      className={`hidden md:flex h-screen fixed left-0 top-0 flex-col border-r border-outline-variant bg-surface-container-low z-50 transition-all duration-300 ease-in-out ${
-        sidebarCollapsed ? "w-16" : "w-64"
+      className={`hidden md:flex fixed top-16 left-0 bottom-0 flex-col bg-white border-r border-gray-200/90 z-30 transition-all duration-300 ease-in-out select-none shadow-2xs ${
+        sidebarCollapsed ? "w-16" : "w-56"
       }`}
     >
-      <div className={`h-16 px-4 flex items-center border-b border-outline-variant bg-surface shrink-0 ${
-        sidebarCollapsed ? "justify-center" : "justify-between"
-      }`}>
-        {!sidebarCollapsed && (
-          <div
-            onClick={() => navigate("/admin/dashboard")}
-            className="flex items-center gap-3 cursor-pointer min-w-0 flex-1 mr-1"
-          >
-            <div className="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-white shrink-0 shadow-sm">
-              <AccountBalanceOutlined sx={{ fontSize: 20 }} />
-            </div>
-            <div className="min-w-0">
-              <h1 className="font-h2 text-[16px] font-bold text-primary leading-tight truncate">
-                NyayaAI Academy
-              </h1>
-              <p className="font-label-caps text-[11px] text-on-surface-variant leading-tight truncate">
-                Admin Portal
-              </p>
-            </div>
-          </div>
-        )}
-
-        <Tooltip
-          title={sidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
-          placement="right"
-          arrow
+      {/* ── Vertically Centered << / >> Toggle Button on the Right Border ── */}
+      <Tooltip
+        title={
+          sidebarCollapsed ? "Expand Sidebar (>>)" : "Collapse Sidebar (<<)"
+        }
+        placement="right"
+        arrow
+      >
+        <button
+          onClick={toggleSidebar}
+          className="absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-white border border-gray-300/90 shadow-xs flex items-center justify-center text-gray-500 hover:text-[#0b57d0] hover:bg-[#eaf1fc] hover:scale-110 transition-all z-40 cursor-pointer"
+          aria-label="Toggle Sidebar"
         >
-          <IconButton
-            onClick={toggleSidebar}
-            size="small"
-            sx={{
-              color: "var(--color-primary)",
-              bgcolor: "var(--color-surface-container)",
-              "&:hover": { bgcolor: "var(--color-surface-container-high)" },
-              borderRadius: "8px",
-              p: 0.6,
-            }}
-          >
-            {sidebarCollapsed ? (
-              <Menu sx={{ fontSize: 18 }} />
-            ) : (
-              <MenuOpen sx={{ fontSize: 18 }} />
-            )}
-          </IconButton>
-        </Tooltip>
-      </div>
+          {sidebarCollapsed ? (
+            <KeyboardDoubleArrowRight sx={{ fontSize: 14 }} />
+          ) : (
+            <KeyboardDoubleArrowLeft sx={{ fontSize: 14 }} />
+          )}
+        </button>
+      </Tooltip>
 
-      {/* ── Navigation List ── */}
-      <div className="p-3  flex flex-col overflow-hidden">
+      {/* ── Navigation List (Compact: Left Title, Right Icon) ── */}
+      <div className="p-2 pt-3  flex flex-col h-full justify-between overflow-hidden">
         <List
           sx={{
             flex: 1,
             overflowY: "auto",
-            py: 0.5,
+            py: 0.25,
             px: 0,
+
             display: "flex",
             flexDirection: "column",
-            gap: "3px",
+            justifyContent: "flex-start",
+            alignItems: "stretch",
+
+            gap: "2px",
+
+            // Prevent children from being stretched
+            "& .MuiListItemButton-root": {
+              flexGrow: 0,
+              flexShrink: 0,
+            },
           }}
           className="scrollbar-hide"
         >
@@ -117,32 +98,30 @@ export default function AdminSidebar() {
                   <ListItemButton
                     onClick={() => navigate(item.to)}
                     sx={{
-                      borderRadius: "8px",
-                      py: 1,
-                      px: 1,
+                      borderRadius: "6px",
+                      py: 0.8,
+                      px: 0.75,
                       justifyContent: "center",
-                      color: isActive
-                        ? "#071747"
-                        : "var(--color-on-surface-variant)",
-                      bgcolor: isActive ? "#dce1ff !important" : "transparent",
-                      fontWeight: isActive ? 700 : 500,
+                      color: isActive ? "#0b57d0" : "#4b5563",
+                      bgcolor: isActive ? "#eaf1fc !important" : "transparent",
+                      fontWeight: isActive ? 600 : 500,
                       "&:hover": {
                         bgcolor: isActive
-                          ? "#dce1ff !important"
-                          : "var(--color-surface-container-high)",
-                        color: "#071747",
+                          ? "#eaf1fc !important"
+                          : "rgba(0, 0, 0, 0.04)",
+                        color: "#0b57d0",
                       },
-                      minHeight: 20,
+                      minHeight: 34,
                     }}
                   >
                     <ListItemIcon
                       sx={{
                         minWidth: 0,
-                        color: isActive ? "#071747" : "inherit",
+                        color: isActive ? "#0b57d0" : "inherit",
                         justifyContent: "center",
                       }}
                     >
-                      <IconComp sx={{ fontSize: 20 }} />
+                      <IconComp sx={{ fontSize: 18 }} />
                     </ListItemIcon>
                   </ListItemButton>
                 </Tooltip>
@@ -154,40 +133,36 @@ export default function AdminSidebar() {
                 key={item.label}
                 onClick={() => navigate(item.to)}
                 sx={{
-                  borderRadius: "8px",
-                  py: 1,
+                  borderRadius: "6px",
+                  py: 2,
                   px: 2,
-                  justifyContent: "flex-start",
-                  color: isActive
-                    ? "#071747"
-                    : "var(--color-on-surface-variant)",
-                  bgcolor: isActive ? "#dce1ff !important" : "transparent",
-                  fontWeight: isActive ? 700 : 500,
-                  transform: isActive ? "translateX(2px)" : "none",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  color: isActive ? "#0b57d0" : "#4b5563",
+                  bgcolor: isActive ? "#eaf1fc !important" : "transparent",
+                  fontWeight: isActive ? 600 : 500,
                   "&:hover": {
                     bgcolor: isActive
-                      ? "#dce1ff !important"
-                      : "var(--color-surface-container-high)",
-                    color: "#071747",
+                      ? "#eaf1fc !important"
+                      : "rgba(0, 0, 0, 0.04)",
+                    color: "#0b57d0",
                   },
                   transition: "all 0.15s ease",
                   minHeight: 40,
                 }}
               >
-                <ListItemIcon
+                {/* Left Section: Content / Label */}
+                <span className="text-[16px] font-medium text-black">
+                  {item.label}
+                </span>
+
+                {/* Right Section: Icon */}
+                <IconComp
                   sx={{
-                    minWidth: 34,
-                    color: isActive ? "#071747" : "inherit",
-                  }}
-                >
-                  <IconComp sx={{ fontSize: 20 }} />
-                </ListItemIcon>
-                <ListItemText
-                  primary={item.label}
-                  primaryTypographyProps={{
-                    fontSize: "13.5px",
-                    fontWeight: isActive ? 700 : 500,
-                    fontFamily: '"Inter", sans-serif',
+                    fontSize: 18,
+                    color: isActive ? "#0b57d0" : "#6b7280",
+                    transition: "color 0.15s ease",
                   }}
                 />
               </ListItemButton>
@@ -195,9 +170,8 @@ export default function AdminSidebar() {
           })}
         </List>
 
-
         {/* ── Footer: Sign Out + Profile ── */}
-        <div className="space-y-1.5 mt-auto">
+        <div className="space-y-1.5 mt-auto pt-2 border-t border-gray-100">
           {sidebarCollapsed ? (
             <Tooltip title="Sign Out" placement="right" arrow>
               <IconButton
@@ -205,16 +179,16 @@ export default function AdminSidebar() {
                 size="small"
                 sx={{
                   width: "100%",
-                  py: 1,
-                  borderRadius: "8px",
-                  color: "var(--color-on-surface-variant)",
+                  py: 0.8,
+                  borderRadius: "6px",
+                  color: "#4b5563",
                   "&:hover": {
                     color: "var(--color-error)",
-                    bgcolor: "var(--color-error-container)",
+                    bgcolor: "rgba(239, 68, 68, 0.1)",
                   },
                 }}
               >
-                <LogoutOutlined sx={{ fontSize: 19 }} />
+                <LogoutOutlined sx={{ fontSize: 18 }} />
               </IconButton>
             </Tooltip>
           ) : (
@@ -222,32 +196,30 @@ export default function AdminSidebar() {
               <ListItemButton
                 onClick={logout}
                 sx={{
-                  borderRadius: "8px",
-                  py: 0.8,
+                  borderRadius: "6px",
+                  py: 0.6,
                   px: 2,
-                  color: "var(--color-on-surface-variant)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  color: "#4b5563",
                   "&:hover": {
                     color: "var(--color-error)",
-                    bgcolor: "var(--color-surface-container-high)",
+                    bgcolor: "rgba(239, 68, 68, 0.08)",
                   },
                 }}
               >
-                <ListItemIcon sx={{ minWidth: 32, color: "inherit" }}>
-                  <LogoutOutlined sx={{ fontSize: 18 }} />
-                </ListItemIcon>
-                <ListItemText
-                  primary="Sign Out"
-                  primaryTypographyProps={{ fontSize: "13px", fontWeight: 500 }}
-                />
+                <span className="text-[12.5px] font-medium">Sign Out</span>
+                <LogoutOutlined sx={{ fontSize: 17, color: "#6b7280" }} />
               </ListItemButton>
 
-              <div className="p-2.5 rounded-xl bg-surface-container/60 flex items-center gap-3">
-                <Avatar name={user?.full_name || "Admin"} size="sm" />
+              <div className="p-2 rounded-sm bg-gray-50 border border-gray-100 flex items-center gap-2.5">
+                <Avatar name={user?.full_name || "Admin"} size="xs" />
                 <div className="min-w-0 flex-1">
-                  <p className="font-body-md text-[13px] font-semibold text-primary truncate">
+                  <p className="text-[12px] font-bold text-gray-950 truncate leading-tight">
                     {user?.full_name || "Admin User"}
                   </p>
-                  <p className="text-[11px] text-on-surface-variant capitalize">
+                  <p className="text-[10px] text-gray-500 capitalize leading-tight">
                     {user?.user_type?.name ||
                       user?.user_type ||
                       "Administrator"}

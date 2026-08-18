@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import AdminSidebar from '../../components/layout/AdminSidebar';
+import Topbar from '../../components/layout/Topbar';
 import Icon from '../../components/ui/Icon';
 import { useCmsStore } from '../../stores/cmsStore';
 import { useAuth } from '../../hooks/useAuth';
@@ -160,10 +161,11 @@ export default function LessonFormPage() {
   if (loadingLesson) {
     return (
       <div className="bg-background flex h-screen w-full">
+        <Topbar variant="admin" adminTitle={isEdit ? 'Edit Lesson' : 'New Lesson'} />
         <AdminSidebar />
-        <main 
-          className={`flex-1 flex items-center justify-center transition-all duration-300 ease-in-out ${
-            sidebarCollapsed ? 'md:ml-16' : 'md:ml-64'
+        <main
+          className={`flex-1 flex items-center justify-center pt-16 transition-all duration-300 ease-in-out ${
+            sidebarCollapsed ? 'md:ml-16' : 'md:ml-56'
           }`}
         >
           <div className="flex flex-col items-center gap-4">
@@ -175,61 +177,49 @@ export default function LessonFormPage() {
     );
   }
 
+  const adminAction = (
+    <div className="flex items-center gap-2">
+      <button
+        id="lesson-save-draft-btn"
+        type="button"
+        onClick={() => handleSave('draft')}
+        disabled={saving}
+        className="px-4 py-1.5 font-label-caps text-[12px] font-bold tracking-wider uppercase border border-gray-300 rounded-sm text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-60 cursor-pointer"
+      >
+        Save Draft
+      </button>
+      <button
+        id="lesson-publish-btn"
+        type="button"
+        onClick={() => handleSave('published')}
+        disabled={saving}
+        className="px-5 py-1.5 bg-[#0b57d0] hover:bg-[#0842a0] text-white font-label-caps text-[12px] font-bold tracking-wider uppercase rounded-sm transition-colors disabled:opacity-60 flex items-center gap-2 shadow-xs cursor-pointer"
+      >
+        {saving ? (
+          <>
+            <span className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            Saving…
+          </>
+        ) : (
+          <>
+            <Icon name="publish" size={16} />
+            <span>Publish</span>
+          </>
+        )}
+      </button>
+    </div>
+  );
+
   return (
-    <div className="bg-background text-on-background font-body-md antialiased overflow-hidden flex h-screen w-full">
+    <div className="bg-[#fafbfc] text-on-background font-body-md antialiased overflow-hidden flex h-screen w-full">
+      <Topbar variant="admin" adminTitle={isEdit ? 'Edit Lesson' : 'New Lesson'} adminAction={adminAction} />
       <AdminSidebar />
 
       <main
-        className={`flex-1 flex flex-col w-full min-w-0 bg-background relative overflow-hidden transition-all duration-300 ease-in-out ${
-          sidebarCollapsed ? 'md:ml-16' : 'md:ml-64'
+        className={`flex-1 flex flex-col pt-16 h-screen w-full min-w-0 bg-[#fafbfc] relative overflow-hidden transition-all duration-300 ease-in-out ${
+          sidebarCollapsed ? 'md:ml-16' : 'md:ml-56'
         }`}
       >
-
-        {/* Header */}
-        <header className="bg-white border-b border-gray-200/90 shadow-xs z-10 w-full h-16 flex items-center justify-between px-8 shrink-0">
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => navigate('/admin/cms')}
-              className="p-1.5 rounded-sm text-gray-500 hover:bg-gray-100 transition-colors cursor-pointer"
-              title="Back to CMS"
-            >
-              <Icon name="arrow_back" size={20} />
-            </button>
-            <h2 className="text-[18px] font-bold text-gray-950 tracking-tight">
-              {isEdit ? 'Edit Lesson' : 'New Lesson'}
-            </h2>
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              id="lesson-save-draft-btn"
-              type="button"
-              onClick={() => handleSave('draft')}
-              disabled={saving}
-              className="px-4 py-2 font-label-caps text-[12.5px] font-bold tracking-wider uppercase border border-gray-300 rounded-sm text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-60 cursor-pointer"
-            >
-              Save Draft
-            </button>
-            <button
-              id="lesson-publish-btn"
-              type="button"
-              onClick={() => handleSave('published')}
-              disabled={saving}
-              className="px-6 py-2 bg-[#0b57d0] hover:bg-[#0842a0] text-white font-label-caps text-[12.5px] font-bold tracking-wider uppercase rounded-sm transition-colors disabled:opacity-60 flex items-center gap-2 shadow-xs cursor-pointer"
-            >
-              {saving ? (
-                <>
-                  <span className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  Saving…
-                </>
-              ) : (
-                <>
-                  <Icon name="publish" size={16} />
-                  <span>Publish</span>
-                </>
-              )}
-            </button>
-          </div>
-        </header>
 
         {/* Form body */}
         <div className="flex-1 overflow-y-auto px-8 py-8 w-full max-w-4xl pb-24 bg-[#fafbfc]">

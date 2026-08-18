@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminSidebar from '../../components/layout/AdminSidebar';
+import Topbar from '../../components/layout/Topbar';
 import Icon from '../../components/ui/Icon';
 import { fetchCmsQuizzesApi, publishQuizApi, unpublishQuizApi } from '../../lib/api/cms';
 import { useUiStore } from '../../stores/uiStore';
@@ -137,32 +138,27 @@ export default function QuizManagerPage() {
   const publishedCount = quizzes.filter((q) => q.status === 'published').length;
   const draftCount = quizzes.filter((q) => q.status === 'draft').length;
 
+  const adminAction = (
+    <button
+      onClick={() => navigate('/admin/quiz-builder/new')}
+      className="flex items-center gap-2 bg-[#0b57d0] hover:bg-[#0842a0] text-white px-4 py-1.5 rounded-sm text-[12px] font-bold tracking-wider uppercase transition-colors shadow-xs cursor-pointer"
+    >
+      <Icon name="add" size={16} />
+      <span>New Quiz</span>
+    </button>
+  );
+
   return (
-    <div className="bg-background text-on-background font-body-md min-h-screen flex flex-col md:flex-row">
+    <div className="bg-[#fafbfc] text-on-background font-body-md antialiased overflow-hidden flex h-screen w-full">
+      <Topbar variant="admin" adminTitle="Manage Quizzes" adminAction={adminAction} />
       <AdminSidebar />
 
-      <div
-        className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ease-in-out ${
-          sidebarCollapsed ? 'md:ml-16' : 'md:ml-64'
+      <main
+        className={`flex-1 flex flex-col pt-16 h-screen w-full min-w-0 bg-[#fafbfc] relative overflow-hidden transition-all duration-300 ease-in-out ${
+          sidebarCollapsed ? 'md:ml-16' : 'md:ml-56'
         }`}
       >
-        <header className="bg-white border-b border-gray-200/90 shadow-xs flex justify-between items-center w-full px-8 h-16 sticky top-0 z-20 shrink-0">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-[#0b57d0] text-white flex items-center justify-center font-bold shadow-xs">
-              <Icon name="quiz" size={18} />
-            </div>
-            <h2 className="text-[18px] font-bold text-gray-950 tracking-tight">Manage Quizzes</h2>
-          </div>
-          <button
-            onClick={() => navigate('/admin/quiz-builder/new')}
-            className="bg-[#0b57d0] hover:bg-[#0842a0] text-white text-[13px] font-bold tracking-wider uppercase px-5 py-2 rounded-sm transition-colors flex items-center gap-1.5 shadow-xs cursor-pointer"
-          >
-            <Icon name="add" size={18} />
-            <span>New Quiz</span>
-          </button>
-        </header>
-
-        <main className="flex-1 p-8 max-w-[1280px] w-full mx-auto overflow-y-auto bg-[#fafbfc]">
+        <div className="flex-1 overflow-y-auto p-8 w-full pb-24 bg-[#fafbfc]">
           {/* Header text */}
           <div className="mb-6">
             <p className="text-[12px] font-bold text-gray-500 tracking-[0.12em] uppercase mb-1.5">
@@ -300,8 +296,8 @@ export default function QuizManagerPage() {
               ))}
             </div>
           )}
-        </main>
-      </div>
+        </div>
+      </main>
     </div>
   );
 }

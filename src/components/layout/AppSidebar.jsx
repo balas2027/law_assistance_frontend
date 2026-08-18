@@ -1,15 +1,10 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Tooltip,
-  IconButton,
   List,
   ListItemButton,
   ListItemIcon,
-  ListItemText,
-  Divider,
 } from '@mui/material';
-import MenuOpen from '@mui/icons-material/MenuOpen';
-import Menu from '@mui/icons-material/Menu';
 import DashboardOutlined from '@mui/icons-material/DashboardOutlined';
 import AutoStoriesOutlined from '@mui/icons-material/AutoStoriesOutlined';
 import GavelOutlined from '@mui/icons-material/GavelOutlined';
@@ -25,6 +20,9 @@ import FolderSharedOutlined from '@mui/icons-material/FolderSharedOutlined';
 import AccountCircleOutlined from '@mui/icons-material/AccountCircleOutlined';
 import SchoolOutlined from '@mui/icons-material/SchoolOutlined';
 import AddOutlined from '@mui/icons-material/AddOutlined';
+import SmartToyOutlined from '@mui/icons-material/SmartToyOutlined';
+import KeyboardDoubleArrowLeft from '@mui/icons-material/KeyboardDoubleArrowLeft';
+import KeyboardDoubleArrowRight from '@mui/icons-material/KeyboardDoubleArrowRight';
 import { useAuth } from '../../hooks/useAuth';
 import { useUiStore } from '../../stores/uiStore';
 
@@ -44,9 +42,10 @@ const ICON_COMPONENTS = {
   folder_shared: FolderSharedOutlined,
   account_circle: AccountCircleOutlined,
   school: SchoolOutlined,
+  chat: SmartToyOutlined,
 };
 
-export default function AppSidebar({ variant = 'academy', cta = null, footer = null }) {
+export default function AppSidebar({ variant = 'academy', footer = null }) {
   const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -58,7 +57,6 @@ export default function AppSidebar({ variant = 'academy', cta = null, footer = n
     user?.user_type === 'admin' ||
     user?.user_type?.code === 'admin';
 
-  // Dynamic dashboard route depending on role
   const dashboardRoute = isAdmin ? '/admin/dashboard' : '/academy/dashboard';
 
   const NAV_ITEMS = {
@@ -84,7 +82,7 @@ export default function AppSidebar({ variant = 'academy', cta = null, footer = n
       { id: 'curr_cases', to: '/academy/path', label: 'Case Studies', icon: 'gavel' },
       { id: 'curr_quiz', to: '/academy/quiz', label: 'Mock Tests', icon: 'quiz' },
       { id: 'curr_resources', to: '/academy/path', label: 'Bare Acts', icon: 'menu_book' },
-
+      { id: 'ai_chat', to: '/chat', label: 'AI Chat', icon: 'chat' },
     ],
   };
 
@@ -133,95 +131,63 @@ export default function AppSidebar({ variant = 'academy', cta = null, footer = n
     return false;
   };
 
-
   return (
     <nav
-      className={`hidden md:flex h-screen fixed left-0 top-0 flex-col border-r border-outline-variant z-50 transition-all duration-300 ease-in-out ${sidebarCollapsed ? 'w-16' : 'w-64'
-        }`}
+      className={`hidden md:flex fixed top-16 left-0 bottom-0 flex-col bg-white border-r border-gray-200/90 z-30 transition-all duration-300 ease-in-out select-none shadow-2xs ${
+        sidebarCollapsed ? 'w-16' : 'w-56'
+      }`}
     >
-      {/* ── Header: Logo + Collapse/Expand Toggle ── */}
-      <div className={`h-16 px-4 flex items-center shrink-0 ${sidebarCollapsed ? 'justify-center' : 'justify-between'
-        }`}>
-        {!sidebarCollapsed && (
-          <div
-            onClick={() => navigate('/academy/dashboard')}
-            className="flex items-center gap-3 cursor-pointer min-w-0 flex-1 mr-1"
-          >
-            <div className="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-white shrink-0 shadow-sm">
-              <AccountBalanceOutlined sx={{ fontSize: 20 }} />
-            </div>
-            <div className="min-w-0">
-              <h1 className="font-h2 text-[16px] font-bold text-primary leading-tight truncate">
-                {variant === 'chat' ? 'NyayaAI' : 'NyayaAI Academy'}
-              </h1>
-              <p className="font-label-caps text-[11px] text-on-surface-variant leading-tight truncate">
-                {variant === 'chat' ? 'Indian Law Assistant' : 'Legal Excellence'}
-              </p>
-            </div>
-          </div>
-        )}
-
-        <Tooltip
-          title={sidebarCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
-          placement="right"
-          arrow
+      {/* ── Vertically Centered << / >> Toggle Button on the Right Border ── */}
+      <Tooltip title={sidebarCollapsed ? 'Expand Sidebar (>>)' : 'Collapse Sidebar (<<)'} placement="right" arrow>
+        <button
+          onClick={toggleSidebar}
+          className="absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-white border border-gray-300/90 shadow-xs flex items-center justify-center text-gray-500 hover:text-[#0b57d0] hover:bg-[#eaf1fc] hover:scale-110 transition-all z-40 cursor-pointer"
+          aria-label="Toggle Sidebar"
         >
-          <IconButton
-            onClick={toggleSidebar}
-            size="small"
-            sx={{
-              color: 'var(--color-primary)',
-              bgcolor: 'var(--color-surface-container)',
-              '&:hover': { bgcolor: 'var(--color-surface-container-high)' },
-              borderRadius: '8px',
-              p: 0.6,
-            }}
-          >
-            {sidebarCollapsed ? (
-              <Menu sx={{ fontSize: 18 }} />
-            ) : (
-              <MenuOpen sx={{ fontSize: 18 }} />
-            )}
-          </IconButton>
-        </Tooltip>
-      </div>
+          {sidebarCollapsed ? (
+            <KeyboardDoubleArrowRight sx={{ fontSize: 14 }} />
+          ) : (
+            <KeyboardDoubleArrowLeft sx={{ fontSize: 14 }} />
+          )}
+        </button>
+      </Tooltip>
 
       {/* ── Body Container ── */}
-      <div className="p-3 flex-1 mt-6 flex flex-col overflow-hidden">
+      <div className="p-2 pt-3 flex-1 flex flex-col overflow-hidden">
         {/* ── Action Button (Chat Mode: + New Chat) ── */}
         {variant === 'chat' ? (
           <div className="mb-3">
             {!sidebarCollapsed ? (
               <button
                 onClick={handleNewChatClick}
-                className="w-full py-2.5 px-4 rounded-sm bg-[#0b57d0] hover:bg-[#0842a0] text-white font-bold text-[13px] tracking-wider uppercase flex items-center justify-center gap-2 shadow-xs transition-all cursor-pointer"
+                className="w-full py-2 px-3 rounded-sm bg-[#0b57d0] hover:bg-[#0842a0] text-white font-bold text-[12px] tracking-wider uppercase flex items-center justify-center gap-1.5 shadow-xs transition-all cursor-pointer"
               >
-                <AddOutlined sx={{ fontSize: 18 }} />
+                <AddOutlined sx={{ fontSize: 16 }} />
                 <span>New Chat</span>
               </button>
             ) : (
               <Tooltip title="New Chat" placement="right" arrow>
                 <button
                   onClick={handleNewChatClick}
-                  className="w-10 h-10 rounded-sm bg-[#0b57d0] hover:bg-[#0842a0] text-white flex items-center justify-center mx-auto shadow-xs transition-all cursor-pointer"
+                  className="w-9 h-9 rounded-sm bg-[#0b57d0] hover:bg-[#0842a0] text-white flex items-center justify-center mx-auto shadow-xs transition-all cursor-pointer"
                 >
-                  <AddOutlined sx={{ fontSize: 20 }} />
+                  <AddOutlined sx={{ fontSize: 18 }} />
                 </button>
               </Tooltip>
             )}
           </div>
         ) : null}
 
-        {/* ── Navigation List ── */}
+        {/* ── Navigation List (Two sections: Left Title/Content, Right Icon) ── */}
         <List
           sx={{
             flex: 1,
             overflowY: 'auto',
-            py: 0.5,
+            py: 0.25,
             px: 0,
             display: 'flex',
             flexDirection: 'column',
-            gap: '3px',
+            gap: '2px',
           }}
           className="scrollbar-hide"
         >
@@ -233,7 +199,7 @@ export default function AppSidebar({ variant = 'academy', cta = null, footer = n
               <div key={item.id || idx}>
                 {/* Group section label if specified */}
                 {item.group && !sidebarCollapsed && (
-                  <p className="font-label-caps text-[11px] text-on-surface-variant font-bold uppercase tracking-wider px-3 pt-3 pb-1">
+                  <p className="text-[10.5px] text-gray-400 font-bold uppercase tracking-wider px-2.5 pt-2.5 pb-1">
                     {item.group}
                   </p>
                 )}
@@ -244,17 +210,17 @@ export default function AppSidebar({ variant = 'academy', cta = null, footer = n
                       onClick={() => handleNavClick(item.to)}
                       sx={{
                         borderRadius: '6px',
-                        py: 1,
-                        px: 1,
+                        py: 0.8,
+                        px: 0.75,
                         justifyContent: 'center',
                         color: isActive ? '#0b57d0' : '#4b5563',
                         bgcolor: isActive ? '#eaf1fc !important' : 'transparent',
-                        fontWeight: isActive ? 700 : 500,
+                        fontWeight: isActive ? 600 : 500,
                         '&:hover': {
                           bgcolor: isActive ? '#eaf1fc !important' : 'rgba(0, 0, 0, 0.04)',
                           color: '#0b57d0',
                         },
-                        minHeight: 40,
+                        minHeight: 34,
                       }}
                     >
                       <ListItemIcon
@@ -264,7 +230,7 @@ export default function AppSidebar({ variant = 'academy', cta = null, footer = n
                           justifyContent: 'center',
                         }}
                       >
-                        <IconComponent sx={{ fontSize: 20 }} />
+                        <IconComponent sx={{ fontSize: 18 }} />
                       </ListItemIcon>
                     </ListItemButton>
                   </Tooltip>
@@ -273,12 +239,14 @@ export default function AppSidebar({ variant = 'academy', cta = null, footer = n
                     onClick={() => handleNavClick(item.to)}
                     sx={{
                       borderRadius: '6px',
-                      py: 1,
+                      py: 2,
                       px: 2,
-                      justifyContent: 'flex-start',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
                       color: isActive ? '#0b57d0' : '#4b5563',
                       bgcolor: isActive ? '#eaf1fc !important' : 'transparent',
-                      fontWeight: isActive ? 700 : 500,
+                      fontWeight: isActive ? 600 : 500,
                       '&:hover': {
                         bgcolor: isActive ? '#eaf1fc !important' : 'rgba(0, 0, 0, 0.04)',
                         color: '#0b57d0',
@@ -287,21 +255,17 @@ export default function AppSidebar({ variant = 'academy', cta = null, footer = n
                       minHeight: 40,
                     }}
                   >
-                    <ListItemIcon
-                      sx={{
-                        minWidth: 34,
-                        color: isActive ? '#0b57d0' : 'inherit',
-                      }}
-                    >
-                      <IconComponent sx={{ fontSize: 20 }} />
-                    </ListItemIcon>
+                    {/* Left Section: Content / Label */}
+                    <span className="text-[16px] font-medium text-black">
+                      {item.label}
+                    </span>
 
-                    <ListItemText
-                      primary={item.label}
-                      primaryTypographyProps={{
-                        fontSize: '13.5px',
-                        fontWeight: isActive ? 700 : 500,
-                        fontFamily: '"Inter", sans-serif',
+                    {/* Right Section: Icon */}
+                    <IconComponent
+                      sx={{
+                        fontSize: 18,
+                        color: isActive ? '#0b57d0' : '#6b7280',
+                        transition: 'color 0.15s ease',
                       }}
                     />
                   </ListItemButton>
@@ -311,44 +275,43 @@ export default function AppSidebar({ variant = 'academy', cta = null, footer = n
           })}
         </List>
 
-
-
-
-        {/* ── Footer: Settings & Support ── */}
-        <div className="space-y-0.5 mt-auto">
+        {/* ── Footer: Settings & Support (Two sections: Left Title, Right Icon) ── */}
+        <div className="space-y-0.5 mt-auto pt-2 border-t border-gray-100">
           {footer ?? (
             <>
               {sidebarCollapsed ? (
                 <>
                   <Tooltip title="Settings" placement="right" arrow>
-                    <IconButton
+                    <ListItemButton
                       onClick={() => navigate('/settings')}
-                      size="small"
                       sx={{
-                        width: '100%',
-                        py: 0.8,
-                        borderRadius: '8px',
-                        color: 'var(--color-on-surface-variant)',
-                        '&:hover': { color: 'var(--color-primary)', bgcolor: 'var(--color-surface-container)' },
+                        borderRadius: '6px',
+                        py: 0.7,
+                        justifyContent: 'center',
+                        color: '#4b5563',
+                        '&:hover': { color: '#0b57d0', bgcolor: 'rgba(0, 0, 0, 0.04)' },
                       }}
                     >
-                      <SettingsOutlined sx={{ fontSize: 18 }} />
-                    </IconButton>
+                      <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center', color: 'inherit' }}>
+                        <SettingsOutlined sx={{ fontSize: 18 }} />
+                      </ListItemIcon>
+                    </ListItemButton>
                   </Tooltip>
                   <Tooltip title="Support" placement="right" arrow>
-                    <IconButton
+                    <ListItemButton
                       onClick={() => navigate('/support')}
-                      size="small"
                       sx={{
-                        width: '100%',
-                        py: 0.8,
-                        borderRadius: '8px',
-                        color: 'var(--color-on-surface-variant)',
-                        '&:hover': { color: 'var(--color-primary)', bgcolor: 'var(--color-surface-container)' },
+                        borderRadius: '6px',
+                        py: 0.7,
+                        justifyContent: 'center',
+                        color: '#4b5563',
+                        '&:hover': { color: '#0b57d0', bgcolor: 'rgba(0, 0, 0, 0.04)' },
                       }}
                     >
-                      <HelpOutlined sx={{ fontSize: 18 }} />
-                    </IconButton>
+                      <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center', color: 'inherit' }}>
+                        <HelpOutlined sx={{ fontSize: 18 }} />
+                      </ListItemIcon>
+                    </ListItemButton>
                   </Tooltip>
                 </>
               ) : (
@@ -357,38 +320,34 @@ export default function AppSidebar({ variant = 'academy', cta = null, footer = n
                     onClick={() => navigate('/settings')}
                     sx={{
                       borderRadius: '6px',
-                      py: 0.7,
+                      py: 0.6,
                       px: 2,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
                       color: '#4b5563',
                       '&:hover': { color: '#0b57d0', bgcolor: 'rgba(0, 0, 0, 0.04)' },
                     }}
                   >
-                    <ListItemIcon sx={{ minWidth: 32, color: 'inherit' }}>
-                      <SettingsOutlined sx={{ fontSize: 18 }} />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary="Settings"
-                      primaryTypographyProps={{ fontSize: '13px', fontWeight: 500 }}
-                    />
+                    <span className="text-[12.5px] font-medium">Settings</span>
+                    <SettingsOutlined sx={{ fontSize: 17, color: '#6b7280' }} />
                   </ListItemButton>
 
                   <ListItemButton
                     onClick={() => navigate('/support')}
                     sx={{
                       borderRadius: '6px',
-                      py: 0.7,
+                      py: 0.6,
                       px: 2,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
                       color: '#4b5563',
                       '&:hover': { color: '#0b57d0', bgcolor: 'rgba(0, 0, 0, 0.04)' },
                     }}
                   >
-                    <ListItemIcon sx={{ minWidth: 32, color: 'inherit' }}>
-                      <HelpOutlined sx={{ fontSize: 18 }} />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary="Support"
-                      primaryTypographyProps={{ fontSize: '13px', fontWeight: 500 }}
-                    />
+                    <span className="text-[12.5px] font-medium">Support</span>
+                    <HelpOutlined sx={{ fontSize: 17, color: '#6b7280' }} />
                   </ListItemButton>
                 </>
               )}
