@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import AppSidebar from "../../../components/layout/AppSidebar";
 import Topbar from "../../../components/layout/Topbar";
@@ -6,17 +6,21 @@ import Icon from "../../../components/ui/Icon";
 import { useUiStore } from "../../../stores/uiStore";
 import { useUserStats } from "../../../hooks/useUserStats";
 import { fetchCoursesApi, fetchLessonsApi } from "../../../lib/api/academy";
+import AcademyLeetCodeStats from "../../../components/features/academy/AcademyLeetCodeStats";
 
 export default function AcademyDashboardPage() {
   const navigate = useNavigate();
   const { sidebarCollapsed } = useUiStore();
-  const { currentStreak, totalXp, level } = useUserStats();
+  const userStats = useUserStats();
+  const { currentStreak, totalXp, level } = userStats;
 
   const [courses, setCourses] = useState([]);
   const [allLessons, setAllLessons] = useState([]);
   const [totalLessons, setTotalLessons] = useState(0);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+
+  const coursesScrollRef = useRef(null);
 
   useEffect(() => {
     setLoading(true);
@@ -48,6 +52,13 @@ export default function AcademyDashboardPage() {
       .finally(() => setLoading(false));
   }, []);
 
+  function scrollCourses(direction) {
+    if (coursesScrollRef.current) {
+      const scrollAmount = direction === "left" ? -340 : 340;
+      coursesScrollRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
+    }
+  }
+
   const filteredCourses = courses.filter(
     (c) =>
       c.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -74,35 +85,17 @@ export default function AcademyDashboardPage() {
 
         <main className="flex-1 overflow-y-auto px-6 md:px-12 py-10 w-full pb-24">
           
-          {/* Top Header / Stats Row */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
-            <div className="bg-white border border-gray-200/90 rounded-sm p-5 shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
-              <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Courses</p>
-              <p className="text-[24px] font-bold text-gray-950 mt-0.5">{courses.length}</p>
-            </div>
-
-            <div className="bg-white border border-gray-200/90 rounded-sm p-5 shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
-              <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Total Lessons</p>
-              <p className="text-[24px] font-bold text-gray-950 mt-0.5">{totalLessons}</p>
-            </div>
-
-            <div className="bg-white border border-gray-200/90 rounded-sm p-5 shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
-              <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Daily Streak</p>
-              <p className="text-[24px] font-bold text-gray-950 mt-0.5">
-                {currentStreak > 0 ? `${currentStreak} Days 🔥` : "—"}
-              </p>
-            </div>
-
-            <div className="bg-white border border-gray-200/90 rounded-sm p-5 shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
-              <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Experience</p>
-              <p className="text-[24px] font-bold text-gray-950 mt-0.5">
-                {totalXp > 0 ? `Level ${level} • ${totalXp} XP` : "—"}
-              </p>
-            </div>
-          </div>
+          {/* Top Section: LeetCode-style 365 Days Tracking & Stats Module in Bluish Palette */}
+          {!searchQuery && (
+            <AcademyLeetCodeStats
+              stats={userStats}
+              totalCourses={courses.length}
+              totalLessons={totalLessons}
+            />
+          )}
 
           {searchQuery ? (
-            /* Search Results in Editorial Card Grid */
+            /* Search Results View */
             <div className="space-y-12 animate-fade-in">
               <div>
                 <p className="text-[12px] md:text-[13px] font-bold text-gray-700 tracking-[0.12em] uppercase mb-2">
@@ -190,62 +183,145 @@ export default function AcademyDashboardPage() {
               )}
             </div>
           ) : (
-            /* Standard Editorial Dashboard View */
+            /* Standard Dashboard View */
             <div className="space-y-16">
               
-              {/* Section 1: Courses Grid */}
-              <div>
-                <div className="mb-8">
-                  <p className="text-[12px] md:text-[13px] font-bold text-gray-700 tracking-[0.12em] uppercase mb-2">
-                    ACADEMY COURSES
-                  </p>
-                  <h1 className="text-[28px] md:text-[34px] font-bold text-gray-950 tracking-tight">
-                    From the NyayaAI Editorial Desk
-                  </h1>
-                  <p className="text-[15px] text-gray-600 mt-1">
-                    Deep dives on Indian law, constitutional rights, legal drafting, and real-world case simulations
-                  </p>
+              {/* Section 1: Horizontally Scrollable Courses + Side Stats Panel */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                
+                {/* Left Side: Courses Section with Horizontal Scroll */}
+                <div className="lg:col-span-8 space-y-6">
+                  <div className="flex items-end justify-between">
+                    <div>
+                      <p className="text-[12px] md:text-[13px] font-bold text-gray-700 tracking-[0.12em] uppercase mb-1.5">
+                        ACADEMY COURSES
+                      </p>
+                      <h2 className="text-[26px] md:text-[30px] font-bold text-gray-950 tracking-tight">
+                        From the NyayaAI Editorial Desk
+                      </h2>
+                      <p className="text-[14.5px] text-gray-600 mt-1">
+                        Deep dives on Indian law, constitutional rights, legal drafting, and real-world cases
+                      </p>
+                    </div>
+
+                    {/* Scroll buttons */}
+                    <div className="hidden sm:flex items-center gap-2 shrink-0 pb-1">
+                      <button
+                        onClick={() => scrollCourses("left")}
+                        className="w-8 h-8 rounded-full border border-gray-300 bg-white hover:bg-gray-100 flex items-center justify-center text-gray-600 transition-colors shadow-2xs cursor-pointer"
+                        aria-label="Scroll left"
+                      >
+                        <Icon name="arrow_back" size={16} />
+                      </button>
+                      <button
+                        onClick={() => scrollCourses("right")}
+                        className="w-8 h-8 rounded-full border border-gray-300 bg-white hover:bg-gray-100 flex items-center justify-center text-gray-600 transition-colors shadow-2xs cursor-pointer"
+                        aria-label="Scroll right"
+                      >
+                        <Icon name="arrow_forward" size={16} />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Horizontal Scrollable Courses Container */}
+                  {loading ? (
+                    <div className="flex gap-5 overflow-hidden">
+                      {[1, 2, 3].map((i) => (
+                        <div key={i} className="min-w-[300px] h-52 bg-white border border-gray-200/90 rounded-sm animate-pulse p-6 shrink-0" />
+                      ))}
+                    </div>
+                  ) : courses.length === 0 ? (
+                    <div className="text-center py-12 bg-white border border-gray-200/90 rounded-sm p-6">
+                      <p className="text-[15px] font-semibold text-gray-900">No courses available yet</p>
+                      <p className="text-[13px] text-gray-500 mt-1">Check back soon for new modules.</p>
+                    </div>
+                  ) : (
+                    <div
+                      ref={coursesScrollRef}
+                      className="flex gap-5 overflow-x-auto pb-4 pt-1 scroll-smooth scrollbar-thin"
+                      style={{ scrollSnapType: "x mandatory" }}
+                    >
+                      {courses.map((course) => (
+                        <div
+                          key={course.id}
+                          onClick={() => navigate(`/academy/path/${course.id}`)}
+                          style={{ scrollSnapAlign: "start" }}
+                          className="min-w-[290px] md:min-w-[320px] max-w-[340px] bg-white border border-gray-200/90 rounded-sm p-6 flex flex-col justify-between hover:border-gray-300 transition-all hover:shadow-xs group cursor-pointer shadow-[0_1px_2px_rgba(0,0,0,0.02)] shrink-0"
+                        >
+                          <div>
+                            <h3 className="text-[17px] font-bold text-gray-950 leading-snug group-hover:text-[#0b57d0] transition-colors mb-3 line-clamp-2">
+                              {course.title}
+                            </h3>
+                            <p className="text-[13.5px] text-gray-600 leading-relaxed mb-6 line-clamp-3">
+                              {course.description || "A structured curriculum designed to build foundational mastery in legal research, reasoning, and procedures."}
+                            </p>
+                          </div>
+
+                          <div className="flex items-center justify-between pt-4 border-t border-gray-100 text-[13px] text-gray-500">
+                            <span className="font-medium text-gray-700">Team NyayaAI</span>
+                            <span>{course.lessons?.length || 0} Lessons</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
-                {loading ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {[1, 2, 3].map((i) => (
-                      <div key={i} className="h-56 bg-white border border-gray-200/90 rounded-sm animate-pulse p-6" />
-                    ))}
+                {/* Right Side: Existing Stats Moved to Side Panel */}
+                <div className="lg:col-span-4 bg-white border border-gray-200/90 rounded-sm p-6 shadow-[0_1px_2px_rgba(0,0,0,0.02)] space-y-5">
+                  <div className="flex items-center justify-between pb-3 border-b border-gray-100">
+                    <h3 className="font-bold text-[16px] text-gray-950">Learning Overview</h3>
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-[#0b57d0] bg-blue-50 px-2 py-0.5 rounded">
+                      Live Stats
+                    </span>
                   </div>
-                ) : courses.length === 0 ? (
-                  <div className="text-center py-12 bg-white border border-gray-200/90 rounded-sm p-6">
-                    <p className="text-[15px] font-semibold text-gray-900">No courses available yet</p>
-                    <p className="text-[13px] text-gray-500 mt-1">Check back soon for new modules.</p>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {courses.map((course) => (
-                      <div
-                        key={course.id}
-                        onClick={() => navigate(`/academy/path/${course.id}`)}
-                        className="bg-white border border-gray-200/90 rounded-sm p-6 flex flex-col justify-between hover:border-gray-300 transition-all hover:shadow-xs group cursor-pointer shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
-                      >
-                        <div>
-                          <h3 className="text-[17px] font-bold text-gray-950 leading-snug group-hover:text-[#0b57d0] transition-colors mb-3 line-clamp-2">
-                            {course.title}
-                          </h3>
-                          <p className="text-[13.5px] text-gray-600 leading-relaxed mb-6 line-clamp-3">
-                            {course.description || "A structured curriculum designed to build foundational mastery in legal research, reasoning, and procedures."}
-                          </p>
-                        </div>
 
-                        <div className="flex items-center justify-between pt-4 border-t border-gray-100 text-[13px] text-gray-500">
-                          <span className="font-medium text-gray-700">Team NyayaAI</span>
-                          <span>{course.lessons?.length || 0} Lessons</span>
-                        </div>
-                      </div>
-                    ))}
+                  {/* 2x2 Grid of the 4 stats */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="p-3.5 bg-[#f8fafc] border border-gray-100 rounded-sm">
+                      <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Courses</p>
+                      <p className="text-[20px] font-bold text-gray-950 mt-0.5">{courses.length}</p>
+                    </div>
+
+                    <div className="p-3.5 bg-[#f8fafc] border border-gray-100 rounded-sm">
+                      <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Total Lessons</p>
+                      <p className="text-[20px] font-bold text-gray-950 mt-0.5">{totalLessons}</p>
+                    </div>
+
+                    <div className="p-3.5 bg-[#f8fafc] border border-gray-100 rounded-sm">
+                      <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Daily Streak</p>
+                      <p className="text-[18px] font-bold text-gray-950 mt-0.5">
+                        {currentStreak > 0 ? `${currentStreak} Days 🔥` : "—"}
+                      </p>
+                    </div>
+
+                    <div className="p-3.5 bg-[#f8fafc] border border-gray-100 rounded-sm">
+                      <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Experience</p>
+                      <p className="text-[18px] font-bold text-gray-950 mt-0.5 truncate">
+                        {totalXp > 0 ? `Lvl ${level} • ${totalXp} XP` : "—"}
+                      </p>
+                    </div>
                   </div>
-                )}
+
+                  {/* Action button */}
+                  <button
+                    onClick={() => {
+                      if (courses.length > 0) {
+                        navigate(`/academy/path/${courses[0].id}`);
+                      } else {
+                        navigate('/chat');
+                      }
+                    }}
+                    className="w-full py-2.5 bg-[#0b57d0] hover:bg-[#0842a0] text-white font-bold text-[13px] tracking-wider uppercase rounded-sm transition-colors cursor-pointer flex items-center justify-center gap-2 shadow-xs"
+                  >
+                    <span>Continue Learning</span>
+                    <Icon name="arrow_forward" size={16} />
+                  </button>
+                </div>
+
               </div>
 
-              {/* Section 2: Featured Lessons */}
+              {/* Section 2: Featured Individual Modules */}
               {allLessons.length > 0 && (
                 <div>
                   <div className="mb-8">
