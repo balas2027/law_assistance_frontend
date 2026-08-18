@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icon from '../ui/Icon';
 import Avatar from '../ui/Avatar';
@@ -8,10 +9,18 @@ import { useAuthStore } from '../../stores/authStore';
 const CHAT_LINKS = ['Case Research', 'Legal Drafting', 'Consultations'];
 
 
-export default function Topbar({ variant = 'academy', onSearch = null }) {
+export default function Topbar({ variant = 'academy', onSearch = null, searchValue = '' }) {
   const navigate = useNavigate();
   const { currentStreak, totalXp, level } = useUserStats();
   const user = useAuthStore((s) => s.user);
+
+  const [localValue, setLocalValue] = useState(searchValue || '');
+
+  useEffect(() => {
+    if (searchValue !== undefined) {
+      setLocalValue(searchValue);
+    }
+  }, [searchValue]);
 
   return (
     <header className="bg-surface border-b border-outline-variant sticky top-0 z-30 shrink-0">
@@ -43,11 +52,27 @@ export default function Topbar({ variant = 'academy', onSearch = null }) {
             <div className="relative">
               <Icon name="search" size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" />
               <input
-                onChange={(e) => onSearch?.(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 bg-surface-container-lowest border border-outline-variant rounded-card focus:border-primary-container focus:ring-0 text-body-md font-body-md transition-colors placeholder:text-on-surface-variant"
+                value={localValue}
+                onChange={(e) => {
+                  setLocalValue(e.target.value);
+                  onSearch?.(e.target.value);
+                }}
+                className="w-full pl-10 pr-10 py-2 bg-surface-container-lowest border border-outline-variant rounded-card focus:border-primary-container focus:ring-0 text-body-md font-body-md transition-colors placeholder:text-on-surface-variant"
                 placeholder="Search lessons, cases..."
                 type="text"
               />
+              {localValue && (
+                <button
+                  onClick={() => {
+                    setLocalValue('');
+                    onSearch?.('');
+                  }}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary transition-colors cursor-pointer flex items-center justify-center p-1 rounded-full hover:bg-surface-container-high"
+                  aria-label="Clear search"
+                >
+                  <Icon name="close" size={16} />
+                </button>
+              )}
             </div>
           </div>
         )}
