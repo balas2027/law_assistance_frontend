@@ -6,6 +6,7 @@ import Icon from "../../../components/ui/Icon";
 import { useUiStore } from "../../../stores/uiStore";
 import { useUserStats } from "../../../hooks/useUserStats";
 import { fetchCoursesApi, fetchLessonsApi } from "../../../lib/api/academy";
+import { fetchAcademyStatsApi } from "../../../lib/api/progress";
 import AcademyLeetCodeStats from "../../../components/features/academy/AcademyLeetCodeStats";
 
 export default function AcademyDashboardPage() {
@@ -17,6 +18,7 @@ export default function AcademyDashboardPage() {
   const [courses, setCourses] = useState([]);
   const [allLessons, setAllLessons] = useState([]);
   const [totalLessons, setTotalLessons] = useState(0);
+  const [academyStats, setAcademyStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -24,6 +26,11 @@ export default function AcademyDashboardPage() {
 
   useEffect(() => {
     setLoading(true);
+
+    fetchAcademyStatsApi()
+      .then((data) => setAcademyStats(data))
+      .catch(() => {});
+
     fetchCoursesApi()
       .then(async (allCourses) => {
         const list = Array.isArray(allCourses) ? allCourses : [];
@@ -85,12 +92,11 @@ export default function AcademyDashboardPage() {
 
         <main className="flex-1 overflow-y-auto px-6 md:px-12 py-10 w-full pb-24">
           
-          {/* Top Section: LeetCode-style 365 Days Tracking & Stats Module in Bluish Palette */}
+          {/* Top Section: 365-day Lesson Completion Tracking */}
           {!searchQuery && (
             <AcademyLeetCodeStats
-              stats={userStats}
-              totalCourses={courses.length}
-              totalLessons={totalLessons}
+              stats={academyStats || userStats}
+              calendar={academyStats?.calendar || []}
             />
           )}
 
@@ -267,10 +273,10 @@ export default function AcademyDashboardPage() {
                   )}
                 </div>
 
-                {/* Right Side: Existing Stats Moved to Side Panel */}
+                {/* Right Side: Learning Progress Panel */}
                 <div className="lg:col-span-4 bg-white border border-gray-200/90 rounded-sm p-6 shadow-[0_1px_2px_rgba(0,0,0,0.02)] space-y-5">
                   <div className="flex items-center justify-between pb-3 border-b border-gray-100">
-                    <h3 className="font-bold text-[16px] text-gray-950">Learning Overview</h3>
+                    <h3 className="font-bold text-[16px] text-gray-950">Your Learning Progress</h3>
                     <span className="text-[11px] font-bold uppercase tracking-wider text-[#0b57d0] bg-blue-50 px-2 py-0.5 rounded">
                       Live Stats
                     </span>
@@ -280,28 +286,54 @@ export default function AcademyDashboardPage() {
                   <div className="grid grid-cols-2 gap-3">
                     <div className="p-3.5 bg-[#f8fafc] border border-gray-100 rounded-sm">
                       <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Courses</p>
-                      <p className="text-[20px] font-bold text-gray-950 mt-0.5">{courses.length}</p>
+                      <p className="text-[20px] font-bold text-gray-950 mt-0.5">{academyStats?.total_courses ?? courses.length}</p>
                     </div>
 
                     <div className="p-3.5 bg-[#f8fafc] border border-gray-100 rounded-sm">
-                      <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Total Lessons</p>
-                      <p className="text-[20px] font-bold text-gray-950 mt-0.5">{totalLessons}</p>
+                      <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Lessons Completed</p>
+                      <p className="text-[20px] font-bold text-gray-950 mt-0.5">
+                        {academyStats ? `${academyStats.completed_lessons} / ${academyStats.total_lessons}` : totalLessons}
+                      </p>
                     </div>
 
                     <div className="p-3.5 bg-[#f8fafc] border border-gray-100 rounded-sm">
                       <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Daily Streak</p>
                       <p className="text-[18px] font-bold text-gray-950 mt-0.5">
-                        {currentStreak > 0 ? `${currentStreak} Days 🔥` : "—"}
+                        {currentStreak > 0 ? `${currentStreak} Days` : "—"}
                       </p>
                     </div>
 
                     <div className="p-3.5 bg-[#f8fafc] border border-gray-100 rounded-sm">
                       <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Experience</p>
                       <p className="text-[18px] font-bold text-gray-950 mt-0.5 truncate">
-                        {totalXp > 0 ? `Lvl ${level} • ${totalXp} XP` : "—"}
+                        {totalXp > 0 ? `Level ${level} • ${totalXp} XP` : "—"}
                       </p>
                     </div>
                   </div>
+
+                  {academyStats && academyStats.total_lessons > 0 && (
+                    <div>
+                      <div className="flex items-center justify-between text-[12px] text-gray-500 mb-1.5">
+                        <span>Overall course completion</span>
+                        <span className="font-bold text-gray-900">{academyStats.completion_pct}%</span>
+                      </div>
+                      <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-[#0b57d0] rounded-full transition-all duration-500"
+                          style={{ width: `${Math.min(100, academyStats.completion_pct)}%` }}
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {academyStats && academyStats.quizzes_taken > 0 && (
+                    <div className="flex items-center justify-between text-[12px] text-gray-500">
+                      <span>Mock tests attempted</span>
+                      <span className="font-bold text-gray-900">
+                        {academyStats.quizzes_passed} passed of {academyStats.quizzes_taken}
+                      </span>
+                    </div>
+                  )}
 
                   {/* Action button */}
                   <button

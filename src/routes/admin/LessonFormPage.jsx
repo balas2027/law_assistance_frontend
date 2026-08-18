@@ -186,16 +186,16 @@ export default function LessonFormPage() {
       >
 
         {/* Header */}
-        <header className="bg-surface-container-lowest border-b border-outline-variant shadow-sm z-10 w-full h-16 flex items-center justify-between px-8 shrink-0">
+        <header className="bg-white border-b border-gray-200/90 shadow-xs z-10 w-full h-16 flex items-center justify-between px-8 shrink-0">
           <div className="flex items-center gap-3">
             <button
               onClick={() => navigate('/admin/cms')}
-              className="p-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors"
+              className="p-1.5 rounded-sm text-gray-500 hover:bg-gray-100 transition-colors cursor-pointer"
               title="Back to CMS"
             >
               <Icon name="arrow_back" size={20} />
             </button>
-            <h2 className="font-h1 font-bold text-primary tracking-tight text-[18px]">
+            <h2 className="text-[18px] font-bold text-gray-950 tracking-tight">
               {isEdit ? 'Edit Lesson' : 'New Lesson'}
             </h2>
           </div>
@@ -205,7 +205,7 @@ export default function LessonFormPage() {
               type="button"
               onClick={() => handleSave('draft')}
               disabled={saving}
-              className="px-4 py-2 font-label-caps text-[12px] font-semibold border border-outline-variant rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors disabled:opacity-60"
+              className="px-4 py-2 font-label-caps text-[12.5px] font-bold tracking-wider uppercase border border-gray-300 rounded-sm text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-60 cursor-pointer"
             >
               Save Draft
             </button>
@@ -214,7 +214,7 @@ export default function LessonFormPage() {
               type="button"
               onClick={() => handleSave('published')}
               disabled={saving}
-              className="px-5 py-2 bg-primary text-white font-label-caps text-[12px] font-semibold rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-60 flex items-center gap-2 shadow-sm"
+              className="px-6 py-2 bg-[#0b57d0] hover:bg-[#0842a0] text-white font-label-caps text-[12.5px] font-bold tracking-wider uppercase rounded-sm transition-colors disabled:opacity-60 flex items-center gap-2 shadow-xs cursor-pointer"
             >
               {saving ? (
                 <>
@@ -224,7 +224,7 @@ export default function LessonFormPage() {
               ) : (
                 <>
                   <Icon name="publish" size={16} />
-                  Publish
+                  <span>Publish</span>
                 </>
               )}
             </button>
@@ -232,125 +232,129 @@ export default function LessonFormPage() {
         </header>
 
         {/* Form body */}
-        <div className="flex-1 overflow-y-auto px-8 py-6 w-full max-w-4xl pb-24">
-
+        <div className="flex-1 overflow-y-auto px-8 py-8 w-full max-w-4xl pb-24 bg-[#fafbfc]">
 
           {error && (
-            <div className="mb-5 bg-error/10 border border-error/30 text-error rounded-lg px-4 py-3 font-body-md flex items-center gap-2">
+            <div className="mb-6 bg-red-50 border border-red-200 text-red-700 rounded-sm px-4 py-3 text-[13px] flex items-center gap-2">
               <Icon name="error" size={18} />
               {error}
             </div>
           )}
 
-          {/* Status indicator strip */}
-          <div className="mb-6 flex items-center gap-3">
-            <span
-              className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold font-label-caps uppercase tracking-wider ${
-                form.status === 'published'
-                  ? 'bg-tertiary-container/20 text-tertiary-container'
-                  : 'bg-surface-container text-on-surface-variant'
-              }`}
-            >
-              <span className={`w-1.5 h-1.5 rounded-full ${form.status === 'published' ? 'bg-tertiary-container' : 'bg-on-surface-variant/40'}`} />
-              {form.status === 'published' ? 'Published' : 'Draft'}
-            </span>
-            <button
-              type="button"
-              onClick={() => handleField('status', form.status === 'published' ? 'draft' : 'published')}
-              className="text-[12px] text-primary hover:underline"
-            >
-              Toggle status
-            </button>
-          </div>
-
-          {/* Title */}
-          <div className="mb-5">
-            <input
-              id="lesson-title-input"
-              type="text"
-              placeholder="Lesson title *"
-              value={form.title}
-              onChange={(e) => handleField('title', e.target.value)}
-              className="w-full bg-transparent border-0 border-b-2 border-outline-variant focus:border-primary outline-none font-h1 text-[28px] text-primary placeholder:text-on-surface-variant/50 py-2 transition-colors"
-            />
-          </div>
-
-          {/* Metadata row */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-            {/* Course selector */}
-            <div>
-              <label htmlFor="lesson-course-select" className="block font-label-caps text-label-caps text-on-surface-variant mb-1.5 uppercase tracking-wider">
-                Course *
-              </label>
-              <select
-                id="lesson-course-select"
-                value={form.course_id}
-                onChange={(e) => handleField('course_id', e.target.value)}
-                className="w-full bg-surface border border-outline-variant rounded-lg px-4 py-2.5 font-body-md text-on-surface focus:outline-none focus:border-primary transition-colors"
+          <div className="bg-white border border-gray-200/90 rounded-sm p-8 shadow-[0_1px_2px_rgba(0,0,0,0.02)] space-y-6">
+            {/* Status indicator strip */}
+            <div className="flex items-center justify-between pb-4 border-b border-gray-100">
+              <span
+                className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider ${
+                  form.status === 'published'
+                    ? 'bg-emerald-500/15 text-emerald-700 border border-emerald-500/30'
+                    : 'bg-amber-500/15 text-amber-700 border border-amber-500/30'
+                }`}
               >
-                <option value="">Select a course…</option>
-                {courses.map((c) => (
-                  <option key={c.id} value={c.id}>{c.title}</option>
-                ))}
-              </select>
+                <span className={`w-1.5 h-1.5 rounded-full ${form.status === 'published' ? 'bg-emerald-600' : 'bg-amber-600'}`} />
+                {form.status === 'published' ? 'Published' : 'Draft'}
+              </span>
+              <button
+                type="button"
+                onClick={() => handleField('status', form.status === 'published' ? 'draft' : 'published')}
+                className="text-[12px] text-[#0b57d0] hover:underline font-bold cursor-pointer"
+              >
+                Toggle Status
+              </button>
             </div>
 
-            {/* Author */}
+            {/* Title */}
             <div>
-              <label htmlFor="lesson-author-input" className="block font-label-caps text-label-caps text-on-surface-variant mb-1.5 uppercase tracking-wider">
-                Author
+              <label className="block text-[12px] font-bold text-gray-500 uppercase tracking-wider mb-2">
+                Lesson Title *
               </label>
               <input
-                id="lesson-author-input"
+                id="lesson-title-input"
                 type="text"
-                placeholder="Author name"
-                value={form.author_name}
-                onChange={(e) => handleField('author_name', e.target.value)}
-                className="w-full bg-surface border border-outline-variant rounded-lg px-4 py-2.5 font-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary transition-colors"
+                placeholder="e.g. Fundamental Rights under Article 21"
+                value={form.title}
+                onChange={(e) => handleField('title', e.target.value)}
+                className="w-full bg-white border border-gray-300 rounded-sm px-4 py-3 text-[20px] font-bold text-gray-950 placeholder:text-gray-400 focus:outline-none focus:border-[#0b57d0] transition-colors shadow-2xs"
               />
             </div>
-          </div>
 
-          {/* Rich content editor */}
-          <div className="mb-6">
-            <label className="block font-label-caps text-label-caps text-on-surface-variant mb-1.5 uppercase tracking-wider">
-              Content
-            </label>
-            <RichEditor
-              value={form.content}
-              onChange={(html) => handleField('content', html)}
-            />
-            <p className="mt-1.5 text-[11px] text-on-surface-variant">
-              Use the toolbar to apply formatting. HTML is stored and rendered in the student lesson view.
-            </p>
-          </div>
+            {/* Metadata row */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              {/* Course selector */}
+              <div>
+                <label htmlFor="lesson-course-select" className="block text-[12px] font-bold text-gray-500 uppercase tracking-wider mb-2">
+                  Course Assignment *
+                </label>
+                <select
+                  id="lesson-course-select"
+                  value={form.course_id}
+                  onChange={(e) => handleField('course_id', e.target.value)}
+                  className="w-full bg-white border border-gray-300 rounded-sm px-3.5 py-2.5 text-[14px] text-gray-900 focus:outline-none focus:border-[#0b57d0] transition-colors"
+                >
+                  <option value="">Select a course…</option>
+                  {courses.map((c) => (
+                    <option key={c.id} value={c.id}>{c.title}</option>
+                  ))}
+                </select>
+              </div>
 
-          {/* Bottom action strip */}
-          <div className="flex items-center justify-between pt-4 border-t border-outline-variant/50">
-            <button
-              type="button"
-              onClick={() => navigate('/admin/cms')}
-              className="text-on-surface-variant hover:text-primary font-label-caps text-label-caps transition-colors"
-            >
-              ← Back to CMS
-            </button>
-            <div className="flex items-center gap-3">
+              {/* Author */}
+              <div>
+                <label htmlFor="lesson-author-input" className="block text-[12px] font-bold text-gray-500 uppercase tracking-wider mb-2">
+                  Author / Instructor
+                </label>
+                <input
+                  id="lesson-author-input"
+                  type="text"
+                  placeholder="Author name"
+                  value={form.author_name}
+                  onChange={(e) => handleField('author_name', e.target.value)}
+                  className="w-full bg-white border border-gray-300 rounded-sm px-3.5 py-2.5 text-[14px] text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#0b57d0] transition-colors"
+                />
+              </div>
+            </div>
+
+            {/* Rich content editor */}
+            <div>
+              <label className="block text-[12px] font-bold text-gray-500 uppercase tracking-wider mb-2">
+                Lesson Content (HTML / Rich Text)
+              </label>
+              <RichEditor
+                value={form.content}
+                onChange={(html) => handleField('content', html)}
+              />
+              <p className="mt-2 text-[12px] text-gray-500">
+                Format your lesson with headings, bold text, lists, and landmark case notes.
+              </p>
+            </div>
+
+            {/* Bottom action strip */}
+            <div className="flex items-center justify-between pt-6 border-t border-gray-100">
               <button
                 type="button"
-                onClick={() => handleSave('draft')}
-                disabled={saving}
-                className="px-4 py-2 font-label-caps text-label-caps border border-outline-variant rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors disabled:opacity-60"
+                onClick={() => navigate('/admin/cms')}
+                className="text-gray-600 hover:text-[#0b57d0] text-[13px] font-semibold transition-colors cursor-pointer"
               >
-                Save Draft
+                ← Back to CMS
               </button>
-              <button
-                type="button"
-                onClick={() => handleSave('published')}
-                disabled={saving}
-                className="px-5 py-2 bg-primary text-on-primary font-label-caps text-label-caps rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-60"
-              >
-                Publish
-              </button>
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => handleSave('draft')}
+                  disabled={saving}
+                  className="px-4 py-2 text-[12.5px] font-bold tracking-wider uppercase border border-gray-300 rounded-sm text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-60 cursor-pointer"
+                >
+                  Save Draft
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleSave('published')}
+                  disabled={saving}
+                  className="px-6 py-2 bg-[#0b57d0] hover:bg-[#0842a0] text-white text-[12.5px] font-bold tracking-wider uppercase rounded-sm transition-colors disabled:opacity-60 cursor-pointer shadow-xs"
+                >
+                  Publish Lesson
+                </button>
+              </div>
             </div>
           </div>
         </div>

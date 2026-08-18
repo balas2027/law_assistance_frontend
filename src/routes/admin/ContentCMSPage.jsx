@@ -178,49 +178,57 @@ export default function ContentCMSPage() {
       >
 
         {/* Header - Aligned at h-16 matching sidebar header */}
-        <header className="bg-surface-container-lowest border-b border-outline-variant shadow-sm z-10 w-full h-16 flex items-center justify-between px-8 shrink-0">
+        <header className="bg-white border-b border-gray-200/90 shadow-xs z-10 w-full h-16 flex items-center justify-between px-8 shrink-0">
           <div className="flex items-center gap-3">
-            <h2 className="font-h1 font-bold text-primary tracking-tight text-[18px]">
+            <div className="w-8 h-8 rounded-full bg-[#0b57d0] text-white flex items-center justify-center font-bold shadow-xs">
+              <Icon name="edit_note" size={20} />
+            </div>
+            <h2 className="text-[18px] font-bold text-gray-950 tracking-tight">
               Content CMS
             </h2>
           </div>
           <button
             id="cms-new-lesson-btn"
             onClick={() => navigate('/admin/cms/lessons/new')}
-            className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg font-label-caps text-[13px] font-semibold hover:bg-primary/90 transition-colors shadow-sm"
+            className="flex items-center gap-2 bg-[#0b57d0] hover:bg-[#0842a0] text-white px-4 py-2 rounded-sm text-[13px] font-bold tracking-wider uppercase transition-colors shadow-xs cursor-pointer"
           >
             <Icon name="add" size={16} />
-            New Lesson
+            <span>New Lesson</span>
           </button>
         </header>
 
         {/* Content Body - Responsive fluid width */}
-        <div className="flex-1 overflow-y-auto px-8 py-6 w-full pb-24">
+        <div className="flex-1 overflow-y-auto px-8 py-8 w-full pb-24 bg-[#fafbfc]">
 
           {/* Page heading */}
           <div className="mb-6">
-            <h1 className="font-h1 text-[26px] font-bold text-primary mb-1">Content Management</h1>
-            <p className="font-body-md text-[14px] text-on-surface-variant">
-              Manage courses and lessons. Click any status badge to switch between Published and Draft.
+            <p className="text-[12px] font-bold text-gray-500 tracking-[0.12em] uppercase mb-1.5">
+              CURRICULUM MANAGEMENT
+            </p>
+            <h1 className="text-[28px] md:text-[32px] font-bold text-gray-950 tracking-tight mb-1">
+              Courses & Lessons CMS
+            </h1>
+            <p className="text-[14px] text-gray-600">
+              Manage courses and interactive lessons. Toggle between Published and Draft with a single click.
             </p>
           </div>
 
           {(error || formError) && (
-            <div className="mb-6 bg-error/10 border border-error/30 text-error rounded-xl px-4 py-3 text-[13px] flex items-center gap-2">
+            <div className="mb-6 bg-red-50 border border-red-200 text-red-700 rounded-sm px-4 py-3 text-[13px] flex items-center gap-2">
               <Icon name="error" size={18} />
               {formError || error}
             </div>
           )}
 
           {/* ── Courses Section ─────────────────────────────────────────── */}
-          <section className="mb-8">
-            <div className="flex items-center justify-between mb-3.5">
-              <div className="flex items-center gap-2">
-                <h2 className="font-h2 text-[17px] font-bold text-on-surface flex items-center gap-2">
-                  <Icon name="library_books" size={20} className="text-primary" />
+          <section className="mb-10">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2.5">
+                <h2 className="text-[17px] font-bold text-gray-950 flex items-center gap-2">
+                  <Icon name="library_books" size={20} className="text-[#0b57d0]" />
                   Courses
                 </h2>
-                <span className="text-[12px] font-medium bg-surface-container px-2 py-0.5 rounded-full text-on-surface-variant">
+                <span className="text-[12px] font-bold bg-gray-100 text-gray-600 px-2.5 py-0.5 rounded-full">
                   {courses.length}
                 </span>
               </div>
@@ -234,10 +242,10 @@ export default function ContentCMSPage() {
                   setShowCourseForm((v) => !v);
                   setFormError(null);
                 }}
-                className="flex items-center gap-1.5 text-primary hover:bg-surface-container px-3 py-1.5 rounded-lg transition-colors font-label-caps text-[13px] font-semibold"
+                className="flex items-center gap-1.5 text-[#0b57d0] hover:bg-[#eaf1fc] px-3 py-1.5 rounded-sm transition-colors text-[13px] font-bold tracking-wider uppercase cursor-pointer"
               >
                 <Icon name={showCourseForm && !editingCourseId ? 'close' : 'add_circle'} size={18} />
-                {showCourseForm && !editingCourseId ? 'Cancel' : 'New Course'}
+                <span>{showCourseForm && !editingCourseId ? 'Cancel' : 'New Course'}</span>
               </button>
             </div>
 
@@ -245,18 +253,18 @@ export default function ContentCMSPage() {
             {showCourseForm && (
               <form
                 onSubmit={handleSaveCourse}
-                className="mb-5 bg-surface-container-lowest border-2 border-primary/30 rounded-xl p-5 shadow-level-1 animate-fade-in-up"
+                className="mb-6 bg-white border-2 border-[#0b57d0] rounded-sm p-6 shadow-[0_1px_2px_rgba(0,0,0,0.02)] animate-fade-in-up"
               >
-                <div className="flex items-center justify-between mb-3">
-                  <p className="font-label-caps text-[12px] text-primary font-bold uppercase tracking-wider">
+                <div className="flex items-center justify-between mb-4">
+                  <p className="text-[12px] text-[#0b57d0] font-bold uppercase tracking-wider">
                     {editingCourseId ? 'Edit Course' : 'Create New Course'}
                   </p>
                   <div className="flex items-center gap-2">
-                    <span className="text-[12px] font-semibold text-on-surface-variant">Status:</span>
+                    <span className="text-[12px] font-bold text-gray-500 uppercase tracking-wider">Status:</span>
                     <select
                       value={courseStatus}
                       onChange={(e) => setCourseStatus(e.target.value)}
-                      className="bg-surface border border-outline-variant text-[12px] font-bold rounded-lg px-2.5 py-1 text-primary focus:outline-none focus:border-primary"
+                      className="bg-white border border-gray-300 text-[12.5px] font-bold rounded-sm px-3 py-1.5 text-gray-900 focus:outline-none focus:border-[#0b57d0]"
                     >
                       <option value="published">Published</option>
                       <option value="draft">Draft</option>
@@ -271,7 +279,7 @@ export default function ContentCMSPage() {
                     placeholder="Course title *"
                     value={courseTitle}
                     onChange={(e) => setCourseTitle(e.target.value)}
-                    className="w-full bg-surface border border-outline-variant rounded-lg px-4 py-2.5 text-[14px] text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary transition-colors"
+                    className="w-full bg-white border border-gray-300 rounded-sm px-4 py-2.5 text-[14px] text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#0b57d0] transition-colors"
                     required
                     autoFocus
                   />
@@ -281,9 +289,9 @@ export default function ContentCMSPage() {
                     placeholder="Description (optional)"
                     value={courseDesc}
                     onChange={(e) => setCourseDesc(e.target.value)}
-                    className="w-full bg-surface border border-outline-variant rounded-lg px-4 py-2.5 text-[14px] text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary transition-colors"
+                    className="w-full bg-white border border-gray-300 rounded-sm px-4 py-2.5 text-[14px] text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#0b57d0] transition-colors"
                   />
-                  <div className="flex gap-3 justify-end pt-1">
+                  <div className="flex gap-3 justify-end pt-2">
                     <button
                       type="button"
                       onClick={() => {
@@ -291,14 +299,14 @@ export default function ContentCMSPage() {
                         setEditingCourseId(null);
                         setFormError(null);
                       }}
-                      className="px-4 py-2 text-[13px] font-medium text-on-surface-variant hover:bg-surface-container rounded-lg transition-colors"
+                      className="px-4 py-2 text-[13px] font-semibold text-gray-600 hover:bg-gray-100 rounded-sm transition-colors cursor-pointer"
                     >
                       Cancel
                     </button>
                     <button
                       type="submit"
                       disabled={saving}
-                      className="px-5 py-2 bg-primary text-white text-[13px] font-semibold rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-60 flex items-center gap-2 shadow-sm"
+                      className="px-6 py-2.5 bg-[#0b57d0] hover:bg-[#0842a0] text-white text-[13px] font-bold tracking-wider uppercase rounded-sm transition-colors disabled:opacity-60 flex items-center gap-2 shadow-xs cursor-pointer"
                     >
                       {saving ? (
                         <>
@@ -318,7 +326,7 @@ export default function ContentCMSPage() {
             {coursesLoading && courses.length === 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {[1, 2, 3].map((i) => (
-                  <div key={i} className="h-28 bg-surface-container animate-pulse rounded-xl" />
+                  <div key={i} className="h-28 bg-white border border-gray-200/90 animate-pulse rounded-sm" />
                 ))}
               </div>
             ) : courses.length === 0 && !showCourseForm ? (
@@ -329,7 +337,7 @@ export default function ContentCMSPage() {
                 action={
                   <button
                     onClick={() => setShowCourseForm(true)}
-                    className="px-5 py-2.5 bg-primary text-white text-[13px] font-semibold rounded-full hover:bg-primary/90 transition-colors"
+                    className="px-6 py-2.5 bg-[#0b57d0] hover:bg-[#0842a0] text-white text-[13px] font-bold uppercase tracking-wider rounded-sm transition-colors cursor-pointer shadow-xs"
                   >
                     + New Course
                   </button>
@@ -344,20 +352,20 @@ export default function ContentCMSPage() {
                     <div
                       key={course.id}
                       onClick={() => handleCourseSelect(course.id)}
-                      className={`bg-surface-container-lowest border rounded-xl p-4 shadow-sm cursor-pointer transition-all duration-200 group relative ${
+                      className={`bg-white border rounded-sm p-5 shadow-[0_1px_2px_rgba(0,0,0,0.02)] cursor-pointer transition-all duration-200 group relative ${
                         isSelected
-                          ? 'border-primary ring-2 ring-primary/20 bg-primary/[0.02]'
-                          : 'border-outline-variant hover:border-primary/50 hover:shadow-md'
+                          ? 'border-2 border-[#0b57d0] bg-[#fafbfc]'
+                          : 'border-gray-200/90 hover:border-gray-400'
                       }`}
                     >
-                      <div className="flex items-start justify-between gap-2 mb-1.5">
-                        <p className="font-h2 text-[15px] font-bold text-primary leading-snug line-clamp-2">
+                      <div className="flex items-start justify-between gap-2 mb-2">
+                        <p className="text-[15px] font-bold text-gray-950 leading-snug line-clamp-2 group-hover:text-[#0b57d0] transition-colors">
                           {course.title}
                         </p>
-                        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
                           <button
                             onClick={(e) => handleEditCourseClick(e, course)}
-                            className="p-1 text-on-surface-variant hover:text-primary transition-all flex-shrink-0"
+                            className="p-1 text-gray-400 hover:text-[#0b57d0] transition-all cursor-pointer"
                             title="Edit course"
                           >
                             <Icon name="edit" size={15} />
@@ -367,7 +375,7 @@ export default function ContentCMSPage() {
                               e.stopPropagation();
                               handleDeleteCourse(course.id);
                             }}
-                            className="p-1 text-on-surface-variant hover:text-error transition-all flex-shrink-0"
+                            className="p-1 text-gray-400 hover:text-red-600 transition-all cursor-pointer"
                             title="Delete course"
                           >
                             <Icon name="delete" size={15} />
@@ -375,17 +383,17 @@ export default function ContentCMSPage() {
                         </div>
                       </div>
                       {course.description && (
-                        <p className="text-[13px] text-on-surface-variant line-clamp-2 mb-3">
+                        <p className="text-[13px] text-gray-600 line-clamp-2 mb-4 leading-relaxed">
                           {course.description}
                         </p>
                       )}
-                      <div className="flex items-center justify-between pt-2 border-t border-outline-variant/40 text-[12px]">
+                      <div className="flex items-center justify-between pt-3 border-t border-gray-100 text-[12px]">
                         <StatusBadge
                           status={course.status}
                           clickable={true}
                           onClick={(e) => handleToggleCourseStatus(e, course)}
                         />
-                        <span className="text-on-surface-variant font-medium">
+                        <span className="text-gray-500 font-semibold">
                           {lessonCount} {lessonCount === 1 ? 'lesson' : 'lessons'}
                         </span>
                       </div>
@@ -398,18 +406,18 @@ export default function ContentCMSPage() {
 
           {/* ── Lessons Section ─────────────────────────────────────────── */}
           <section>
-            <div className="flex flex-wrap items-center justify-between gap-3 mb-3.5">
-              <div className="flex items-center gap-2">
-                <h2 className="font-h2 text-[17px] font-bold text-on-surface flex items-center gap-2">
-                  <Icon name="menu_book" size={20} className="text-primary" />
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+              <div className="flex items-center gap-2.5">
+                <h2 className="text-[17px] font-bold text-gray-950 flex items-center gap-2">
+                  <Icon name="menu_book" size={20} className="text-[#0b57d0]" />
                   Lessons
                 </h2>
                 {selectedCourseId && (
-                  <span className="text-[13px] font-normal text-on-surface-variant flex items-center gap-1">
-                    in <strong className="text-primary">{courses.find((c) => c.id === selectedCourseId)?.title || ''}</strong>
+                  <span className="text-[13px] font-normal text-gray-500 flex items-center gap-1">
+                    in <strong className="text-gray-900 font-bold">{courses.find((c) => c.id === selectedCourseId)?.title || ''}</strong>
                   </span>
                 )}
-                <span className="text-[12px] font-medium bg-surface-container px-2 py-0.5 rounded-full text-on-surface-variant">
+                <span className="text-[12px] font-bold bg-gray-100 text-gray-600 px-2.5 py-0.5 rounded-full">
                   {filteredLessons.length}
                 </span>
               </div>
@@ -420,7 +428,7 @@ export default function ContentCMSPage() {
                       setSelectedCourse(null);
                       loadLessons(undefined);
                     }}
-                    className="text-[12px] text-primary hover:underline font-medium px-1"
+                    className="text-[12px] text-[#0b57d0] hover:underline font-bold px-1 cursor-pointer"
                   >
                     Clear course filter
                   </button>
@@ -430,7 +438,7 @@ export default function ContentCMSPage() {
                   <Icon
                     name="search"
                     size={16}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant"
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
                   />
                   <input
                     id="lesson-search"
@@ -438,59 +446,59 @@ export default function ContentCMSPage() {
                     placeholder="Search lessons…"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-9 pr-3 py-1.5 bg-surface border border-outline-variant rounded-lg text-[13px] text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary transition-colors w-52"
+                    className="pl-9 pr-3 py-1.5 bg-white border border-gray-300 rounded-sm text-[13px] text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#0b57d0] transition-colors w-56 shadow-2xs"
                   />
                 </div>
               </div>
             </div>
 
             {/* Lessons table */}
-            <div className="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm overflow-hidden">
+            <div className="bg-white border border-gray-200/90 rounded-sm shadow-[0_1px_2px_rgba(0,0,0,0.02)] overflow-hidden">
               <div className="overflow-x-auto w-full">
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="bg-surface-container/40 border-b border-outline-variant">
-                      <th className="px-5 py-3 font-label-caps text-[11px] text-on-surface-variant uppercase tracking-wider font-semibold">
+                    <tr className="bg-[#fafbfc] border-b border-gray-200/80">
+                      <th className="px-6 py-3.5 text-[11px] text-gray-500 uppercase tracking-wider font-bold">
                         Title
                       </th>
-                      <th className="px-5 py-3 font-label-caps text-[11px] text-on-surface-variant uppercase tracking-wider font-semibold hidden sm:table-cell">
+                      <th className="px-6 py-3.5 text-[11px] text-gray-500 uppercase tracking-wider font-bold hidden sm:table-cell">
                         Course
                       </th>
-                      <th className="px-5 py-3 font-label-caps text-[11px] text-on-surface-variant uppercase tracking-wider font-semibold">
+                      <th className="px-6 py-3.5 text-[11px] text-gray-500 uppercase tracking-wider font-bold">
                         Status (Click to toggle)
                       </th>
-                      <th className="px-5 py-3 font-label-caps text-[11px] text-on-surface-variant uppercase tracking-wider font-semibold hidden md:table-cell">
+                      <th className="px-6 py-3.5 text-[11px] text-gray-500 uppercase tracking-wider font-bold hidden md:table-cell">
                         Author
                       </th>
-                      <th className="px-5 py-3 font-label-caps text-[11px] text-on-surface-variant uppercase tracking-wider font-semibold text-right">
+                      <th className="px-6 py-3.5 text-[11px] text-gray-500 uppercase tracking-wider font-bold text-right">
                         Actions
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-outline-variant/50">
+                  <tbody className="divide-y divide-gray-100">
                     {lessonsLoading && filteredLessons.length === 0 ? (
                       Array.from({ length: 3 }).map((_, i) => (
                         <tr key={i}>
                           {[1, 2, 3, 4, 5].map((c) => (
-                            <td key={c} className="px-5 py-4">
-                              <div className="h-3 bg-surface-container animate-pulse rounded w-full" />
+                            <td key={c} className="px-6 py-4">
+                              <div className="h-3 bg-gray-100 animate-pulse rounded-sm w-full" />
                             </td>
                           ))}
                         </tr>
                       ))
                     ) : filteredLessons.length === 0 ? (
                       <tr>
-                        <td colSpan={5} className="text-center py-12">
+                        <td colSpan={5} className="text-center py-14">
                           <div className="flex flex-col items-center gap-2">
-                            <Icon name="menu_book" size={32} className="text-on-surface-variant/40" />
-                            <p className="text-[14px] text-on-surface-variant font-medium">
+                            <Icon name="menu_book" size={36} className="text-gray-300" />
+                            <p className="text-[14.5px] text-gray-700 font-semibold">
                               {searchQuery
                                 ? 'No lessons match your search query.'
                                 : 'No lessons found for this course.'}
                             </p>
                             <button
                               onClick={() => navigate('/admin/cms/lessons/new')}
-                              className="mt-2 px-4 py-1.5 bg-primary text-white text-[12px] font-semibold rounded-full hover:bg-primary/90 transition-colors"
+                              className="mt-2 px-5 py-2 bg-[#0b57d0] hover:bg-[#0842a0] text-white text-[12.5px] font-bold uppercase tracking-wider rounded-sm transition-colors cursor-pointer shadow-xs"
                             >
                               + Create Lesson
                             </button>
@@ -504,43 +512,43 @@ export default function ContentCMSPage() {
                           ? new Date(lesson.updated_at).toLocaleDateString('en-IN', {
                               day: 'numeric',
                               month: 'short',
-                              year: '2-digit',
+                              year: 'numeric',
                             })
                           : '—';
                         return (
                           <tr
                             key={lesson.id}
-                            className="hover:bg-surface-container/40 transition-colors group"
+                            className="hover:bg-gray-50/70 transition-colors group"
                           >
-                            <td className="px-5 py-3.5">
-                              <p className="font-body-md text-[14px] font-semibold text-primary line-clamp-1">
+                            <td className="px-6 py-4">
+                              <p className="text-[14px] font-bold text-gray-950 group-hover:text-[#0b57d0] transition-colors line-clamp-1">
                                 {lesson.title}
                               </p>
-                              <p className="text-[11px] text-on-surface-variant mt-0.5">{date}</p>
+                              <p className="text-[11.5px] text-gray-500 mt-0.5">{date}</p>
                             </td>
-                            <td className="px-5 py-3.5 hidden sm:table-cell">
-                              <span className="text-[13px] text-on-surface-variant font-medium">
+                            <td className="px-6 py-4 hidden sm:table-cell">
+                              <span className="text-[13px] text-gray-700 font-medium">
                                 {course?.title ?? '—'}
                               </span>
                             </td>
-                            <td className="px-5 py-3.5">
+                            <td className="px-6 py-4">
                               <StatusBadge
                                 status={lesson.status}
                                 clickable={true}
                                 onClick={(e) => handleToggleLessonStatus(e, lesson)}
                               />
                             </td>
-                            <td className="px-5 py-3.5 hidden md:table-cell">
-                              <span className="text-[13px] text-on-surface-variant">
+                            <td className="px-6 py-4 hidden md:table-cell">
+                              <span className="text-[13px] text-gray-600">
                                 {lesson.author_name ?? '—'}
                               </span>
                             </td>
-                            <td className="px-5 py-3.5 text-right">
-                              <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <td className="px-6 py-4 text-right">
+                              <div className="flex items-center justify-end gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
                                 <button
                                   id={`edit-lesson-${lesson.id}`}
                                   onClick={() => navigate(`/admin/cms/lessons/${lesson.id}/edit`)}
-                                  className="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container rounded-md transition-colors"
+                                  className="p-1.5 text-gray-500 hover:text-[#0b57d0] hover:bg-[#eaf1fc] rounded-sm transition-colors cursor-pointer"
                                   title="Edit"
                                 >
                                   <Icon name="edit" size={16} />
@@ -548,7 +556,7 @@ export default function ContentCMSPage() {
                                 <button
                                   id={`delete-lesson-${lesson.id}`}
                                   onClick={() => handleDeleteLesson(lesson.id)}
-                                  className="p-1.5 text-on-surface-variant hover:text-error hover:bg-error/10 rounded-md transition-colors"
+                                  className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-sm transition-colors cursor-pointer"
                                   title="Delete"
                                 >
                                   <Icon name="delete" size={16} />

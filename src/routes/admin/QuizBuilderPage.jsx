@@ -62,46 +62,36 @@ export default function QuizBuilderPage() {
         }`}
       >
 
-        <header className="bg-surface-container-lowest text-primary border-b border-outline-variant shadow-sm flex justify-between items-center w-full px-gutter h-16 sticky z-20">
-          <div className="flex items-center gap-4">
-            <button className="md:hidden text-on-surface-variant">
-              <Icon name="menu" size={24} />
-            </button>
-            <div className="flex flex-col">
-              <span className="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">
-                Quiz Builder
-              </span>
-              <h2 className="font-h2 text-h2 font-bold text-primary truncate md:text-[24px]">{quizBuilder.header}</h2>
+        <header className="bg-white border-b border-gray-200/90 shadow-xs flex justify-between items-center w-full px-8 h-16 sticky top-0 z-20 shrink-0">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-[#0b57d0] text-white flex items-center justify-center font-bold shadow-xs">
+              <Icon name="quiz" size={18} />
+            </div>
+            <div>
+              <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Quiz Builder</p>
+              <h2 className="text-[17px] font-bold text-gray-950 truncate">{quizBuilder.header || 'Configure Quiz'}</h2>
             </div>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="hidden md:flex items-center gap-2">
-              <button className="text-on-surface-variant hover:text-secondary transition-all p-2 rounded-full hover:bg-surface-container">
-                <Icon name="notifications" size={20} />
-              </button>
-              <button className="text-on-surface-variant hover:text-secondary transition-all p-2 rounded-full hover:bg-surface-container">
-                <Icon name="gavel" size={20} />
-              </button>
-            </div>
+          <div className="flex items-center gap-3">
             <button
               onClick={handleSaveDraft}
               disabled={loading}
-              className="border border-outline-variant text-on-surface-variant font-label-caps text-label-caps px-6 py-2 rounded-full font-bold hover:bg-surface-container transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="border border-gray-300 text-gray-700 font-bold text-[12.5px] uppercase tracking-wider px-5 py-2 rounded-sm hover:bg-gray-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
               Save Draft
             </button>
             <button
               onClick={handlePublish}
               disabled={loading}
-              className="bg-saffron text-on-primary font-label-caps text-label-caps px-6 py-2 rounded-full font-bold hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-[#0b57d0] hover:bg-[#0842a0] text-white font-bold text-[12.5px] uppercase tracking-wider px-6 py-2 rounded-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-xs"
             >
               {loading ? 'Saving…' : 'Publish Changes'}
             </button>
           </div>
         </header>
 
-        <main className="flex-1 p-margin-mobile md:p-gutter max-w-[1200px] w-full mx-auto overflow-y-auto">
-          <div className="flex flex-col lg:flex-row gap-gutter items-start">
+        <main className="flex-1 p-8 max-w-[1280px] w-full mx-auto overflow-y-auto bg-[#fafbfc]">
+          <div className="flex flex-col lg:flex-row gap-8 items-start">
             <QuizBuilderForm
               quiz={quizBuilder}
               onFieldChange={setBuilderField}
@@ -123,7 +113,7 @@ export default function QuizBuilderPage() {
             />
           </div>
           {error && (
-            <div className="mt-4 bg-error/10 border border-error/30 text-error rounded-xl px-5 py-3 flex items-center gap-2">
+            <div className="mt-4 bg-red-50 border border-red-200 text-red-700 rounded-sm px-5 py-3 flex items-center gap-2 text-[13px]">
               <Icon name="error" size={18} />
               {error}
             </div>

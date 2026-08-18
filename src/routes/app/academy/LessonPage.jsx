@@ -4,6 +4,11 @@ import AppSidebar from '../../../components/layout/AppSidebar';
 import Topbar from '../../../components/layout/Topbar';
 import Icon from '../../../components/ui/Icon';
 import { fetchLessonApi, fetchLessonsApi } from '../../../lib/api/academy';
+import {
+  fetchLessonCompletionStatusApi,
+  markLessonCompletedApi,
+  unmarkLessonCompletedApi,
+} from '../../../lib/api/progress';
 import { useUiStore } from '../../../stores/uiStore';
 
 
@@ -110,16 +115,19 @@ function ReadingToolbar({ lesson }) {
 export default function LessonPage() {
 
   const { lessonId } = useParams();
-  const { sidebarCollapsed } = useUiStore();
+  const { sidebarCollapsed, addToast } = useUiStore();
   const [lesson,      setLesson]      = useState(null);
   const [siblings,    setSiblings]    = useState([]);
   const [loading,     setLoading]     = useState(true);
   const [error,       setError]       = useState(null);
+  const [completion,  setCompletion]  = useState(null);
+  const [updating,    setUpdating]    = useState(false);
 
   useEffect(() => {
     if (!lessonId) return;
     setLoading(true);
     setError(null);
+    setCompletion(null);
     fetchLessonApi(lessonId)
       .then(async (l) => {
         setLesson(l);
@@ -127,10 +135,33 @@ export default function LessonPage() {
           const ls = await fetchLessonsApi({ courseId: l.course_id }).catch(() => []);
           setSiblings(Array.isArray(ls) ? ls : []);
         }
+        fetchLessonCompletionStatusApi(lessonId)
+          .then((s) => setCompletion(s))
+          .catch(() => {});
       })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
   }, [lessonId]);
+
+  async function toggleCompletion() {
+    if (!lessonId || updating) return;
+    setUpdating(true);
+    try {
+      if (completion?.completed) {
+        await unmarkLessonCompletedApi(lessonId);
+        setCompletion({ completed: false, completed_at: null });
+        addToast('Lesson marked as not completed', 'success');
+      } else {
+        const res = await markLessonCompletedApi(lessonId);
+        setCompletion(res);
+        addToast('Lesson marked as completed', 'success');
+      }
+    } catch (err) {
+      addToast(err.message, 'error');
+    } finally {
+      setUpdating(false);
+    }
+  }
 
   const currentIdx = siblings.findIndex((l) => String(l.id) === String(lessonId));
   const prevLesson = currentIdx > 0 ? siblings[currentIdx - 1] : null;
@@ -218,6 +249,53 @@ export default function LessonPage() {
                       </p>
                     </div>
                   )}
+
+                  {/* Mark as Completed */}
+                  <div
+                    className={`mt-10 rounded-xl border p-6 flex flex-col sm:flex-row sm:items-center gap-4 ${
+                      completion?.completed
+                        ? 'bg-secondary-container/40 border-secondary-container'
+                        : 'bg-surface-container border-outline-variant/50'
+                    }`}
+                  >
+                    <div className="flex-1">
+                      <h3 className="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">
+                        Lesson progress
+                      </h3>
+                      <p className="text-[13.5px] text-on-surface-variant mt-1">
+                        {completion?.completed
+                          ? `Completed on ${new Date(completion.completed_at).toLocaleDateString('en-IN', {
+                              day: 'numeric',
+                              month: 'short',
+                              year: 'numeric',
+                            })}`
+                          : 'Mark this lesson as completed to track your learning progress and daily streak.'}
+                      </p>
+                    </div>
+                    <button
+                      onClick={toggleCompletion}
+                      disabled={updating}
+                      className={`shrink-0 font-label-caps text-label-caps px-5 py-3 rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-60 ${
+                        completion?.completed
+                          ? 'bg-surface bg-surface-container-high text-on-surface-variant hover:bg-surface-container'
+                          : 'bg-primary text-white hover:bg-primary/90 shadow-level-1'
+                      }`}
+                    >
+                      {updating ? (
+                        <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                      ) : completion?.completed ? (
+                        <>
+                          <Icon name="check" size={16} />
+                          Completed
+                        </>
+                      ) : (
+                        <>
+                          <Icon name="check_circle" size={16} />
+                          Mark as Completed
+                        </>
+                      )}
+                    </button>
+                  </div>
 
                   {/* Prev / Next navigation */}
                   <div className="mt-12 pt-6 border-t border-outline-variant flex justify-between gap-4">

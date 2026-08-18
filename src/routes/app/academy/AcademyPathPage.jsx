@@ -4,6 +4,7 @@ import AppSidebar from '../../../components/layout/AppSidebar';
 import Topbar from '../../../components/layout/Topbar';
 import Icon from '../../../components/ui/Icon';
 import { fetchCoursesApi, fetchLessonsApi } from '../../../lib/api/academy';
+import { fetchAcademyStatsApi } from '../../../lib/api/progress';
 import { useUiStore } from '../../../stores/uiStore';
 
 export default function AcademyPathPage() {
@@ -14,6 +15,7 @@ export default function AcademyPathPage() {
   const [courses, setCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [lessons, setLessons] = useState([]);
+  const [completedIds, setCompletedIds] = useState(new Set());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -58,6 +60,18 @@ export default function AcademyPathPage() {
       .finally(() => {
         setLoading(false);
       });
+
+    // Real lesson completion data for progress tracking
+    fetchAcademyStatsApi()
+      .then((data) => {
+        if (!data?.courses) return;
+        const ids = new Set();
+        for (const c of data.courses) {
+          (c.completed_lesson_ids || []).forEach((id) => ids.add(Number(id)));
+        }
+        setCompletedIds(ids);
+      })
+      .catch(() => {});
   }, [courseId]);
 
   const handleSelectCourse = async (c) => {
@@ -66,9 +80,11 @@ export default function AcademyPathPage() {
   };
 
   const totalCount = lessons.length;
-  // Let active lesson be the first lesson or the one currently in progress
-  const activeLessonIdx = totalCount > 0 ? (totalCount >= 3 ? 2 : totalCount - 1) : 0;
-  const activeLesson = lessons[activeLessonIdx] || lessons[0];
+  const completedCount = lessons.filter((l) => completedIds.has(Number(l.id))).length;
+  const progressPct = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+  // Active lesson = first lesson not yet completed
+  const activeLessonIdx = lessons.findIndex((l) => !completedIds.has(Number(l.id)));
+  const activeLesson = lessons[activeLessonIdx] || lessons[totalCount - 1] || lessons[0];
 
   return (
     <div className="flex h-screen overflow-hidden antialiased bg-[#fafbfc] font-sans">
@@ -146,13 +162,13 @@ export default function AcademyPathPage() {
                           d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                           fill="none"
                           stroke="currentColor"
-                          strokeDasharray="50, 100"
+                          strokeDasharray={`${progressPct}, 100`}
                           strokeWidth="3.5"
                           strokeLinecap="round"
                         />
                       </svg>
                       <div className="absolute inset-0 flex items-center justify-center text-[12.5px] font-bold text-[#0b57d0]">
-                        50%
+                        {progressPct}%
                       </div>
                     </div>
                     <div className="flex-1">
@@ -161,11 +177,11 @@ export default function AcademyPathPage() {
                           Course Progress
                         </span>
                         <span className="text-[13px] font-bold text-gray-900">
-                          {lessons.length} {lessons.length === 1 ? 'Module' : 'Modules'}
+                          {completedCount} of {lessons.length} {lessons.length === 1 ? 'Module' : 'Modules'} completed
                         </span>
                       </div>
                       <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                        <div className="h-full bg-[#0b57d0] rounded-full" style={{ width: '50%' }} />
+                        <div className="h-full bg-[#0b57d0] rounded-full" style={{ width: `${progressPct}%` }} />
                       </div>
                     </div>
                   </div>
@@ -205,7 +221,7 @@ export default function AcademyPathPage() {
               ) : (
                 lessons.map((lesson, idx) => {
                   const isCurrent = idx === activeLessonIdx;
-                  const isCompleted = idx < activeLessonIdx;
+                  const isCompleted = completedIds.has(Number(lesson.id));
 
                   if (isCurrent) {
                     // ── Active / Current Lesson Node ──
@@ -223,11 +239,11 @@ export default function AcademyPathPage() {
                         <div className="flex-1 bg-white border-2 border-[#0b57d0] p-6 rounded-sm shadow-[0_1px_2px_rgba(0,0,0,0.02)] mt-0">
                           <div className="flex justify-between items-start mb-3">
                             <div className="text-[11px] font-bold text-[#0b57d0] bg-[#eaf1fc] px-2.5 py-1 rounded-sm uppercase tracking-wider inline-block">
-                              Current Lesson
+                              {progressPct > 0 ? 'Resume Here' : 'Start Here'}
                             </div>
                             <div className="flex items-center gap-1.5 text-gray-500 text-[12px] font-medium">
-                              <Icon name="schedule" size={16} />
-                              <span>15 mins</span>
+                              <Icon name="menu_book" size={16} />
+                              <span>Lesson {idx + 1}</span>
                             </div>
                           </div>
 
@@ -245,7 +261,7 @@ export default function AcademyPathPage() {
                             onClick={() => navigate(`/academy/lesson/${lesson.id}`)}
                             className="inline-flex items-center gap-2 px-6 py-2.5 bg-[#0b57d0] hover:bg-[#0842a0] text-white font-bold text-[13px] tracking-wider uppercase rounded-sm transition-colors cursor-pointer shadow-xs"
                           >
-                            <span>Resume Lesson</span>
+                            <span>{progressPct > 0 ? 'Resume Lesson' : 'Start Lesson'}</span>
                             <Icon name="arrow_forward" size={16} />
                           </button>
                         </div>
@@ -350,7 +366,7 @@ export default function AcademyPathPage() {
                   </h4>
                   <ul className="space-y-3">
                     {lessons.slice(0, 4).map((l, i) => {
-                      const isDone = i < activeLessonIdx;
+                      const isDone = completedIds.has(Number(l.id));
                       const isCurrentSub = i === activeLessonIdx;
                       return (
                         <li key={l.id} className="flex gap-3 items-start relative">
@@ -371,7 +387,7 @@ export default function AcademyPathPage() {
                               {l.title}
                             </Link>
                             <p className="text-[11px] text-gray-400">
-                              {isDone ? 'Completed' : isCurrentSub ? 'In Progress • 5 mins left' : '10 mins'}
+                              {isDone ? 'Completed' : isCurrentSub ? 'Next up' : 'Upcoming'}
                             </p>
                           </div>
                         </li>
