@@ -131,14 +131,12 @@ export default function AppSidebar({ variant = 'academy', cta = null, footer = n
 
   return (
     <nav
-      className={`hidden md:flex h-screen fixed left-0 top-0 flex-col border-r border-outline-variant bg-surface-container-low z-50 transition-all duration-300 ease-in-out ${
-        sidebarCollapsed ? 'w-16' : 'w-64'
-      }`}
+      className={`hidden md:flex h-screen fixed left-0 top-0 flex-col border-r border-outline-variant bg-surface-container-low z-50 transition-all duration-300 ease-in-out ${sidebarCollapsed ? 'w-16' : 'w-64'
+        }`}
     >
       {/* ── Header: Logo + Collapse/Expand Toggle ── */}
-      <div className={`h-16 px-4 flex items-center border-b border-outline-variant bg-surface shrink-0 ${
-        sidebarCollapsed ? 'justify-center' : 'justify-between'
-      }`}>
+      <div className={`h-16 px-4 flex items-center bg-surface-container-low shrink-0 ${sidebarCollapsed ? 'justify-center' : 'justify-between'
+        }`}>
         {!sidebarCollapsed && (
           <div
             onClick={() => navigate('/academy/dashboard')}
@@ -184,7 +182,7 @@ export default function AppSidebar({ variant = 'academy', cta = null, footer = n
       </div>
 
       {/* ── Body Container ── */}
-      <div className="p-3 flex-1 flex flex-col overflow-hidden">
+      <div className="p-3 flex-1 mt-6 flex flex-col overflow-hidden">
         {/* ── Action Button (Chat Mode: + New Chat) ── */}
         {variant === 'chat' ? (
           <div className="mb-3">
@@ -311,7 +309,7 @@ export default function AppSidebar({ variant = 'academy', cta = null, footer = n
 
 
 
-       
+
         {/* ── Footer: Settings & Support ── */}
         <div className="space-y-0.5 mt-auto">
           {footer ?? (
