@@ -136,11 +136,11 @@ export default function AppSidebar({ variant = 'academy', cta = null, footer = n
 
   return (
     <nav
-      className={`hidden md:flex h-screen fixed left-0 top-0 flex-col border-r border-outline-variant bg-surface-container-low z-50 transition-all duration-300 ease-in-out ${sidebarCollapsed ? 'w-16' : 'w-64'
+      className={`hidden md:flex h-screen fixed left-0 top-0 flex-col border-r border-outline-variant z-50 transition-all duration-300 ease-in-out ${sidebarCollapsed ? 'w-16' : 'w-64'
         }`}
     >
       {/* ── Header: Logo + Collapse/Expand Toggle ── */}
-      <div className={`h-16 px-4 flex items-center bg-surface-container-low shrink-0 ${sidebarCollapsed ? 'justify-center' : 'justify-between'
+      <div className={`h-16 px-4 flex items-center shrink-0 ${sidebarCollapsed ? 'justify-center' : 'justify-between'
         }`}>
         {!sidebarCollapsed && (
           <div
