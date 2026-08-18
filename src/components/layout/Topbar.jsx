@@ -97,14 +97,9 @@ export default function Topbar({ variant = 'academy', onSearch = null, searchVal
 
         <div className="flex items-center gap-4 md:gap-6">
           {variant === 'chat' && (
-            <>
-              <button className="bg-secondary-container text-on-secondary-container font-label-caps text-label-caps px-4 py-2 rounded-full hover:opacity-90 transition-opacity hidden md:block">
-                Upgrade to Pro
-              </button>
-              <button className="text-on-surface-variant hover:text-primary transition-colors w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-highest">
-                <Icon name="notifications" size={20} />
-              </button>
-            </>
+            <button className="text-on-surface-variant hover:text-primary transition-colors w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-highest">
+              <Icon name="notifications" size={20} />
+            </button>
           )}
 
           {variant === 'academy' && (

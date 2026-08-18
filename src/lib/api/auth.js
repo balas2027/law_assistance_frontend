@@ -44,6 +44,19 @@ export async function meApi(token) {
   return handle(res);
 }
 
+export async function updateUserApi(token, userData) {
+  const res = await fetch(`${API_BASE}/users/me`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(userData),
+  });
+  return handle(res);
+}
+
 export async function logoutApi() {
   return Promise.resolve();
 }
+

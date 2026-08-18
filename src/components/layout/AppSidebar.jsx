@@ -309,17 +309,7 @@ export default function AppSidebar({ variant = 'academy', cta = null, footer = n
           })}
         </List>
 
-        {/* ── Upgrade to Pro Button (Academy mode) ── */}
-        {variant !== 'chat' && !sidebarCollapsed && (
-          <div className="py-2">
-            <button
-              onClick={() => navigate('/chat')}
-              className="w-full py-2.5 bg-[#fe9832] text-white rounded-full font-label-caps text-[12.5px] font-bold hover:opacity-90 transition-opacity shadow-sm"
-            >
-              Upgrade to Pro
-            </button>
-          </div>
-        )}
+
 
        
         {/* ── Footer: Settings & Support ── */}
