@@ -40,9 +40,6 @@ function CourseCard({ course, onEdit, onDelete, onStatusToggle, lessonCount }) {
           <div className="w-9 h-9 rounded-lg bg-[#eaf1fc] flex items-center justify-center shrink-0">
             <Icon name="library_books" size={20} className="text-[#0b57d0]" />
           </div>
-          {/* <span className="text-[11px] font-bold uppercase tracking-wider text-gray-500 bg-gray-100 px-2.5 py-0.5 rounded-full">
-            COURSE
-          </span> */}
         </div>
 
         {/* Action Menu */}
