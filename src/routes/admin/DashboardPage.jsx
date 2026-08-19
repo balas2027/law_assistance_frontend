@@ -159,11 +159,7 @@ export default function DashboardPage() {
   const adminAction = (
     <button
       id="dashboard-goto-cms-btn"
-      onClick={() => navigate("/admin/cms")}
-      className="flex items-center gap-1.5 bg-[#0b57d0] hover:bg-[#0842a0] text-white px-3.5 py-1.5 rounded-sm text-[12px] font-bold tracking-wider uppercase transition-colors shadow-xs cursor-pointer"
-    >
-      <Icon name="edit_note" size={16} />
-      <span>Content CMS</span>
+      onClick={() => navigate("/admin/cms")}>
     </button>
   );
 
@@ -177,9 +173,8 @@ export default function DashboardPage() {
       <AdminSidebar />
 
       <main
-        className={`flex-1 flex flex-col pt-16 h-screen w-full min-w-0 bg-[#fafbfc] relative overflow-hidden transition-all duration-300 ease-in-out ${
-          sidebarCollapsed ? "md:ml-16" : "md:ml-56"
-        }`}
+        className={`flex-1 flex flex-col pt-16 h-screen w-full min-w-0 bg-[#fafbfc] relative overflow-hidden transition-all duration-300 ease-in-out ${sidebarCollapsed ? "md:ml-16" : "md:ml-56"
+          }`}
       >
         <div className="flex-1 overflow-y-auto px-8 pt-4 w-full bg-[#fafbfc]">
           {/* Page heading */}
@@ -197,67 +192,67 @@ export default function DashboardPage() {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-5">
             {loading || !stats
               ? Array.from({ length: 5 }).map((_, i) => (
-                  <SkeletonCard key={i} />
-                ))
+                <SkeletonCard key={i} />
+              ))
               : [
-                  {
-                    key: "total_users",
-                    label: "Total Users",
-                    icon: "group",
-                    color: "text-[#0b57d0]",
-                    bg: "bg-[#eaf1fc]",
-                  },
-                  {
-                    key: "total_students",
-                    label: "Learners",
-                    icon: "school",
-                    color: "text-amber-600",
-                    bg: "bg-amber-50",
-                  },
-                  {
-                    key: "total_courses",
-                    label: "Courses",
-                    icon: "library_books",
-                    color: "text-emerald-700",
-                    bg: "bg-emerald-50",
-                  },
-                  {
-                    key: "total_lessons",
-                    label: "Lessons",
-                    icon: "menu_book",
-                    color: "text-indigo-700",
-                    bg: "bg-indigo-50",
-                  },
-                  {
-                    key: "total_quizzes",
-                    label: "Quizzes",
-                    icon: "quiz",
-                    color: "text-purple-700",
-                    bg: "bg-purple-50",
-                  },
-                ].map(({ key, label, icon, color, bg }) => (
-                  <div
-                    key={key}
-                    className="bg-white border border-gray-200/90 rounded-sm p-5 shadow-[0_1px_2px_rgba(0,0,0,0.02)] flex flex-col relative overflow-hidden group hover:border-gray-300 transition-all"
-                  >
-                    <div className="flex items-center justify-between mb-3">
-                      <div
-                        className={`w-9 h-9 rounded-sm ${bg} ${color} flex items-center justify-center shrink-0 shadow-xs`}
-                      >
-                        <Icon name={icon} size={20} />
-                      </div>
-                      <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
-                        Live
-                      </span>
+                {
+                  key: "total_users",
+                  label: "Total Users",
+                  icon: "group",
+                  color: "text-[#0b57d0]",
+                  bg: "bg-[#eaf1fc]",
+                },
+                {
+                  key: "total_students",
+                  label: "Learners",
+                  icon: "school",
+                  color: "text-amber-600",
+                  bg: "bg-amber-50",
+                },
+                {
+                  key: "total_courses",
+                  label: "Courses",
+                  icon: "library_books",
+                  color: "text-emerald-700",
+                  bg: "bg-emerald-50",
+                },
+                {
+                  key: "total_lessons",
+                  label: "Lessons",
+                  icon: "menu_book",
+                  color: "text-indigo-700",
+                  bg: "bg-indigo-50",
+                },
+                {
+                  key: "total_quizzes",
+                  label: "Quizzes",
+                  icon: "quiz",
+                  color: "text-purple-700",
+                  bg: "bg-purple-50",
+                },
+              ].map(({ key, label, icon, color, bg }) => (
+                <div
+                  key={key}
+                  className="bg-white border border-gray-200/90 rounded-sm p-5 shadow-[0_1px_2px_rgba(0,0,0,0.02)] flex flex-col relative overflow-hidden group hover:border-gray-300 transition-all"
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <div
+                      className={`w-9 h-9 rounded-sm ${bg} ${color} flex items-center justify-center shrink-0 shadow-xs`}
+                    >
+                      <Icon name={icon} size={20} />
                     </div>
-                    <p className="text-[12px] font-bold text-gray-500 uppercase tracking-wider mb-1">
-                      {label}
-                    </p>
-                    <p className="text-[26px] font-bold text-gray-950 tracking-tight">
-                      {(stats[key] ?? 0).toLocaleString()}
-                    </p>
+                    <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
+                      Live
+                    </span>
                   </div>
-                ))}
+                  <p className="text-[12px] font-bold text-gray-500 uppercase tracking-wider mb-1">
+                    {label}
+                  </p>
+                  <p className="text-[26px] font-bold text-gray-950 tracking-tight">
+                    {(stats[key] ?? 0).toLocaleString()}
+                  </p>
+                </div>
+              ))}
           </div>
 
           {/* Daily signups & content overview */}
