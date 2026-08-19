@@ -5,6 +5,8 @@ export const useChat = () => {
   const activeChat = useChatStore((s) => s.activeChat);
   const messages = useChatStore((s) => s.messages);
   const loading = useChatStore((s) => s.loading);
+  const selectedSourceType = useChatStore((s) => s.selectedSourceType);
+  const setSelectedSourceType = useChatStore((s) => s.setSelectedSourceType);
   const loadChats = useChatStore((s) => s.loadChats);
   const selectChat = useChatStore((s) => s.selectChat);
   const newChat = useChatStore((s) => s.newChat);
@@ -16,6 +18,8 @@ export const useChat = () => {
     activeChat,
     messages,
     loading,
+    selectedSourceType,
+    setSelectedSourceType,
     loadChats,
     selectChat,
     newChat,
@@ -23,3 +27,4 @@ export const useChat = () => {
     reset,
   };
 };
+

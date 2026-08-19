@@ -11,19 +11,22 @@ import { useChat } from '../../../hooks/useChat';
 import { useUiStore } from '../../../stores/uiStore';
 
 export default function ChatPage() {
-  const { newChat } = useChat();
+  const { newChat, sendMessage } = useChat();
   const navigate = useNavigate();
   const { sidebarCollapsed } = useUiStore();
 
   const handlePrompt = async (text) => {
     const chat = await newChat(text);
     navigate(`/chat/${chat.id}`);
+    sendMessage(text);
   };
 
   const handleComposerSend = async (text) => {
     const chat = await newChat(text);
     navigate(`/chat/${chat.id}`);
+    sendMessage(text);
   };
+
 
   return (
     <div className="flex h-screen w-full bg-[#fafbfc] text-gray-900 font-sans overflow-hidden">

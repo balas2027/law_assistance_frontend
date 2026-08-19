@@ -27,13 +27,13 @@ export default function ChatConversationPage() {
   const { chatId } = useParams();
   const navigate = useNavigate();
   const { sidebarCollapsed } = useUiStore();
-  const { activeChat, messages, loadConversation, sendMessage } = useChat();
+  const { activeChat, messages, selectChat, sendMessage, loading } = useChat();
 
   useEffect(() => {
     if (chatId) {
-      loadConversation(chatId);
+      selectChat(chatId);
     }
-  }, [chatId, loadConversation]);
+  }, [chatId, selectChat]);
 
   const handleSend = async (text) => {
     await sendMessage(text);
@@ -78,13 +78,12 @@ export default function ChatConversationPage() {
               </button>
             </div>
 
-            <ChatWindow messages={messages} />
+            <ChatWindow messages={messages} loading={loading} />
 
             <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-[#fafbfc] via-[#fafbfc] to-transparent pb-8">
               <ChatInput
                 onSend={handleSend}
                 placeholder="Ask a follow-up question or specify a clause..."
-                attachments={[{ name: 'Bangalore_Rental_2024.pdf' }]}
               />
               <div className="text-center mt-3 text-[11px] text-gray-400">
                 NyayaAI is grounded in Indian statutes and landmark precedents. Verify critical citations independently.
@@ -98,3 +97,4 @@ export default function ChatConversationPage() {
     </div>
   );
 }
+

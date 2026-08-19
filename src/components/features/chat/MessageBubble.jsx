@@ -1,25 +1,50 @@
+import { useState } from 'react';
 import { MESSAGE_ROLES } from '../../../types/chat';
 import Icon from '../../ui/Icon';
 
-function ActionRow() {
+function ActionRow({ content }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    if (content) {
+      navigator.clipboard.writeText(content);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
   return (
     <div className="flex items-center gap-1 mt-6 pt-4 border-t border-surface-variant text-on-surface-variant">
-      <button className="p-1.5 rounded hover:bg-surface-container hover:text-primary transition-colors" title="Copy text">
-        <Icon name="content_copy" size={20} />
+      <button
+        type="button"
+        onClick={handleCopy}
+        className="p-1.5 rounded hover:bg-surface-container hover:text-primary transition-colors flex items-center gap-1 text-xs cursor-pointer"
+        title="Copy text"
+      >
+        <Icon name={copied ? 'check' : 'content_copy'} size={18} />
+        {copied && <span>Copied</span>}
       </button>
-      <button className="p-1.5 rounded hover:bg-surface-container hover:text-primary transition-colors" title="Regenerate response">
-        <Icon name="refresh" size={20} />
+      <button
+        type="button"
+        className="p-1.5 rounded hover:bg-surface-container hover:text-primary transition-colors cursor-pointer"
+        title="Regenerate response"
+      >
+        <Icon name="refresh" size={18} />
       </button>
       <div className="w-px h-4 bg-outline-variant mx-2" />
-      <button className="p-1.5 rounded hover:bg-surface-container hover:text-primary transition-colors" title="Helpful">
-        <Icon name="thumb_up" size={20} />
+      <button
+        type="button"
+        className="p-1.5 rounded hover:bg-surface-container hover:text-primary transition-colors cursor-pointer"
+        title="Helpful"
+      >
+        <Icon name="thumb_up" size={18} />
       </button>
-      <button className="p-1.5 rounded hover:bg-surface-container hover:text-primary transition-colors" title="Not helpful">
-        <Icon name="thumb_down" size={20} />
-      </button>
-      <div className="w-px h-4 bg-outline-variant mx-2" />
-      <button className="p-1.5 rounded hover:bg-surface-container hover:text-primary transition-colors" title="Bookmark">
-        <Icon name="bookmark_add" size={20} />
+      <button
+        type="button"
+        className="p-1.5 rounded hover:bg-surface-container hover:text-primary transition-colors cursor-pointer"
+        title="Not helpful"
+      >
+        <Icon name="thumb_down" size={18} />
       </button>
     </div>
   );
@@ -47,33 +72,107 @@ function DocumentBlock({ document }) {
   );
 }
 
+function SourcesSection({ sources }) {
+  const [expanded, setExpanded] = useState(false);
+  if (!sources || sources.length === 0) return null;
+
+  return (
+    <div className="mt-5 pt-4 border-t border-gray-100">
+      <div className="flex items-center justify-between mb-3">
+        <h4 className="text-xs font-bold text-gray-700 uppercase tracking-wider flex items-center gap-1.5">
+          <Icon name="auto_awesome" size={16} className="text-[#0b57d0]" />
+          Grounding Legal Sources ({sources.length})
+        </h4>
+        <button
+          type="button"
+          onClick={() => setExpanded(!expanded)}
+          className="text-xs font-medium text-[#0b57d0] hover:underline flex items-center gap-1 cursor-pointer"
+        >
+          {expanded ? 'Collapse' : 'View Excerpts'}
+          <Icon name={expanded ? 'expand_less' : 'expand_more'} size={16} />
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 gap-2.5">
+        {sources.slice(0, expanded ? sources.length : 2).map((source, index) => {
+          const title = source.metadata?.title || source.title || `Source ${index + 1}`;
+          const sourceType = (source.metadata?.source_type || source.source_type || 'statute').toUpperCase();
+          const refNum = source.metadata?.reference_number || source.metadata?.section || '';
+          const snippet = source.content || '';
+
+          return (
+            <div
+              key={index}
+              className="bg-blue-50/50 border border-blue-100 rounded-lg p-3 text-xs leading-relaxed transition-all hover:bg-blue-50"
+            >
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="font-bold text-gray-900 flex items-center gap-1.5">
+                  <Icon name="gavel" size={14} className="text-[#0b57d0]" />
+                  {title} {refNum ? `(${refNum})` : ''}
+                </span>
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-white text-[#0b57d0] border border-blue-200 uppercase">
+                  {sourceType}
+                </span>
+              </div>
+              {expanded && snippet && (
+                <p className="text-gray-600 font-mono text-[11px] bg-white/70 p-2 rounded border border-blue-100/60 mt-2 line-clamp-4">
+                  "{snippet.trim()}"
+                </p>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 function AssistantContent({ message }) {
-  const { blocks = [], content } = message;
+  const { blocks = [], content, sources = [], isError } = message;
+
+  if (isError) {
+    return (
+      <div className="bg-red-50 border border-red-200 text-red-800 rounded-xl p-4 flex items-start gap-3">
+        <Icon name="warning" size={20} className="text-red-600 shrink-0 mt-0.5" />
+        <div className="text-xs leading-relaxed">{content}</div>
+      </div>
+    );
+  }
+
   return (
     <div className="prose prose-sm max-w-none text-primary-container">
-      {message.sources?.length > 0 && (
-        <h3 className="font-h2 text-[18px] mb-4 text-primary font-semibold flex items-center gap-2">
-          <Icon name="analytics" size={20} className="text-secondary-container" />
-          Analysis of your agreement
-        </h3>
+      {content && (
+        <div className="text-[15px] leading-relaxed text-gray-900 whitespace-pre-wrap">
+          {content}
+        </div>
       )}
-      {content && <p className="mb-4">{content}</p>}
+
       {blocks.map((block) => (
         <div key={block.title}>
           <h4 className="font-body-md font-semibold mt-6 mb-2 text-primary">{block.title}</h4>
           <ul className="list-disc pl-5 mb-4 space-y-2 text-on-surface-variant">
             {block.items.map((item) => {
-              const isHighlighted = item.startsWith('**') || item.startsWith('Legal Standing:') || item.startsWith('Risk Flag:') || item.startsWith('Standard Practice:');
+              const isHighlighted =
+                item.startsWith('**') ||
+                item.startsWith('Legal Standing:') ||
+                item.startsWith('Risk Flag:') ||
+                item.startsWith('Standard Practice:');
               const contentText = item.replace(/^\*\*/, '').replace(/\*\*$/, '');
               return (
                 <li key={contentText}>
-                  {isHighlighted ? <strong className="text-primary-container">{contentText}</strong> : contentText}
+                  {isHighlighted ? (
+                    <strong className="text-primary-container">{contentText}</strong>
+                  ) : (
+                    contentText
+                  )}
                 </li>
               );
             })}
           </ul>
         </div>
       ))}
+
+      <SourcesSection sources={sources} />
     </div>
   );
 }
@@ -101,7 +200,8 @@ export default function MessageBubble({ message }) {
         <Icon name="balance" size={16} fill className="text-secondary-container" />
       </div>
       <AssistantContent message={message} />
-      <ActionRow />
+      <ActionRow content={message.content} />
     </div>
   );
 }
+

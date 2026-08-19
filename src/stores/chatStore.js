@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { createChatApi, fetchChatApi, fetchChatsApi, sendMessageApi } from '../lib/api/chat';
+import { createChatApi, fetchChatApi, fetchChatsApi, saveChatSessionApi, sendMessageApi } from '../lib/api/chat';
 import { demoChatSession } from '../types/chat';
 import { uid } from '../lib/utils';
 
@@ -8,18 +8,29 @@ export const useChatStore = create((set, get) => ({
   activeChat: demoChatSession,
   messages: demoChatSession.messages,
   loading: false,
+  selectedSourceType: 'all',
+
+  setSelectedSourceType: (sourceType) => set({ selectedSourceType: sourceType }),
 
   loadChats: async () => {
     set({ loading: true });
-    const chats = await fetchChatsApi();
-    set({ chats, loading: false });
+    try {
+      const chats = await fetchChatsApi();
+      set({ chats, loading: false });
+    } catch {
+      set({ loading: false });
+    }
   },
 
   selectChat: async (chatId) => {
     set({ loading: true });
-    const chat = await fetchChatApi(chatId);
-    set({ activeChat: chat, messages: chat.messages, loading: false });
-    return chat;
+    try {
+      const chat = await fetchChatApi(chatId);
+      set({ activeChat: chat, messages: chat.messages || [], loading: false });
+      return chat;
+    } catch {
+      set({ loading: false });
+    }
   },
 
   newChat: async (prompt) => {
@@ -35,16 +46,51 @@ export const useChatStore = create((set, get) => ({
       content,
       timestamp: new Date().toISOString(),
     };
-    set((state) => ({ messages: [...state.messages, userMessage] }));
-    await sendMessageApi(get().activeChat.id, content);
 
-    const assistantMessage = {
-      id: uid('msg'),
-      role: 'assistant',
-      timestamp: new Date().toISOString(),
-      content: `Thank you for your question. I am analyzing "${content}" against verified Indian jurisprudence and will respond with grounded citations shortly.`,
+    const newMessages = [...get().messages, userMessage];
+    set({ messages: newMessages, loading: true });
+
+    let assistantMessage;
+    try {
+      const response = await sendMessageApi({
+        query: content,
+        source_type: get().selectedSourceType,
+        top_k: 5,
+      });
+
+      assistantMessage = {
+        id: uid('msg'),
+        role: 'assistant',
+        timestamp: new Date().toISOString(),
+        content: response.answer,
+        source_type: response.source_type,
+        sources: response.sources || [],
+      };
+    } catch (error) {
+      assistantMessage = {
+        id: uid('msg'),
+        role: 'assistant',
+        timestamp: new Date().toISOString(),
+        content: `I encountered an issue retrieving legal information: ${error.message || 'Unable to connect to service'}. Please verify that the backend API server is running.`,
+        isError: true,
+        sources: [],
+      };
+    }
+
+    const updatedMessages = [...get().messages, assistantMessage];
+    const currentActive = get().activeChat || {};
+    const updatedActiveChat = {
+      ...currentActive,
+      title: currentActive.title && currentActive.title !== 'New Legal Query' ? currentActive.title : content.slice(0, 40),
+      updatedAt: new Date().toISOString(),
+      messages: updatedMessages,
     };
-    set((state) => ({ messages: [...state.messages, assistantMessage] }));
+
+    set({ messages: updatedMessages, activeChat: updatedActiveChat, loading: false });
+
+    // Save updated session to storage
+    saveChatSessionApi(updatedActiveChat).catch(() => {});
+
     return assistantMessage;
   },
 
@@ -54,5 +100,7 @@ export const useChatStore = create((set, get) => ({
       activeChat: demoChatSession,
       messages: demoChatSession.messages,
       loading: false,
+      selectedSourceType: 'all',
     }),
 }));
+

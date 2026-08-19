@@ -23,8 +23,10 @@ import AddOutlined from '@mui/icons-material/AddOutlined';
 import SmartToyOutlined from '@mui/icons-material/SmartToyOutlined';
 import KeyboardDoubleArrowLeft from '@mui/icons-material/KeyboardDoubleArrowLeft';
 import KeyboardDoubleArrowRight from '@mui/icons-material/KeyboardDoubleArrowRight';
+import { useEffect } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { useUiStore } from '../../stores/uiStore';
+import { useChat } from '../../hooks/useChat';
 
 // Map string icon names to MUI Icon components
 const ICON_COMPONENTS = {
@@ -50,6 +52,13 @@ export default function AppSidebar({ variant = 'academy', footer = null }) {
   const navigate = useNavigate();
   const location = useLocation();
   const { sidebarCollapsed, toggleSidebar } = useUiStore();
+  const { chats, activeChat, loadChats } = useChat();
+
+  useEffect(() => {
+    if (variant === 'chat') {
+      loadChats();
+    }
+  }, [variant, loadChats]);
 
   const isAdmin =
     user?.is_superuser ||
@@ -62,11 +71,6 @@ export default function AppSidebar({ variant = 'academy', footer = null }) {
   const NAV_ITEMS = {
     chat: [
       { id: 'chat_learn', to: '/academy/dashboard', label: 'Back to Learn', icon: 'school' },
-      { id: 'chat_history', to: '/chat', label: 'Chat History', icon: 'history' },
-      { id: 'chat_docs', to: '/chat', label: 'Legal Documents', icon: 'description' },
-      { id: 'chat_bookmarks', to: '/chat', label: 'Bookmarks', icon: 'bookmark' },
-      { id: 'chat_criminal', to: '/chat', label: 'Criminal Law', icon: 'gavel', group: 'DOMAINS' },
-      { id: 'chat_civil', to: '/chat', label: 'Civil Law', icon: 'balance' },
     ],
     academy: [
       { id: 'acad_dash', to: dashboardRoute, label: 'Dashboard', icon: 'dashboard' },
@@ -108,21 +112,6 @@ export default function AppSidebar({ variant = 'academy', footer = null }) {
     }
     if (item.id === 'acad_quiz' || item.id === 'curr_quiz') {
       return p.startsWith('/academy/quiz');
-    }
-    if (item.id === 'chat_history') {
-      return p.startsWith('/chat/') && p !== '/chat';
-    }
-    if (item.id === 'chat_docs') {
-      return p === '/documents';
-    }
-    if (item.id === 'chat_bookmarks') {
-      return p === '/bookmarks';
-    }
-    if (item.id === 'chat_criminal') {
-      return location.search.includes('domain=criminal');
-    }
-    if (item.id === 'chat_civil') {
-      return location.search.includes('domain=civil');
     }
     if (item.id === 'ai_chat') {
       return p === '/chat';
@@ -177,6 +166,36 @@ export default function AppSidebar({ variant = 'academy', footer = null }) {
             )}
           </div>
         ) : null}
+
+        {/* Recent Chats Section in Chat Mode */}
+        {variant === 'chat' && chats.length > 0 && !sidebarCollapsed && (
+          <div className="mb-2">
+            <p className="text-[10.5px] text-gray-400 font-bold uppercase tracking-wider px-2.5 pt-1 pb-1">
+              Recent Conversations
+            </p>
+            <div className="space-y-0.5 max-h-48 overflow-y-auto scrollbar-hide">
+              {chats.map((c) => {
+                const isActiveChat = activeChat?.id === c.id;
+                return (
+                  <button
+                    key={c.id}
+                    onClick={() => navigate(`/chat/${c.id}`)}
+                    className={`w-full text-left px-2.5 py-1.5 rounded-md text-xs font-medium truncate flex items-center gap-2 transition-all cursor-pointer ${
+                      isActiveChat
+                        ? 'bg-blue-50 text-[#0b57d0] font-semibold'
+                        : 'text-gray-700 hover:bg-gray-100'
+                    }`}
+                    title={c.title}
+                  >
+                    <SmartToyOutlined sx={{ fontSize: 14, color: isActiveChat ? '#0b57d0' : '#9ca3af' }} />
+                    <span className="truncate">{c.title || 'Untitled Chat'}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
 
         {/* ── Navigation List (Two sections: Left Title/Content, Right Icon) ── */}
         <List
