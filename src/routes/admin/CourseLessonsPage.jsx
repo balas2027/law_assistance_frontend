@@ -35,8 +35,8 @@ function StatusChip({ status, onClick }) {
         border: `1px solid ${isPublished ? 'rgba(16, 185, 129, 0.35)' : 'rgba(245, 158, 11, 0.35)'}`,
         '&:hover': onClick
           ? {
-              bgcolor: isPublished ? 'rgba(16, 185, 129, 0.22)' : 'rgba(245, 158, 11, 0.22)',
-            }
+            bgcolor: isPublished ? 'rgba(16, 185, 129, 0.22)' : 'rgba(245, 158, 11, 0.22)',
+          }
           : {},
         '& .MuiChip-label': { px: 1.5 },
       }}
@@ -234,9 +234,8 @@ export default function CourseLessonsPage() {
       <AdminSidebar />
 
       <main
-        className={`flex-1 flex flex-col pt-16 h-screen w-full min-w-0 bg-[#fafbfc] relative overflow-hidden transition-all duration-300 ease-in-out ${
-          sidebarCollapsed ? 'md:ml-16' : 'md:ml-56'
-        }`}
+        className={`flex-1 flex flex-col pt-16 h-screen w-full min-w-0 bg-[#fafbfc] relative overflow-hidden transition-all duration-300 ease-in-out ${sidebarCollapsed ? 'md:ml-16' : 'md:ml-56'
+          }`}
       >
         <div className="flex-1 overflow-y-auto px-8 py-8 pb-12 w-full">
 
@@ -279,12 +278,55 @@ export default function CourseLessonsPage() {
           </div>
 
           {/* Stat Cards Row */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-            <StatCard label="Total" value={lessons.length} icon="📚" color="text-[#0b57d0]" />
-            <StatCard label="Published" value={publishedCount} icon="✅" color="text-emerald-600" />
-            <StatCard label="Draft" value={draftCount} icon="📝" color="text-amber-600" />
-            <StatCard label="Course" value={course?.status === 'published' ? 'Live' : 'Draft'} icon={course?.status === 'published' ? '🟢' : '🟡'} color="text-gray-600" />
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-8">
+            {[
+              {
+                label: "Total Lessons",
+                value: lessons.length,
+                icon: "library_books",
+                desc: "All available lessons",
+              },
+              {
+                label: "Published Lessons",
+                value: publishedCount,
+                icon: "published_with_changes",
+                desc: "Currently published lessons",
+              },
+              {
+                label: "Draft Lessons",
+                value: draftCount,
+                icon: "edit_note",
+                desc: "Lessons saved as drafts",
+              },
+            ].map(({ label, value, icon, desc }) => (
+              <div
+                key={label}
+                className="w-full flex items-center justify-between bg-[#fafbfc] hover:bg-[#eaf1fc] border border-gray-200/70 hover:border-[#0b57d0]/30 transition-all rounded-sm px-4 py-3.5 group"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-sm bg-white border border-gray-200/80 flex items-center justify-center text-[#0b57d0] shrink-0 shadow-2xs group-hover:bg-[#0b57d0] group-hover:text-white transition-colors">
+                    <Icon name={icon} size={18} />
+                  </div>
+
+                  <div>
+                    <p className="text-[14px] font-bold text-gray-900 group-hover:text-[#0b57d0] transition-colors">
+                      {label}
+                    </p>
+
+                    <p className="text-[12px] text-gray-500">
+                      {desc}
+                    </p>
+                  </div>
+                </div>
+
+                <span className="text-[18px] font-bold text-gray-900">
+                  {(value ?? 0).toLocaleString()}
+                </span>
+              </div>
+            ))}
           </div>
+
 
           {/* Error Banner */}
           {error && (
