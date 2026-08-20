@@ -1,32 +1,27 @@
-import { useNavigate, useLocation } from 'react-router-dom';
-import {
-  Tooltip,
-  List,
-  ListItemButton,
-  ListItemIcon,
-} from '@mui/material';
-import DashboardOutlined from '@mui/icons-material/DashboardOutlined';
-import AutoStoriesOutlined from '@mui/icons-material/AutoStoriesOutlined';
-import GavelOutlined from '@mui/icons-material/GavelOutlined';
-import MenuBookOutlined from '@mui/icons-material/MenuBookOutlined';
-import QuizOutlined from '@mui/icons-material/QuizOutlined';
-import SettingsOutlined from '@mui/icons-material/SettingsOutlined';
-import HelpOutlined from '@mui/icons-material/HelpOutlined';
-import HistoryOutlined from '@mui/icons-material/HistoryOutlined';
-import DescriptionOutlined from '@mui/icons-material/DescriptionOutlined';
-import BookmarkBorderOutlined from '@mui/icons-material/BookmarkBorderOutlined';
-import AccountBalanceOutlined from '@mui/icons-material/AccountBalanceOutlined';
-import FolderSharedOutlined from '@mui/icons-material/FolderSharedOutlined';
-import AccountCircleOutlined from '@mui/icons-material/AccountCircleOutlined';
-import SchoolOutlined from '@mui/icons-material/SchoolOutlined';
-import AddOutlined from '@mui/icons-material/AddOutlined';
-import SmartToyOutlined from '@mui/icons-material/SmartToyOutlined';
-import KeyboardDoubleArrowLeft from '@mui/icons-material/KeyboardDoubleArrowLeft';
-import KeyboardDoubleArrowRight from '@mui/icons-material/KeyboardDoubleArrowRight';
-import { useEffect } from 'react';
-import { useAuth } from '../../hooks/useAuth';
-import { useUiStore } from '../../stores/uiStore';
-import { useChat } from '../../hooks/useChat';
+import { useNavigate, useLocation } from "react-router-dom";
+import { Tooltip, List, ListItemButton, ListItemIcon } from "@mui/material";
+import DashboardOutlined from "@mui/icons-material/DashboardOutlined";
+import AutoStoriesOutlined from "@mui/icons-material/AutoStoriesOutlined";
+import GavelOutlined from "@mui/icons-material/GavelOutlined";
+import MenuBookOutlined from "@mui/icons-material/MenuBookOutlined";
+import QuizOutlined from "@mui/icons-material/QuizOutlined";
+import SettingsOutlined from "@mui/icons-material/SettingsOutlined";
+import HelpOutlined from "@mui/icons-material/HelpOutlined";
+import HistoryOutlined from "@mui/icons-material/HistoryOutlined";
+import DescriptionOutlined from "@mui/icons-material/DescriptionOutlined";
+import BookmarkBorderOutlined from "@mui/icons-material/BookmarkBorderOutlined";
+import AccountBalanceOutlined from "@mui/icons-material/AccountBalanceOutlined";
+import FolderSharedOutlined from "@mui/icons-material/FolderSharedOutlined";
+import AccountCircleOutlined from "@mui/icons-material/AccountCircleOutlined";
+import SchoolOutlined from "@mui/icons-material/SchoolOutlined";
+import AddOutlined from "@mui/icons-material/AddOutlined";
+import SmartToyOutlined from "@mui/icons-material/SmartToyOutlined";
+import KeyboardDoubleArrowLeft from "@mui/icons-material/KeyboardDoubleArrowLeft";
+import KeyboardDoubleArrowRight from "@mui/icons-material/KeyboardDoubleArrowRight";
+import { useEffect } from "react";
+import { useAuth } from "../../hooks/useAuth";
+import { useUiStore } from "../../stores/uiStore";
+import { useChat } from "../../hooks/useChat";
 
 // Map string icon names to MUI Icon components
 const ICON_COMPONENTS = {
@@ -47,7 +42,7 @@ const ICON_COMPONENTS = {
   chat: SmartToyOutlined,
 };
 
-export default function AppSidebar({ variant = 'academy', footer = null }) {
+export default function AppSidebar({ variant = "academy", footer = null }) {
   const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -55,38 +50,86 @@ export default function AppSidebar({ variant = 'academy', footer = null }) {
   const { chats, activeChat, loadChats } = useChat();
 
   useEffect(() => {
-    if (variant === 'chat') {
+    if (variant === "chat") {
       loadChats();
     }
   }, [variant, loadChats]);
 
   const isAdmin =
     user?.is_superuser ||
-    user?.role_name === 'Admin' ||
-    user?.user_type === 'admin' ||
-    user?.user_type?.code === 'admin';
+    user?.role_name === "Admin" ||
+    user?.user_type === "admin" ||
+    user?.user_type?.code === "admin";
 
-  const dashboardRoute = isAdmin ? '/admin/dashboard' : '/academy/dashboard';
+  const dashboardRoute = isAdmin ? "/admin/dashboard" : "/academy/dashboard";
 
   const NAV_ITEMS = {
-    chat: [
-      { id: 'chat_learn', to: '/academy/dashboard', label: 'Back to Learn', icon: 'school' },
-    ],
+    chat: [{ id: "home", to: "/", label: "Home", icon: "HomeFilled" }],
     academy: [
-      { id: 'acad_dash', to: dashboardRoute, label: 'Dashboard', icon: 'dashboard' },
-      { id: 'acad_path', to: '/academy/path', label: 'Learning Path', icon: 'auto_stories' },
-      { id: 'acad_cases', to: '/academy/path', label: 'Case Studies', icon: 'gavel' },
-      { id: 'acad_acts', to: '/academy/path', label: 'Bare Acts', icon: 'menu_book' },
-      { id: 'acad_quiz', to: '/academy/quiz', label: 'Mock Tests', icon: 'quiz' },
-      { id: 'ai_chat', to: '/chat', label: 'AI Chat', icon: 'chat' },
+      { id: "home", to: "/", label: "Home", icon: "HomeFilled" },
+      {
+        id: "acad_dash",
+        to: dashboardRoute,
+        label: "Dashboard",
+        icon: "dashboard",
+      },
+      {
+        id: "acad_path",
+        to: "/academy/path",
+        label: "Learning Path",
+        icon: "auto_stories",
+      },
+      {
+        id: "acad_cases",
+        to: "/academy/path",
+        label: "Case Studies",
+        icon: "gavel",
+      },
+      {
+        id: "acad_acts",
+        to: "/academy/path",
+        label: "Bare Acts",
+        icon: "menu_book",
+      },
+      {
+        id: "acad_quiz",
+        to: "/academy/quiz",
+        label: "Mock Tests",
+        icon: "quiz",
+      },
     ],
     curriculum: [
-      { id: 'curr_dash', to: dashboardRoute, label: 'Dashboard', icon: 'dashboard' },
-      { id: 'curr_path', to: '/academy/path', label: 'Learning Path', icon: 'auto_stories' },
-      { id: 'curr_cases', to: '/academy/path', label: 'Case Studies', icon: 'gavel' },
-      { id: 'curr_quiz', to: '/academy/quiz', label: 'Mock Tests', icon: 'quiz' },
-      { id: 'curr_resources', to: '/academy/path', label: 'Bare Acts', icon: 'menu_book' },
-      { id: 'ai_chat', to: '/chat', label: 'AI Chat', icon: 'chat' },
+      { id: "home", to: "/", label: "Home", icon: "HomeFilled" },
+      {
+        id: "curr_dash",
+        to: dashboardRoute,
+        label: "Dashboard",
+        icon: "dashboard",
+      },
+      {
+        id: "curr_path",
+        to: "/academy/path",
+        label: "Learning Path",
+        icon: "auto_stories",
+      },
+      {
+        id: "curr_cases",
+        to: "/academy/path",
+        label: "Case Studies",
+        icon: "gavel",
+      },
+      {
+        id: "curr_quiz",
+        to: "/academy/quiz",
+        label: "Mock Tests",
+        icon: "quiz",
+      },
+      {
+        id: "curr_resources",
+        to: "/academy/path",
+        label: "Bare Acts",
+        icon: "menu_book",
+      },
     ],
   };
 
@@ -97,24 +140,35 @@ export default function AppSidebar({ variant = 'academy', footer = null }) {
   };
 
   const handleNewChatClick = () => {
-    navigate('/chat');
+    navigate("/chat");
   };
 
   // Precise active state determination
   const getIsActive = (item) => {
     const p = location.pathname;
 
-    if (item.id === 'acad_dash' || item.id === 'curr_dash' || item.id === 'chat_learn') {
-      return p === '/academy/dashboard' || p === '/admin/dashboard';
+    if (
+      item.id === "acad_dash" ||
+      item.id === "curr_dash" ||
+      item.id === "chat_learn"
+    ) {
+      return p === "/academy/dashboard" || p === "/admin/dashboard";
     }
-    if (item.id === 'acad_path' || item.id === 'curr_path') {
-      return p === '/academy/path' || p.startsWith('/academy/path/') || p.startsWith('/academy/lesson/');
+    if (item.id === "acad_path" || item.id === "curr_path") {
+      return (
+        p === "/academy/path" ||
+        p.startsWith("/academy/path/") ||
+        p.startsWith("/academy/lesson/")
+      );
     }
-    if (item.id === 'acad_quiz' || item.id === 'curr_quiz') {
-      return p.startsWith('/academy/quiz');
+    if (item.id === "acad_quiz" || item.id === "curr_quiz") {
+      return p.startsWith("/academy/quiz");
     }
-    if (item.id === 'ai_chat') {
-      return p === '/chat';
+    if (item.id === "ai_chat") {
+      return p === "/chat";
+    }
+    if (item.id === "home") {
+      return p === "/";
     }
 
     return false;
@@ -123,11 +177,17 @@ export default function AppSidebar({ variant = 'academy', footer = null }) {
   return (
     <nav
       className={`hidden md:flex fixed top-16 left-0 bottom-0 flex-col bg-white border-r border-gray-200/90 z-30 transition-all duration-300 ease-in-out select-none shadow-2xs ${
-        sidebarCollapsed ? 'w-16' : 'w-56'
+        sidebarCollapsed ? "w-16" : "w-56"
       }`}
     >
       {/* ── Vertically Centered << / >> Toggle Button on the Right Border ── */}
-      <Tooltip title={sidebarCollapsed ? 'Expand Sidebar (>>)' : 'Collapse Sidebar (<<)'} placement="right" arrow>
+      <Tooltip
+        title={
+          sidebarCollapsed ? "Expand Sidebar (>>)" : "Collapse Sidebar (<<)"
+        }
+        placement="right"
+        arrow
+      >
         <button
           onClick={toggleSidebar}
           className="absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-white border border-gray-300/90 shadow-xs flex items-center justify-center text-gray-500 hover:text-[#0b57d0] hover:bg-[#eaf1fc] hover:scale-110 transition-all z-40 cursor-pointer"
@@ -144,7 +204,7 @@ export default function AppSidebar({ variant = 'academy', footer = null }) {
       {/* ── Body Container ── */}
       <div className="p-2 pt-3 flex-1 flex flex-col overflow-hidden">
         {/* ── Action Button (Chat Mode: + New Chat) ── */}
-        {variant === 'chat' ? (
+        {variant === "chat" ? (
           <div className="mb-3">
             {!sidebarCollapsed ? (
               <button
@@ -168,7 +228,7 @@ export default function AppSidebar({ variant = 'academy', footer = null }) {
         ) : null}
 
         {/* Recent Chats Section in Chat Mode */}
-        {variant === 'chat' && chats.length > 0 && !sidebarCollapsed && (
+        {variant === "chat" && chats.length > 0 && !sidebarCollapsed && (
           <div className="mb-2">
             <p className="text-[10.5px] text-gray-400 font-bold uppercase tracking-wider px-2.5 pt-1 pb-1">
               Recent Conversations
@@ -182,13 +242,20 @@ export default function AppSidebar({ variant = 'academy', footer = null }) {
                     onClick={() => navigate(`/chat/${c.id}`)}
                     className={`w-full text-left px-2.5 py-1.5 rounded-md text-xs font-medium truncate flex items-center gap-2 transition-all cursor-pointer ${
                       isActiveChat
-                        ? 'bg-blue-50 text-[#0b57d0] font-semibold'
-                        : 'text-gray-700 hover:bg-gray-100'
+                        ? "bg-blue-50 text-[#0b57d0] font-semibold"
+                        : "text-gray-700 hover:bg-gray-100"
                     }`}
                     title={c.title}
                   >
-                    <SmartToyOutlined sx={{ fontSize: 14, color: isActiveChat ? '#0b57d0' : '#9ca3af' }} />
-                    <span className="truncate">{c.title || 'Untitled Chat'}</span>
+                    <SmartToyOutlined
+                      sx={{
+                        fontSize: 14,
+                        color: isActiveChat ? "#0b57d0" : "#9ca3af",
+                      }}
+                    />
+                    <span className="truncate">
+                      {c.title || "Untitled Chat"}
+                    </span>
                   </button>
                 );
               })}
@@ -196,22 +263,22 @@ export default function AppSidebar({ variant = 'academy', footer = null }) {
           </div>
         )}
 
-
         {/* ── Navigation List (Two sections: Left Title/Content, Right Icon) ── */}
         <List
           sx={{
             flex: 1,
-            overflowY: 'auto',
+            overflowY: "auto",
             py: 0.25,
             px: 0,
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '2px',
+            display: "flex",
+            flexDirection: "column",
+            gap: "2px",
           }}
           className="scrollbar-hide"
         >
           {items.map((item, idx) => {
-            const IconComponent = ICON_COMPONENTS[item.icon] || AutoStoriesOutlined;
+            const IconComponent =
+              ICON_COMPONENTS[item.icon] || AutoStoriesOutlined;
             const isActive = getIsActive(item);
 
             return (
@@ -228,16 +295,20 @@ export default function AppSidebar({ variant = 'academy', footer = null }) {
                     <ListItemButton
                       onClick={() => handleNavClick(item.to)}
                       sx={{
-                        borderRadius: '6px',
+                        borderRadius: "6px",
                         py: 0.8,
                         px: 0.75,
-                        justifyContent: 'center',
-                        color: isActive ? '#0b57d0' : '#4b5563',
-                        bgcolor: isActive ? '#eaf1fc !important' : 'transparent',
+                        justifyContent: "center",
+                        color: isActive ? "#0b57d0" : "#4b5563",
+                        bgcolor: isActive
+                          ? "#eaf1fc !important"
+                          : "transparent",
                         fontWeight: isActive ? 600 : 500,
-                        '&:hover': {
-                          bgcolor: isActive ? '#eaf1fc !important' : 'rgba(0, 0, 0, 0.04)',
-                          color: '#0b57d0',
+                        "&:hover": {
+                          bgcolor: isActive
+                            ? "#eaf1fc !important"
+                            : "rgba(0, 0, 0, 0.04)",
+                          color: "#0b57d0",
                         },
                         minHeight: 34,
                       }}
@@ -245,8 +316,8 @@ export default function AppSidebar({ variant = 'academy', footer = null }) {
                       <ListItemIcon
                         sx={{
                           minWidth: 0,
-                          color: isActive ? '#0b57d0' : 'inherit',
-                          justifyContent: 'center',
+                          color: isActive ? "#0b57d0" : "inherit",
+                          justifyContent: "center",
                         }}
                       >
                         <IconComponent sx={{ fontSize: 18 }} />
@@ -257,20 +328,22 @@ export default function AppSidebar({ variant = 'academy', footer = null }) {
                   <ListItemButton
                     onClick={() => handleNavClick(item.to)}
                     sx={{
-                      borderRadius: '6px',
+                      borderRadius: "6px",
                       py: 2,
                       px: 2,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      color: isActive ? '#0b57d0' : '#4b5563',
-                      bgcolor: isActive ? '#eaf1fc !important' : 'transparent',
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      color: isActive ? "#0b57d0" : "#4b5563",
+                      bgcolor: isActive ? "#eaf1fc !important" : "transparent",
                       fontWeight: isActive ? 600 : 500,
-                      '&:hover': {
-                        bgcolor: isActive ? '#eaf1fc !important' : 'rgba(0, 0, 0, 0.04)',
-                        color: '#0b57d0',
+                      "&:hover": {
+                        bgcolor: isActive
+                          ? "#eaf1fc !important"
+                          : "rgba(0, 0, 0, 0.04)",
+                        color: "#0b57d0",
                       },
-                      transition: 'all 0.15s ease',
+                      transition: "all 0.15s ease",
                       minHeight: 40,
                     }}
                   >
@@ -283,8 +356,8 @@ export default function AppSidebar({ variant = 'academy', footer = null }) {
                     <IconComponent
                       sx={{
                         fontSize: 18,
-                        color: isActive ? '#0b57d0' : '#6b7280',
-                        transition: 'color 0.15s ease',
+                        color: isActive ? "#0b57d0" : "#6b7280",
+                        transition: "color 0.15s ease",
                       }}
                     />
                   </ListItemButton>
@@ -302,32 +375,50 @@ export default function AppSidebar({ variant = 'academy', footer = null }) {
                 <>
                   <Tooltip title="Settings" placement="right" arrow>
                     <ListItemButton
-                      onClick={() => navigate('/settings')}
+                      onClick={() => navigate("/settings")}
                       sx={{
-                        borderRadius: '6px',
+                        borderRadius: "6px",
                         py: 0.7,
-                        justifyContent: 'center',
-                        color: '#4b5563',
-                        '&:hover': { color: '#0b57d0', bgcolor: 'rgba(0, 0, 0, 0.04)' },
+                        justifyContent: "center",
+                        color: "#4b5563",
+                        "&:hover": {
+                          color: "#0b57d0",
+                          bgcolor: "rgba(0, 0, 0, 0.04)",
+                        },
                       }}
                     >
-                      <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center', color: 'inherit' }}>
+                      <ListItemIcon
+                        sx={{
+                          minWidth: 0,
+                          justifyContent: "center",
+                          color: "inherit",
+                        }}
+                      >
                         <SettingsOutlined sx={{ fontSize: 18 }} />
                       </ListItemIcon>
                     </ListItemButton>
                   </Tooltip>
                   <Tooltip title="Support" placement="right" arrow>
                     <ListItemButton
-                      onClick={() => navigate('/support')}
+                      onClick={() => navigate("/support")}
                       sx={{
-                        borderRadius: '6px',
+                        borderRadius: "6px",
                         py: 0.7,
-                        justifyContent: 'center',
-                        color: '#4b5563',
-                        '&:hover': { color: '#0b57d0', bgcolor: 'rgba(0, 0, 0, 0.04)' },
+                        justifyContent: "center",
+                        color: "#4b5563",
+                        "&:hover": {
+                          color: "#0b57d0",
+                          bgcolor: "rgba(0, 0, 0, 0.04)",
+                        },
                       }}
                     >
-                      <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center', color: 'inherit' }}>
+                      <ListItemIcon
+                        sx={{
+                          minWidth: 0,
+                          justifyContent: "center",
+                          color: "inherit",
+                        }}
+                      >
                         <HelpOutlined sx={{ fontSize: 18 }} />
                       </ListItemIcon>
                     </ListItemButton>
@@ -336,37 +427,43 @@ export default function AppSidebar({ variant = 'academy', footer = null }) {
               ) : (
                 <>
                   <ListItemButton
-                    onClick={() => navigate('/settings')}
+                    onClick={() => navigate("/settings")}
                     sx={{
-                      borderRadius: '6px',
+                      borderRadius: "6px",
                       py: 0.6,
                       px: 2,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      color: '#4b5563',
-                      '&:hover': { color: '#0b57d0', bgcolor: 'rgba(0, 0, 0, 0.04)' },
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      color: "#4b5563",
+                      "&:hover": {
+                        color: "#0b57d0",
+                        bgcolor: "rgba(0, 0, 0, 0.04)",
+                      },
                     }}
                   >
                     <span className="text-[12.5px] font-medium">Settings</span>
-                    <SettingsOutlined sx={{ fontSize: 17, color: '#6b7280' }} />
+                    <SettingsOutlined sx={{ fontSize: 17, color: "#6b7280" }} />
                   </ListItemButton>
 
                   <ListItemButton
-                    onClick={() => navigate('/support')}
+                    onClick={() => navigate("/support")}
                     sx={{
-                      borderRadius: '6px',
+                      borderRadius: "6px",
                       py: 0.6,
                       px: 2,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      color: '#4b5563',
-                      '&:hover': { color: '#0b57d0', bgcolor: 'rgba(0, 0, 0, 0.04)' },
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      color: "#4b5563",
+                      "&:hover": {
+                        color: "#0b57d0",
+                        bgcolor: "rgba(0, 0, 0, 0.04)",
+                      },
                     }}
                   >
                     <span className="text-[12.5px] font-medium">Support</span>
-                    <HelpOutlined sx={{ fontSize: 17, color: '#6b7280' }} />
+                    <HelpOutlined sx={{ fontSize: 17, color: "#6b7280" }} />
                   </ListItemButton>
                 </>
               )}
