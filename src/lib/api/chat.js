@@ -92,6 +92,11 @@ export async function saveChatSessionApi(updatedChat) {
   return updatedChat;
 }
 
+export async function fetchChatConfigApi() {
+  const res = await fetch(`${API_BASE}/chat/config`);
+  return handle(res);
+}
+
 export async function sendMessageApi({ query, source_type = null, top_k = 5 }) {
   const payload = { query, top_k };
   if (source_type && source_type !== 'all') {
