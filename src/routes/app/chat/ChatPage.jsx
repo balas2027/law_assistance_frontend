@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AppSidebar from '../../../components/layout/AppSidebar';
 import Topbar from '../../../components/layout/Topbar';
@@ -6,7 +7,7 @@ import SuggestedPrompts from '../../../components/features/chat/SuggestedPrompts
 import ChatInput from '../../../components/features/chat/ChatInput';
 import DisclaimerBanner from '../../../components/shared/DisclaimerBanner';
 import Icon from '../../../components/ui/Icon';
-import { SUGGESTED_PROMPTS } from '../../../types/chat';
+import { fetchChatConfigApi } from '../../../lib/api/chat';
 import { useChat } from '../../../hooks/useChat';
 import { useUiStore } from '../../../stores/uiStore';
 
@@ -14,6 +15,24 @@ export default function ChatPage() {
   const { newChat, sendMessage } = useChat();
   const navigate = useNavigate();
   const { sidebarCollapsed } = useUiStore();
+
+  const [config, setConfig] = useState(null);
+  const [configLoading, setConfigLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetchChatConfigApi()
+      .then((data) => {
+        if (!cancelled) setConfig(data);
+      })
+      .catch(() => {})
+      .finally(() => {
+        if (!cancelled) setConfigLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const handlePrompt = async (text) => {
     const chat = await newChat(text);
@@ -42,18 +61,33 @@ export default function ChatPage() {
           sidebarCollapsed ? 'md:ml-16' : 'md:ml-56'
         }`}
       >
-        <div className="flex-1 overflow-y-auto px-6 md:px-12 pt-12 pb-40 flex flex-col items-center min-h-0">
+        <div className="flex-1 overflow-y-auto px-6 md:px-12 pt-6 pb-40 flex flex-col items-center min-h-0">
           <div className="w-full max-w-[800px] flex flex-col items-center animate-fade-in my-auto">
-            <div className="w-20 h-20 mb-6 rounded-2xl bg-[#eaf1fc] flex items-center justify-center shadow-xs">
-              <Icon name="account_balance" size={44} className="text-[#0b57d0]" />
-            </div>
-            <h1 className="text-[28px] md:text-[34px] font-bold text-gray-950 text-center mb-3 tracking-tight">
-              How can I help you with Indian law?
-            </h1>
-            <p className="text-[15px] text-gray-600 text-center max-w-2xl mb-10 leading-relaxed">
-              Ask questions, explore constitutional articles, analyze case precedents, or verify sections under BNS, BNSS, and Indian jurisprudence.
-            </p>
-            <SuggestedPrompts prompts={SUGGESTED_PROMPTS} onSelect={handlePrompt} />
+            {configLoading ? (
+              <div className="w-full flex flex-col items-center animate-pulse">
+                <div className="h-9 w-2/3 bg-gray-200 rounded-md mb-4" />
+                <div className="h-4 w-3/4 bg-gray-100 rounded mb-10" />
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
+                  {[1, 2, 3, 4, 5, 6].map((i) => (
+                    <div key={i} className="h-24 bg-gray-100 rounded-sm" />
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <>
+                <h1 className="text-[28px] md:text-[34px] font-bold text-gray-950 text-center mb-3 tracking-tight">
+                  {config?.heading ?? 'How can I help you with Indian law?'}
+                </h1>
+                <p className="text-[15px] text-gray-600 text-center max-w-2xl mb-10 leading-relaxed">
+                  {config?.description ??
+                    'Ask questions, explore constitutional articles, analyze case precedents, or verify sections under BNS, BNSS, and Indian jurisprudence.'}
+                </p>
+                <SuggestedPrompts
+                  prompts={config?.suggested_prompts ?? []}
+                  onSelect={handlePrompt}
+                />
+              </>
+            )}
           </div>
         </div>
 
