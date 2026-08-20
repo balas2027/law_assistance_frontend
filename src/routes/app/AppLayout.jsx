@@ -4,6 +4,7 @@ import Toast from '../../components/ui/Toast';
 import LanguageSelectModal from '../../components/features/language/LanguageSelectModal';
 import { useLanguage } from '../../hooks/useLanguage';
 import { useAuth } from '../../hooks/useAuth';
+import GlobalLoader from '../../components/shared/GlobalLoader';
 
 export default function AppLayout() {
   const { initLanguagePreferences } = useLanguage();
@@ -15,6 +16,7 @@ export default function AppLayout() {
 
   return (
     <div className="min-h-screen bg-background text-on-background font-body-md antialiased">
+      <GlobalLoader />
       <Toast />
       <LanguageSelectModal />
       <Outlet />

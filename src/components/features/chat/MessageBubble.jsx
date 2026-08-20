@@ -147,26 +147,38 @@ function SourcesSection({ sources }) {
       <div className="grid grid-cols-1 gap-2.5">
         {sources.slice(0, expanded ? sources.length : 2).map((source, index) => {
           const title = source.metadata?.title || source.title || `Source ${index + 1}`;
+          const reference =
+            source.reference ||
+            source.metadata?.reference ||
+            source.metadata?.reference_number ||
+            source.metadata?.section ||
+            '';
           const sourceType = (source.metadata?.source_type || source.source_type || 'statute').toUpperCase();
-          const refNum = source.metadata?.reference_number || source.metadata?.section || '';
           const snippet = source.content || '';
 
           return (
             <div
               key={index}
-              className="bg-blue-50/50 border border-blue-100 rounded-lg p-3 text-xs leading-relaxed transition-all hover:bg-blue-50"
+              className="bg-white border border-gray-200 rounded-xl p-3 text-xs leading-relaxed transition-all hover:bg-gray-50 shadow-sm"
             >
-              <div className="flex items-center justify-between mb-1.5">
-                <span className="font-bold text-gray-900 flex items-center gap-1.5">
-                  <Icon name="gavel" size={14} className="text-[#0b57d0]" />
-                  {title} {refNum ? `(${refNum})` : ''}
+              <div className="flex items-center justify-between gap-2 mb-1.5">
+                <span className="font-semibold text-gray-900 flex items-center gap-2 min-w-0">
+                  <span className="w-5 h-5 rounded-full bg-[#0b57d0]/10 text-[#0b57d0] text-[11px] font-bold flex items-center justify-center shrink-0">
+                    {index + 1}
+                  </span>
+                  <span className="truncate">{title}</span>
+                  {reference && (
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-gray-100 text-gray-600 border border-gray-200 uppercase shrink-0">
+                      {reference}
+                    </span>
+                  )}
                 </span>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-white text-[#0b57d0] border border-blue-200 uppercase">
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#0b57d0]/5 text-[#0b57d0] border border-[#0b57d0]/20 uppercase shrink-0">
                   {sourceType}
                 </span>
               </div>
               {expanded && snippet && (
-                <p className="text-gray-600 font-mono text-[11px] bg-white/70 p-2 rounded border border-blue-100/60 mt-2 line-clamp-4">
+                <p className="text-gray-600 text-[11px] bg-gray-50 p-2 rounded border border-gray-100 mt-2 line-clamp-4">
                   "{snippet.trim()}"
                 </p>
               )}
@@ -176,6 +188,21 @@ function SourcesSection({ sources }) {
       </div>
     </div>
   );
+}
+
+function formatText(text) {
+  if (!text) return null;
+  const parts = text.split(/(\*\*.*?\*\*)/g);
+  return parts.map((part, index) => {
+    if (part.startsWith('**') && part.endsWith('**') && part.length >= 4) {
+      return (
+        <strong key={index} className="font-semibold text-gray-900">
+          {part.slice(2, -2)}
+        </strong>
+      );
+    }
+    return <span key={index}>{part}</span>;
+  });
 }
 
 function AssistantContent({ message }) {
@@ -194,7 +221,7 @@ function AssistantContent({ message }) {
     <div className="prose prose-sm max-w-none text-primary-container">
       {content && (
         <div className="text-[15px] leading-relaxed text-gray-900 whitespace-pre-wrap">
-          {content}
+          {formatText(content)}
         </div>
       )}
 
