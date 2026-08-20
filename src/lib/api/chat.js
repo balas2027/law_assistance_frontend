@@ -3,6 +3,13 @@ import { demoChatSession } from '../../types/chat';
 
 const LOCAL_STORAGE_KEY = 'nyaya_ai_chats_v1';
 
+function getAuthHeaders() {
+  const token = JSON.parse(localStorage.getItem('nyayaai-auth') || '{}')?.state?.token;
+  return token
+    ? { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }
+    : { 'Content-Type': 'application/json' };
+}
+
 function getStoredChats() {
   try {
     const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -36,6 +43,61 @@ async function handle(res) {
     throw new Error(detail);
   }
   return data;
+}
+
+// ── Backend (persistent, per-user) ────────────────────────────────────────
+
+export async function fetchChatSessionsApi() {
+  const res = await fetch(`${API_BASE}/chat/sessions`, { headers: getAuthHeaders() });
+  const data = await handle(res);
+  return data.sessions || [];
+}
+
+export async function createChatSessionApi({ title = null } = {}) {
+  const res = await fetch(`${API_BASE}/chat/sessions`, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+    body: JSON.stringify({ title: title || null }),
+  });
+  return handle(res);
+}
+
+export async function fetchChatSessionApi(sessionId) {
+  const res = await fetch(`${API_BASE}/chat/sessions/${sessionId}`, {
+    headers: getAuthHeaders(),
+  });
+  return handle(res);
+}
+
+export async function sendChatMessageApi(sessionId, { query, source_type = null, top_k = 5 }) {
+  const payload = { query, top_k };
+  if (source_type && source_type !== 'all') {
+    payload.source_type = source_type;
+  }
+  const res = await fetch(`${API_BASE}/chat/sessions/${sessionId}/messages`, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+    body: JSON.stringify(payload),
+  });
+  return handle(res);
+}
+
+export async function deleteChatSessionApi(sessionId) {
+  const res = await fetch(`${API_BASE}/chat/sessions/${sessionId}`, {
+    method: 'DELETE',
+    headers: getAuthHeaders(),
+  });
+  if (!res.ok) {
+    return handle(res);
+  }
+  return null;
+}
+
+// ── Local fallback (offline / unauthenticated) ────────────────────────────
+
+export async function fetchChatConfigApi() {
+  const res = await fetch(`${API_BASE}/chat/config`);
+  return handle(res);
 }
 
 export async function fetchChatsApi() {
@@ -92,11 +154,6 @@ export async function saveChatSessionApi(updatedChat) {
   return updatedChat;
 }
 
-export async function fetchChatConfigApi() {
-  const res = await fetch(`${API_BASE}/chat/config`);
-  return handle(res);
-}
-
 export async function sendMessageApi({ query, source_type = null, top_k = 5 }) {
   const payload = { query, top_k };
   if (source_type && source_type !== 'all') {
@@ -111,4 +168,3 @@ export async function sendMessageApi({ query, source_type = null, top_k = 5 }) {
 
   return handle(res);
 }
-

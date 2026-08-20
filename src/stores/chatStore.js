@@ -1,12 +1,56 @@
 import { create } from 'zustand';
-import { createChatApi, fetchChatApi, fetchChatsApi, saveChatSessionApi, sendMessageApi } from '../lib/api/chat';
+import {
+  createChatApi,
+  createChatSessionApi,
+  fetchChatApi,
+  fetchChatSessionApi,
+  fetchChatsApi,
+  fetchChatSessionsApi,
+  saveChatSessionApi,
+  sendChatMessageApi,
+  sendMessageApi,
+} from '../lib/api/chat';
 import { demoChatSession } from '../types/chat';
 import { uid } from '../lib/utils';
 
+function hasAuthToken() {
+  return !!JSON.parse(localStorage.getItem('nyayaai-auth') || '{}')?.state?.token;
+}
+
+function mapSessionSummary(session) {
+  return {
+    id: String(session.id),
+    title: session.title || 'Untitled Chat',
+    createdAt: session.created_at,
+    updatedAt: session.updated_at,
+    messageCount: session.message_count,
+    lastMessage: session.last_message,
+    messages: [],
+  };
+}
+
+function mapSessionDetail(session) {
+  return {
+    id: String(session.id),
+    title: session.title || 'Untitled Chat',
+    createdAt: session.created_at,
+    updatedAt: session.updated_at,
+    messages: (session.messages || []).map((m) => ({
+      id: String(m.id),
+      role: m.role,
+      content: m.content,
+      source_type: m.source_type,
+      is_error: m.is_error,
+      timestamp: m.created_at,
+      sources: (m.sources || []).map((s) => ({ ...s, metadata: s.metadata || {} })),
+    })),
+  };
+}
+
 export const useChatStore = create((set, get) => ({
-  chats: [demoChatSession],
-  activeChat: demoChatSession,
-  messages: demoChatSession.messages,
+  chats: hasAuthToken() ? [] : [demoChatSession],
+  activeChat: hasAuthToken() ? null : demoChatSession,
+  messages: hasAuthToken() ? [] : demoChatSession.messages,
   loading: false,
   selectedSourceType: 'all',
 
@@ -15,28 +59,46 @@ export const useChatStore = create((set, get) => ({
   loadChats: async () => {
     set({ loading: true });
     try {
+      if (!hasAuthToken()) throw new Error('Not authenticated');
+      const sessions = await fetchChatSessionsApi();
+      set({ chats: sessions.map(mapSessionSummary), loading: false });
+    } catch {
       const chats = await fetchChatsApi();
       set({ chats, loading: false });
-    } catch {
-      set({ loading: false });
     }
   },
 
   selectChat: async (chatId) => {
     set({ loading: true });
     try {
+      if (!hasAuthToken()) throw new Error('Not authenticated');
+      const chat = await fetchChatSessionApi(chatId);
+      const mapped = mapSessionDetail(chat);
+      set({ activeChat: mapped, messages: mapped.messages, loading: false });
+      return mapped;
+    } catch {
       const chat = await fetchChatApi(chatId);
       set({ activeChat: chat, messages: chat.messages || [], loading: false });
       return chat;
-    } catch {
-      set({ loading: false });
     }
   },
 
   newChat: async (prompt) => {
-    const chat = await createChatApi(prompt);
-    set((state) => ({ chats: [chat, ...state.chats], activeChat: chat, messages: [] }));
-    return chat;
+    try {
+      if (hasAuthToken()) {
+        const session = await createChatSessionApi({
+          title: prompt && prompt.trim() ? prompt.trim().slice(0, 40) : null,
+        });
+        const mapped = mapSessionDetail(session);
+        set((state) => ({ chats: [mapped, ...state.chats], activeChat: mapped, messages: [] }));
+        return mapped;
+      }
+      throw new Error('Not authenticated');
+    } catch {
+      const chat = await createChatApi(prompt);
+      set((state) => ({ chats: [chat, ...state.chats], activeChat: chat, messages: [] }));
+      return chat;
+    }
   },
 
   sendMessage: async (content) => {
@@ -51,21 +113,44 @@ export const useChatStore = create((set, get) => ({
     set({ messages: newMessages, loading: true });
 
     let assistantMessage;
+    let backendSession = null;
     try {
-      const response = await sendMessageApi({
-        query: content,
-        source_type: get().selectedSourceType,
-        top_k: 5,
-      });
+      const activeChat = get().activeChat;
+      const isBackendSession =
+        activeChat && /^\d+$/.test(String(activeChat.id)) && hasAuthToken();
 
-      assistantMessage = {
-        id: uid('msg'),
-        role: 'assistant',
-        timestamp: new Date().toISOString(),
-        content: response.answer,
-        source_type: response.source_type,
-        sources: response.sources || [],
-      };
+      if (isBackendSession) {
+        const response = await sendChatMessageApi(activeChat.id, {
+          query: content,
+          source_type: get().selectedSourceType,
+          top_k: 5,
+        });
+        const msg = response.message;
+        assistantMessage = {
+          id: String(msg.id),
+          role: msg.role,
+          timestamp: msg.created_at,
+          content: msg.content,
+          source_type: msg.source_type,
+          is_error: msg.is_error,
+          sources: (msg.sources || []).map((s) => ({ ...s, metadata: s.metadata || {} })),
+        };
+        backendSession = response.session;
+      } else {
+        const response = await sendMessageApi({
+          query: content,
+          source_type: get().selectedSourceType,
+          top_k: 5,
+        });
+        assistantMessage = {
+          id: uid('msg'),
+          role: 'assistant',
+          timestamp: new Date().toISOString(),
+          content: response.answer,
+          source_type: response.source_type,
+          sources: response.sources || [],
+        };
+      }
     } catch (error) {
       assistantMessage = {
         id: uid('msg'),
@@ -79,28 +164,43 @@ export const useChatStore = create((set, get) => ({
 
     const updatedMessages = [...get().messages, assistantMessage];
     const currentActive = get().activeChat || {};
-    const updatedActiveChat = {
-      ...currentActive,
-      title: currentActive.title && currentActive.title !== 'New Legal Query' ? currentActive.title : content.slice(0, 40),
-      updatedAt: new Date().toISOString(),
-      messages: updatedMessages,
-    };
+
+    let updatedActiveChat;
+    if (backendSession) {
+      updatedActiveChat = {
+        ...currentActive,
+        id: String(backendSession.id),
+        title: backendSession.title || currentActive.title,
+        updatedAt: backendSession.updated_at,
+        messages: updatedMessages,
+      };
+    } else {
+      updatedActiveChat = {
+        ...currentActive,
+        title:
+          currentActive.title && currentActive.title !== 'New Legal Query'
+            ? currentActive.title
+            : content.slice(0, 40),
+        updatedAt: new Date().toISOString(),
+        messages: updatedMessages,
+      };
+    }
 
     set({ messages: updatedMessages, activeChat: updatedActiveChat, loading: false });
 
-    // Save updated session to storage
-    saveChatSessionApi(updatedActiveChat).catch(() => {});
+    if (!backendSession) {
+      saveChatSessionApi(updatedActiveChat).catch(() => {});
+    }
 
     return assistantMessage;
   },
 
   reset: () =>
     set({
-      chats: [demoChatSession],
-      activeChat: demoChatSession,
-      messages: demoChatSession.messages,
+      chats: hasAuthToken() ? [] : [demoChatSession],
+      activeChat: hasAuthToken() ? null : demoChatSession,
+      messages: hasAuthToken() ? [] : demoChatSession.messages,
       loading: false,
       selectedSourceType: 'all',
     }),
 }));
-

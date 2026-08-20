@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import AppSidebar from '../../../components/layout/AppSidebar';
 import Topbar from '../../../components/layout/Topbar';
@@ -8,20 +8,7 @@ import RightPanel from '../../../components/layout/RightPanel';
 import Icon from '../../../components/ui/Icon';
 import { useChat } from '../../../hooks/useChat';
 import { useUiStore } from '../../../stores/uiStore';
-
-const CONTEXT = {
-  primaryTopic: 'Property Law',
-  acts: [
-    { title: 'Karnataka Rent Control Act, 1999', active: true },
-    { title: 'Indian Contract Act, 1872', active: false },
-  ],
-  sections: ['Section 12', 'Section 25'],
-  documents: [{ name: 'Bangalore_Rental_2024.pdf', uploaded: 'Uploaded today', size: '1.2 MB' }],
-  sources: [
-    { title: 'Official Gazette', subtitle: 'Government of Karnataka' },
-    { title: 'Model Tenancy Act, 2021', subtitle: 'Ministry of Housing' },
-  ],
-};
+import { MESSAGE_ROLES } from '../../../types/chat';
 
 export default function ChatConversationPage() {
   const { chatId } = useParams();
@@ -39,6 +26,15 @@ export default function ChatConversationPage() {
     await sendMessage(text);
   };
 
+  // AI-given context returned by the backend (retrieved legal sources)
+  const aiSources = useMemo(() => {
+    const assistantMessages = messages.filter(
+      (m) => m.role === MESSAGE_ROLES.ASSISTANT && Array.isArray(m.sources) && m.sources.length > 0,
+    );
+    const last = assistantMessages[assistantMessages.length - 1];
+    return last?.sources || [];
+  }, [messages]);
+
   return (
     <div className="bg-[#fafbfc] text-gray-900 font-sans h-screen w-full overflow-hidden flex">
       {/* Full-width fixed Topbar — same as Academy */}
@@ -55,7 +51,7 @@ export default function ChatConversationPage() {
       >
         <main className="flex-1 flex w-full relative overflow-hidden">
           {/* Chat Column */}
-          <div className="flex-1 flex flex-col relative max-w-[860px] mx-auto w-full border-r border-gray-200/90 bg-[#fafbfc] z-10">
+          <div className="flex-1 flex flex-col relative w-full mx-auto w-full border-r border-gray-200/90 bg-[#fafbfc] z-10">
             {/* Conversation Header */}
             <div className="flex items-center justify-between px-8 py-4 border-b border-gray-200/90 bg-white/80 backdrop-blur-sm sticky top-0 z-20 shrink-0">
               <div className="flex items-center gap-3">
@@ -91,10 +87,9 @@ export default function ChatConversationPage() {
             </div>
           </div>
 
-          <RightPanel mode="context" context={CONTEXT} title="Case Context" />
+          <RightPanel mode="context" sources={aiSources} title="AI Context" />
         </main>
       </div>
     </div>
   );
 }
-
