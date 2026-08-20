@@ -12,6 +12,7 @@ import {
 } from '../lib/api/chat';
 import { demoChatSession } from '../types/chat';
 import { uid } from '../lib/utils';
+import { useLanguageStore } from './languageStore';
 
 function hasAuthToken() {
   return !!JSON.parse(localStorage.getItem('nyayaai-auth') || '{}')?.state?.token;
@@ -112,6 +113,8 @@ export const useChatStore = create((set, get) => ({
     const newMessages = [...get().messages, userMessage];
     set({ messages: newMessages, loading: true });
 
+    const currentLanguage = useLanguageStore.getState().preferred_language;
+
     let assistantMessage;
     let backendSession = null;
     try {
@@ -141,7 +144,8 @@ export const useChatStore = create((set, get) => ({
           query: content,
           source_type: get().selectedSourceType,
           top_k: 5,
-        });
+          selected_language: currentLanguage,
+      });
         assistantMessage = {
           id: uid('msg'),
           role: 'assistant',
@@ -149,7 +153,8 @@ export const useChatStore = create((set, get) => ({
           content: response.answer,
           source_type: response.source_type,
           sources: response.sources || [],
-        };
+          language_mismatch_suggestion: response.language_mismatch_suggestion || null,
+      };
       }
     } catch (error) {
       assistantMessage = {
@@ -159,6 +164,7 @@ export const useChatStore = create((set, get) => ({
         content: `I encountered an issue retrieving legal information: ${error.message || 'Unable to connect to service'}. Please verify that the backend API server is running.`,
         isError: true,
         sources: [],
+        language_mismatch_suggestion: null,
       };
     }
 
@@ -204,3 +210,4 @@ export const useChatStore = create((set, get) => ({
       selectedSourceType: 'all',
     }),
 }));
+

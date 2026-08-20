@@ -1,6 +1,57 @@
 import { useState } from 'react';
 import { MESSAGE_ROLES } from '../../../types/chat';
 import Icon from '../../ui/Icon';
+import { useLanguage } from '../../../hooks/useLanguage';
+import { useAuth } from '../../../hooks/useAuth';
+
+function LanguageMismatchBanner({ suggestionCode }) {
+  const [dismissed, setDismissed] = useState(false);
+  const { languages, selectLanguage } = useLanguage();
+  const { token } = useAuth();
+
+  if (!suggestionCode || dismissed) return null;
+
+  const matchedLang = languages.find((l) => l.code === suggestionCode);
+  const langLabel = matchedLang
+    ? `${matchedLang.name}${matchedLang.native_name ? ` (${matchedLang.native_name})` : ''}`
+    : suggestionCode;
+
+  const handleYes = () => {
+    selectLanguage(suggestionCode, token);
+    setDismissed(true);
+  };
+
+  const handleNo = () => {
+    setDismissed(true);
+  };
+
+  return (
+    <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-xl flex flex-wrap items-center justify-between gap-3 text-xs text-blue-900 shadow-2xs">
+      <div className="flex items-center gap-2 font-medium">
+        <Icon name="translate" size={18} className="text-[#0b57d0] shrink-0" />
+        <span>
+          Looks like you typed in <strong>{langLabel}</strong> — switch to it?
+        </span>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <button
+          type="button"
+          onClick={handleYes}
+          className="px-3 py-1 bg-[#0b57d0] hover:bg-[#0842a0] text-white font-bold rounded-md transition-colors cursor-pointer shadow-2xs text-xs"
+        >
+          Yes
+        </button>
+        <button
+          type="button"
+          onClick={handleNo}
+          className="px-3 py-1 bg-white hover:bg-gray-100 text-gray-700 font-semibold border border-gray-300 rounded-md transition-colors cursor-pointer text-xs"
+        >
+          No, keep current
+        </button>
+      </div>
+    </div>
+  );
+}
 
 function ActionRow({ content }) {
   const [copied, setCopied] = useState(false);
@@ -226,9 +277,10 @@ export default function MessageBubble({ message }) {
       <div className="absolute -left-3 -top-3 w-8 h-8 bg-surface-container-lowest border border-outline-variant rounded-full flex items-center justify-center shadow-sm">
         <Icon name="balance" size={16} fill className="text-secondary-container" />
       </div>
+
+      <LanguageMismatchBanner suggestionCode={message.language_mismatch_suggestion} />
       <AssistantContent message={message} />
       <ActionRow content={message.content} />
     </div>
   );
 }
-
