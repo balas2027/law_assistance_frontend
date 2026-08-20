@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Icon from '../../ui/Icon';
 import { useChat } from '../../../hooks/useChat';
+import { useLanguage } from '../../../hooks/useLanguage';
 
 const SOURCE_OPTIONS = [
   { id: 'all', label: 'All Sources', icon: 'auto_awesome' },
@@ -18,40 +19,68 @@ export default function ChatInput({
 }) {
   const [value, setValue] = useState('');
   const { loading, selectedSourceType, setSelectedSourceType } = useChat();
+  const { preferred_language, preferred_language_native, preferred_language_name, openModal } = useLanguage();
 
   const isSending = disabled || loading;
 
   const handleSend = () => {
     if (!value.trim() || isSending) return;
+
+    // Requirement 3: If preferred_language hasn't been set yet, block sending and trigger the modal
+    if (!preferred_language) {
+      openModal();
+      return;
+    }
+
     onSend(value.trim());
     setValue('');
   };
 
+  const displayLanguageLabel = preferred_language_native
+    ? preferred_language_native
+    : preferred_language_name
+    ? preferred_language_name
+    : 'Select Language';
+
   return (
     <div className="w-full">
-      {/* Source Domain Selection Pills */}
-      <div className="flex items-center gap-1.5 mb-2.5 px-1 overflow-x-auto scrollbar-hide py-1">
-        <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider mr-1 shrink-0 flex items-center gap-1">
-          <Icon name="filter_list" size={14} /> Filter:
-        </span>
-        {SOURCE_OPTIONS.map((opt) => {
-          const isSelected = selectedSourceType === opt.id || (selectedSourceType === null && opt.id === 'all');
-          return (
-            <button
-              key={opt.id}
-              type="button"
-              onClick={() => setSelectedSourceType(opt.id)}
-              className={`px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer border shrink-0 ${
-                isSelected
-                  ? 'bg-[#0b57d0] text-white border-[#0b57d0] shadow-xs'
-                  : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50 hover:border-gray-300'
-              }`}
-            >
-              <Icon name={opt.icon} size={14} />
-              {opt.label}
-            </button>
-          );
-        })}
+      {/* Top control bar with Source Filter Pills & Persistent Language Chip */}
+      <div className="flex items-center justify-between gap-2 mb-2.5 px-1 overflow-x-auto scrollbar-hide py-1">
+        <div className="flex items-center gap-1.5 shrink-0">
+          <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider mr-1 shrink-0 flex items-center gap-1">
+            <Icon name="filter_list" size={14} /> Filter:
+          </span>
+          {SOURCE_OPTIONS.map((opt) => {
+            const isSelected = selectedSourceType === opt.id || (selectedSourceType === null && opt.id === 'all');
+            return (
+              <button
+                key={opt.id}
+                type="button"
+                onClick={() => setSelectedSourceType(opt.id)}
+                className={`px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer border shrink-0 ${
+                  isSelected
+                    ? 'bg-[#0b57d0] text-white border-[#0b57d0] shadow-xs'
+                    : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50 hover:border-gray-300'
+                }`}
+              >
+                <Icon name={opt.icon} size={14} />
+                {opt.label}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Requirement 2c: Small persistent indicator chip "Replying in: [native name] ✎" */}
+        <button
+          type="button"
+          onClick={openModal}
+          title="Change response language"
+          className="px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer border border-blue-200 bg-blue-50/90 text-[#0b57d0] hover:bg-blue-100/80 shadow-2xs shrink-0"
+        >
+          <Icon name="translate" size={14} className="text-[#0b57d0]" />
+          <span>Replying in: <strong className="font-bold">{displayLanguageLabel}</strong></span>
+          <span className="text-[13px] leading-none ml-0.5">✎</span>
+        </button>
       </div>
 
       {attachments.length > 0 && (
@@ -117,4 +146,3 @@ export default function ChatInput({
     </div>
   );
 }
-

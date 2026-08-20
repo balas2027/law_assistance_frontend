@@ -92,10 +92,13 @@ export async function saveChatSessionApi(updatedChat) {
   return updatedChat;
 }
 
-export async function sendMessageApi({ query, source_type = null, top_k = 5 }) {
+export async function sendMessageApi({ query, source_type = null, top_k = 5, selected_language = null }) {
   const payload = { query, top_k };
   if (source_type && source_type !== 'all') {
     payload.source_type = source_type;
+  }
+  if (selected_language) {
+    payload.selected_language = selected_language;
   }
 
   const res = await fetch(`${API_BASE}/chat`, {
@@ -106,4 +109,3 @@ export async function sendMessageApi({ query, source_type = null, top_k = 5 }) {
 
   return handle(res);
 }
-

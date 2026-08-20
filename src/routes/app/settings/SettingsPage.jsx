@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import AppSidebar from "../../../components/layout/AppSidebar";
 import Topbar from "../../../components/layout/Topbar";
 import Icon from "../../../components/ui/Icon";
@@ -6,12 +6,14 @@ import Avatar from "../../../components/ui/Avatar";
 import { useAuthStore } from "../../../stores/authStore";
 import { useUiStore } from "../../../stores/uiStore";
 import { updateUserApi } from "../../../lib/api/auth";
+import { useLanguage } from "../../../hooks/useLanguage";
 
 export default function SettingsPage() {
   const { sidebarCollapsed } = useUiStore();
   const user = useAuthStore((s) => s.user);
   const token = useAuthStore((s) => s.token);
   const setUser = useAuthStore((s) => s.setUser);
+  const { preferred_language_native, preferred_language_name, openModal } = useLanguage();
 
   const [fullName, setFullName] = useState(user?.full_name || user?.name || "");
   const [email, setEmail] = useState(user?.email || "");
@@ -47,6 +49,9 @@ export default function SettingsPage() {
   }
 
   const displayName = user?.full_name || user?.name || "User";
+  const displayLang = preferred_language_native
+    ? `${preferred_language_name} (${preferred_language_native})`
+    : preferred_language_name || "Not selected";
 
   return (
     <div className="flex h-screen bg-[#fafbfc] overflow-hidden font-sans">
@@ -205,10 +210,31 @@ export default function SettingsPage() {
               <div className="bg-white border border-gray-200/90 rounded-sm p-6 md:p-8 shadow-[0_1px_2px_rgba(0,0,0,0.02)] space-y-6">
                 <div>
                   <h2 className="text-[17px] font-bold text-gray-900 mb-1">Application Preferences</h2>
-                  <p className="text-[13px] text-gray-500">Customize your learning and study experience.</p>
+                  <p className="text-[13px] text-gray-500">Customize your legal assistance and learning experience.</p>
                 </div>
 
                 <div className="space-y-4">
+                  {/* Language Selection Setting Entry (Requirement 2b) */}
+                  <div className="flex items-center justify-between p-4 bg-[#eaf1fc]/50 border border-blue-100 rounded-md">
+                    <div>
+                      <p className="text-[14px] font-semibold text-gray-900 flex items-center gap-2">
+                        <Icon name="translate" size={18} className="text-[#0b57d0]" />
+                        Preferred Legal Chat Language
+                      </p>
+                      <p className="text-[12.5px] text-gray-600 mt-0.5">
+                        Current selection: <strong className="text-[#0b57d0] font-bold">{displayLang}</strong>
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={openModal}
+                      className="px-4 py-2 bg-[#0b57d0] hover:bg-[#0842a0] text-white font-bold text-[12.5px] rounded-md transition-colors cursor-pointer shadow-2xs shrink-0 flex items-center gap-1.5"
+                    >
+                      <span>Change Language</span>
+                      <Icon name="edit" size={15} />
+                    </button>
+                  </div>
+
                   <div className="flex items-center justify-between p-4 bg-gray-50 rounded-md">
                     <div>
                       <p className="text-[14px] font-semibold text-gray-900">Email Study Reminders</p>
